@@ -1,0 +1,182 @@
+[
+  {
+    "Name": "Gheist",
+    "UnitName": "ALCH0001",
+    "AssetId": 306180273,
+    "Value": 20
+  },
+  {
+    "Name": "Gheistly",
+    "UnitName": "ALCH0002",
+    "AssetId": 306181364,
+    "Value": 40
+  },
+  {
+    "Name": "Psychgeist",
+    "UnitName": "ALCH0003",
+    "AssetId": 306729637,
+    "Value": 80
+  },
+  {
+    "Name": "Miya",
+    "UnitName": "ALCH0004",
+    "AssetId": 306183859,
+    "Value": 20
+  },
+  {
+    "Name": "Miyachu",
+    "UnitName": "ALCH0005",
+    "AssetId": 306184765,
+    "Value": 40
+  },
+  {
+    "Name": "Miyamenice",
+    "UnitName": "ALCH0006",
+    "AssetId": 306186552,
+    "Value": 80
+  },
+  {
+    "Name": "Troc",
+    "UnitName": "ALCH0007",
+    "AssetId": 306187531,
+    "Value": 20
+  },
+  {
+    "Name": "Troctor", //THIS
+    "UnitName": "ALCH0008",
+    "AssetId": 306188337,
+    "Value": 40
+  },
+  {
+    "Name": "Troctosaur",
+    "UnitName": "ALCH0009",
+    "AssetId": 306189097,
+    "Value": 80
+  },
+  {
+    "Name": "Bolt",
+    "UnitName": "ALCH0010",
+    "AssetId": 306190133,
+    "Value": 20
+  },
+  {
+    "Name": "Shockner",
+    "UnitName": "ALCH0011",
+    "AssetId": 306190826,
+    "Value": 40
+  },
+  {
+    "Name": "Flightning",
+    "UnitName": "ALCH0012",
+    "AssetId": 306191511,
+    "Value": 80
+  },
+  {
+    "Name": "Psychomenice",
+    "UnitName": "ALCH0013",
+    "AssetId": 313419037,
+    "Value": 165
+  },
+  {
+    "Name": "Shoctosaur",
+    "UnitName": "ALCH0014",
+    "AssetId": 313421275,
+    "Value": 165
+  },
+  {
+    "Name": "Psychosaurus",
+    "UnitName": "ALCH0015",
+    "AssetId": 315166675,
+    "Value": 340
+  },
+  {
+    "Name": "Arch",
+    "UnitName": "ALCH0016",
+    "AssetId": 332014800,
+    "Value": 20
+  },
+  {
+    "Name": "Archicut",
+    "UnitName": "ALCH0017",
+    "AssetId": 337225085,
+    "Value": 40
+  },
+  {
+    "Name": "Archislash",
+    "UnitName": "ALCH0018",
+    "AssetId": 337226686,
+    "Value": 80
+  },
+  {
+    "Name": "Slug",
+    "UnitName": "ALCH0019",
+    "AssetId": 332016564,
+    "Value": 20
+  },
+  {
+    "Name": "Slugger",
+    "UnitName": "ALCH0020",
+    "AssetId": 337228921,
+    "Value": 40
+  },
+  {
+    "Name": "Sluggernaut",
+    "UnitName": "ALCH0021",
+    "AssetId": 337230496,
+    "Value": 80
+  },
+  {
+    "Name": "Drath",
+    "UnitName": "ALCH0022",
+    "AssetId": 332017894,
+    "Value": 20
+  },
+  {
+    "Name": "Drathula",
+    "UnitName": "ALCH0023",
+    "AssetId": 337231891,
+    "Value": 40
+  },
+  {
+    "Name": "Drathslayer",
+    "UnitName": "ALCH0024",
+    "AssetId": 337233127,
+    "Value": 80
+  },
+  {
+    "Name": "Iggy",
+    "UnitName": "ALCH0025",
+    "AssetId": 332018856,
+    "Value": 20
+  },
+  {
+    "Name": "Igniter", //THIS
+    "UnitName": "ALCH0026",
+    "AssetId": 337238291,
+    "Value": 40
+  },
+  {
+    "Name": "Lavatrix",
+    "UnitName": "ALCH0027",
+    "AssetId": 337239113,
+    "Value": 80
+  },
+  {
+    "Name": "Slugginslash",
+    "UnitName": "ALCH0028",
+    "AssetId": 337243065,
+    "Value": 165
+  },
+  {
+    "Name": "Lavaslayer",
+    "UnitName": "ALCH0029",
+    "AssetId": 337244072,
+    "Value": 165
+  },
+  {
+    "Name": "Shred-X",
+    "UnitName": "ALCH0030",
+    "AssetId": 337245090,
+    "Value": 340
+  }
+]
