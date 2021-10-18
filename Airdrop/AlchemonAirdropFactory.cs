@@ -1,6 +1,9 @@
 ﻿using Algorand.V2.Model;
 using Api;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Airdrop
 {
@@ -12,6 +15,15 @@ namespace Airdrop
         public AlchemonAirdropFactory(IApiUtil apiUtil) : base(310014962) {
             this._apiUtil = apiUtil;
             this._stakeFlagAssetId = 320570576;
+        }
+
+        public override IDictionary<long, long> GetAssetValues()
+        {
+            List<AlcheCoinAsset> alchemonValues = JsonConvert.DeserializeObject<List<AlcheCoinAsset>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/AlcheCoinAirdrop/AlchemonValues.json"));
+
+            Dictionary<long, long> assetValues = alchemonValues.ToDictionary(av => av.AssetId, av => av.Value);
+
+            return assetValues;
         }
 
         public override IEnumerable<string> FetchWalletAddresses()
@@ -28,7 +40,7 @@ namespace Airdrop
 
             foreach (string walletAddress in walletAddresses)
             {
-                List<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAirdropAmount(assetHoldings, assetValues);
                 airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
             }
@@ -58,5 +70,32 @@ namespace Airdrop
 
             return baseAmount + (numberOfAssets > 0 ? 2 * (numberOfAssets - 1) : 0);
         }
+
+        public override IEnumerable<RetrievedAsset> CheckAssets()
+        {
+            IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
+
+            List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
+            IEnumerable<Asset> assets = this._apiUtil.GetAssetById(assetIds);
+            List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
+
+            foreach (Asset asset in assets)
+            {
+                if (asset.Params.UnitName.StartsWith("ALCH"))
+                {
+                    retrievedAssets.Add(new RetrievedAsset(asset.Params.Name, asset.Params.UnitName, asset.Index.Value));
+                }
+            }
+
+            return retrievedAssets;
+        }
+    }
+
+    class AlcheCoinAsset
+    {
+        public string Name { get; set; }
+        public string UnitName { get; set; }
+        public long AssetId { get; set; }
+        public long Value { get; set; }
     }
 }

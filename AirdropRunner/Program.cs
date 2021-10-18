@@ -4,8 +4,6 @@ using Api;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace AirdropRunner
 {
@@ -23,28 +21,25 @@ namespace AirdropRunner
             IndexerApi indexer = new IndexerApi(INDEXER_API_ADDR, INDEXER_API_TOKEN);
             ApiUtil api = new ApiUtil(algod, indexer);
 
-            AirdropFactory alchemonAirdropFactory = new AlchemonAirdropFactory(api);
+            AirdropFactory airdropFactory = new CryptoBunnyAirdropFactory(api);
 
-            List<AlcheCoinAsset> alchemonValues = JsonConvert.DeserializeObject<List<AlcheCoinAsset>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/AlcheCoinAirdrop/AlchemonValues.json"));
+            IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
 
-            Dictionary<long, long> assetValues = alchemonValues.ToDictionary(av => av.AssetId, av => av.Value);
+            IEnumerable<AirdropAmount> airdropAmounts = airdropFactory.FetchAirdropAmounts(assetValues);
 
-            IEnumerable<AirdropAmount> airdropAmounts = alchemonAirdropFactory.FetchAirdropAmounts(assetValues);
-
-            foreach (AirdropAmount airdropAmount in airdropAmounts)
+            /*foreach (AirdropAmount airdropAmount in airdropAmounts)
             {
                 Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount);
             }
 
-            Console.WriteLine("Total: " + airdropAmounts.Sum(a => a.Amount));
-        }
-    }
+            Console.WriteLine("Total: " + airdropAmounts.Sum(a => a.Amount));*/
 
-    class AlcheCoinAsset
-    {
-        public string Name { get; set; }
-        public string UnitName { get; set; }
-        public long AssetId { get; set; }
-        public long Value { get; set; }
+            IEnumerable<RetrievedAsset> retrievedAssets = airdropFactory.CheckAssets();
+
+            foreach (RetrievedAsset retrievedAsset in retrievedAssets.OrderBy(ra => ra.UnitName))
+            {
+                Console.WriteLine(retrievedAsset.UnitName + " : " + retrievedAsset.AssetId + " : " + retrievedAsset.Name);
+            }
+        }
     }
 }

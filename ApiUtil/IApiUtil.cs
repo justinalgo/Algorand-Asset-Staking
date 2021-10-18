@@ -8,10 +8,11 @@ namespace Api
     {
         Algorand.V2.Model.Account GetAccountByAddress(string walletAddress);
         Asset GetAssetById(long assetId);
+        IEnumerable<Asset> GetAssetById(IEnumerable<long> assetIds);
         long GetAssetDecimals(int assetId);
-        List<AssetHolding> GetAssetsByAddress(string walletAddress);
+        IEnumerable<AssetHolding> GetAssetsByAddress(string walletAddress);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId, params long[] assetIds);
-        PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn);
+        void SubmitTransactions(IEnumerable<SignedTransaction> signedTxns);
     }
 }

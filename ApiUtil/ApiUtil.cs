@@ -65,7 +65,7 @@ namespace Api
             return addresses.OrderBy(a => a);
         }
 
-        public PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
+        private PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
         {
             PostTransactionsResponse id = Utils.SubmitTransaction(_algod, signedTxn);
             Console.WriteLine("Successfully sent tx with id: " + id.TxId);
@@ -74,21 +74,76 @@ namespace Api
             return resp;
         }
 
+        public void SubmitTransactions(IEnumerable<SignedTransaction> signedTxns)
+        {
+            foreach (SignedTransaction signedTxn in signedTxns)
+            {
+                try
+                {
+                    this.SubmitTransaction(signedTxn);
+                }
+                catch (ApiException e)
+                {
+                    // This is generally expected, but should give us an informative error message.
+                    Console.WriteLine("Exception when calling algod#rawTransaction: " + e.Message);
+                }
+            }
+        }
+
         public Asset GetAssetById(long assetId)
         {
-            try
-            {
-                return _indexer.LookupAssetByID(assetId).Asset;
-            }
-            catch (ApiException apiException)
-            {
-                if (apiException.ErrorCode == 404)
-                {
-                    return null;
-                }
+            Asset asset = null;
+            int maxRetries = 5;
+            int currentRetry = 0;
 
-                throw apiException;
+            while (asset == null && currentRetry < maxRetries)
+            {
+                try
+                {
+                    asset = _indexer.LookupAssetByID(assetId).Asset;
+                }
+                catch (ApiException apiException)
+                {
+                    if (apiException.ErrorCode == 404)
+                    {
+                        return null;
+                    }
+                    else if (apiException.ErrorCode == 429)
+                    {
+                        currentRetry++;
+
+                        Thread.Sleep(1500); //PureStake Sleep
+                    }
+                    else
+                    {
+                        throw apiException;
+                    }
+                }
             }
+
+            if (currentRetry > maxRetries - 1)
+            {
+                throw new Exception("GetAssetBalances ran out of retries");
+            }
+
+            return asset;
+        }
+
+        public IEnumerable<Asset> GetAssetById(IEnumerable<long> assetIds)
+        {
+            List<Asset> retrievedAssets = new List<Asset>();
+
+            foreach (long assetId in assetIds)
+            {
+                Asset asset = this.GetAssetById(assetId);
+
+                if (asset != null)
+                {
+                    retrievedAssets.Add(asset);
+                }
+            }
+
+            return retrievedAssets;
         }
 
         public AssetBalancesResponse GetAssetBalances(long assetId, string next = null)
@@ -112,11 +167,16 @@ namespace Api
                 }
                 catch (ApiException apiException)
                 {
-                    Console.WriteLine(apiException.ErrorCode);
-                    Console.WriteLine(apiException.Message);
-                    currentRetry++;
+                    if (apiException.ErrorCode == 429)
+                    {
+                        currentRetry++;
 
-                    Thread.Sleep(1500); //PureStake Sleep
+                        Thread.Sleep(1500); //PureStake Sleep
+                    }
+                    else
+                    {
+                        throw apiException;
+                    }
                 }
             }
 
@@ -138,7 +198,7 @@ namespace Api
             return _algod.AccountInformation(walletAddress);
         }
 
-        public List<AssetHolding> GetAssetsByAddress(string walletAddress)
+        public IEnumerable<AssetHolding> GetAssetsByAddress(string walletAddress)
         {
             return this.GetAccountByAddress(walletAddress).Assets;
         }
