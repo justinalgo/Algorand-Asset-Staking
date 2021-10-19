@@ -1,27 +1,27 @@
 ﻿using Algorand.V2.Model;
-using Api;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Util;
 
 namespace Airdrop
 {
     public class CryptoBunnyAirdropFactory : AirdropFactory
     {
-        private readonly IApiUtil _apiUtil;
-        public CryptoBunnyAirdropFactory(IApiUtil apiUtil) : base(329532956)
+        private readonly IApi _api;
+        public CryptoBunnyAirdropFactory(IApi api) : base(329532956)
         {
-            this._apiUtil = apiUtil;
+            this._api = api;
         }
         public override IEnumerable<RetrievedAsset> CheckAssets()
         {
-            IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
+            IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
 
             List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this._apiUtil.GetAssetById(assetIds);
+            IEnumerable<Asset> assets = this._api.GetAssetById(assetIds);
             List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
 
             foreach (Asset asset in assets)
@@ -42,7 +42,7 @@ namespace Airdrop
 
             foreach (string walletAddress in walletAddresses)
             {
-                IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAirdropAmount(assetHoldings, assetValues);
                 airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
             }
@@ -52,7 +52,7 @@ namespace Airdrop
 
         public override IEnumerable<string> FetchWalletAddresses()
         {
-            IEnumerable<string> walletAddresses = this._apiUtil.GetWalletAddressesWithAsset(this.AssetId);
+            IEnumerable<string> walletAddresses = this._api.GetWalletAddressesWithAsset(this.AssetId);
 
             return walletAddresses;
         }

@@ -2,9 +2,9 @@
 using Algorand.V2.Model;
 using System.Collections.Generic;
 
-namespace Api
+namespace Util
 {
-    public interface IApiUtil
+    public interface IApi
     {
         Algorand.V2.Model.Account GetAccountByAddress(string walletAddress);
         Asset GetAssetById(long assetId);

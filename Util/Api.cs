@@ -8,21 +8,21 @@ using Algorand.V2.Model;
 using System.Threading;
 using Algorand.Client;
 
-namespace Api
+namespace Util
 {
-    public class ApiUtil : IApiUtil
+    public class Api : IApi
     {
-        private readonly ILogger<ApiUtil> _log;
+        private readonly ILogger<Api> _log;
         private readonly AlgodApi _algod;
         private readonly IndexerApi _indexer;
 
-        public ApiUtil(ILogger<ApiUtil> log, AlgodApi algod, IndexerApi indexer)
+        public Api(ILogger<Api> log, AlgodApi algod, IndexerApi indexer)
         {
             this._log = log;
             this._algod = algod;
             this._indexer = indexer;
         }
-        public ApiUtil(AlgodApi algod, IndexerApi indexer)
+        public Api(AlgodApi algod, IndexerApi indexer)
         {
             this._algod = algod;
             this._indexer = indexer;

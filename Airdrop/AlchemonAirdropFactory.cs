@@ -1,19 +1,19 @@
 ﻿using Algorand.V2.Model;
-using Api;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Util;
 
 namespace Airdrop
 {
     public class AlchemonAirdropFactory : AirdropFactory
     {
-        private readonly IApiUtil _apiUtil;
+        private readonly IApi _api;
         private readonly long _stakeFlagAssetId;
 
-        public AlchemonAirdropFactory(IApiUtil apiUtil) : base(310014962) {
-            this._apiUtil = apiUtil;
+        public AlchemonAirdropFactory(IApi api) : base(310014962) {
+            this._api = api;
             this._stakeFlagAssetId = 320570576;
         }
 
@@ -28,7 +28,7 @@ namespace Airdrop
 
         public override IEnumerable<string> FetchWalletAddresses()
         {
-            IEnumerable<string> walletAddresses = _apiUtil.GetWalletAddressesWithAsset(this.AssetId, this._stakeFlagAssetId);
+            IEnumerable<string> walletAddresses = this._api.GetWalletAddressesWithAsset(this.AssetId, this._stakeFlagAssetId);
 
             return walletAddresses;
         }
@@ -40,7 +40,7 @@ namespace Airdrop
 
             foreach (string walletAddress in walletAddresses)
             {
-                IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAirdropAmount(assetHoldings, assetValues);
                 airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
             }
@@ -73,10 +73,10 @@ namespace Airdrop
 
         public override IEnumerable<RetrievedAsset> CheckAssets()
         {
-            IEnumerable<AssetHolding> assetHoldings = this._apiUtil.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
+            IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
 
             List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this._apiUtil.GetAssetById(assetIds);
+            IEnumerable<Asset> assets = this._api.GetAssetById(assetIds);
             List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
 
             foreach (Asset asset in assets)
