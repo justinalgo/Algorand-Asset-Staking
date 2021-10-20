@@ -17,6 +17,6 @@ namespace Airdrop
         public abstract IDictionary<long, long> GetAssetValues();
         public abstract IEnumerable<string> FetchWalletAddresses();
         public abstract IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues);
-        public abstract IEnumerable<RetrievedAsset> CheckAssets();
+        //public abstract IEnumerable<RetrievedAsset> CheckAssets();
     }
 }

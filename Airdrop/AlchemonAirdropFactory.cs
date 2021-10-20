@@ -19,9 +19,9 @@ namespace Airdrop
 
         public override IDictionary<long, long> GetAssetValues()
         {
-            List<AlcheCoinAsset> alchemonValues = JsonConvert.DeserializeObject<List<AlcheCoinAsset>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/AlcheCoinAirdrop/AlchemonValues.json"));
+            List<AssetValue> values = JsonConvert.DeserializeObject<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/AlcheCoinAirdrop/AlchemonValues.json"));
 
-            Dictionary<long, long> assetValues = alchemonValues.ToDictionary(av => av.AssetId, av => av.Value);
+            Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
             return assetValues;
         }
@@ -71,7 +71,7 @@ namespace Airdrop
             return baseAmount + (numberOfAssets > 0 ? 2 * (numberOfAssets - 1) : 0);
         }
 
-        public override IEnumerable<RetrievedAsset> CheckAssets()
+        public IEnumerable<RetrievedAsset> CheckAssets()
         {
             IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
 
@@ -89,13 +89,5 @@ namespace Airdrop
 
             return retrievedAssets;
         }
-    }
-
-    class AlcheCoinAsset
-    {
-        public string Name { get; set; }
-        public string UnitName { get; set; }
-        public long AssetId { get; set; }
-        public long Value { get; set; }
     }
 }

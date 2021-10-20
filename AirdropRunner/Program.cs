@@ -19,20 +19,20 @@ namespace AirdropRunner
             string INDEXER_API_ADDR = "https://mainnet-algorand.api.purestake.io/idx2";
             string INDEXER_API_TOKEN = "HFoxXc2sQf7ut4bAVmfg0adKQ6RRqTCi6nEg0YIs";
 
-            var kvUri = "https://cavernavault.vault.azure.net";
+            /*var kvUri = "https://cavernavault.vault.azure.net";
             var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(true));
 
             var mnemonic = client.GetSecret("airdropMnemonic");
 
-            Console.WriteLine(mnemonic.Value.Value);
+            Console.WriteLine(mnemonic.Value.Value);*/
 
             AlgodApi algod = new AlgodApi(ALGOD_API_ADDR, ALGOD_API_TOKEN);
             IndexerApi indexer = new IndexerApi(INDEXER_API_ADDR, INDEXER_API_TOKEN);
             Api api = new Api(algod, indexer);
 
-            AirdropFactory airdropFactory = new CryptoBunnyAirdropFactory(api);
+            AirdropFactory airdropFactory = new ShrimpAirdropFactory(api);
 
-            /*IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
+            IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
 
             IEnumerable<AirdropAmount> airdropAmounts = airdropFactory.FetchAirdropAmounts(assetValues);
 
@@ -42,13 +42,7 @@ namespace AirdropRunner
             }
 
             Console.WriteLine("Total: " + airdropAmounts.Sum(a => a.Amount));
-
-            IEnumerable<RetrievedAsset> retrievedAssets = airdropFactory.CheckAssets();
-
-            foreach (RetrievedAsset retrievedAsset in retrievedAssets.OrderBy(ra => ra.UnitName))
-            {
-                Console.WriteLine(retrievedAsset.UnitName + " : " + retrievedAsset.AssetId + " : " + retrievedAsset.Name);
-            }*/
+            Console.WriteLine("Num: " + airdropAmounts.Count());
         }
     }
 }

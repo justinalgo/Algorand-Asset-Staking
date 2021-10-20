@@ -9,30 +9,12 @@ using Util;
 
 namespace Airdrop
 {
-    public class CryptoBunnyAirdropFactory : AirdropFactory
+    public class ShrimpAirdropFactory : AirdropFactory
     {
         private readonly IApi _api;
-        public CryptoBunnyAirdropFactory(IApi api) : base(329532956)
-        {
+
+        public ShrimpAirdropFactory(IApi api) : base(360019122) {
             this._api = api;
-        }
-        public IEnumerable<RetrievedAsset> CheckAssets()
-        {
-            IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
-
-            List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this._api.GetAssetById(assetIds);
-            List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
-
-            foreach (Asset asset in assets)
-            {
-                if (asset.Params.UnitName.StartsWith("BNYL") || asset.Params.UnitName.StartsWith("BNYO"))
-                {
-                    retrievedAssets.Add(new RetrievedAsset(asset.Params.Name, asset.Params.UnitName, asset.Index.Value));
-                }
-            }
-
-            return retrievedAssets;
         }
 
         public override IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
@@ -59,9 +41,9 @@ namespace Airdrop
 
         public override IDictionary<long, long> GetAssetValues()
         {
-            List<AssetValue> assets = JsonConvert.DeserializeObject<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/CryptoBunnyValues.json"));
+            List<AssetValue> values = JsonConvert.DeserializeObject<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/ShrimpValues.json"));
 
-            Dictionary<long, long> assetValues = assets.ToDictionary(av => av.AssetId, av => av.Value);
+            Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
             return assetValues;
         }
