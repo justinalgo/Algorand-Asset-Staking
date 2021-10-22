@@ -1,10 +1,9 @@
 ﻿using Algorand.V2.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using Util;
 
 namespace Airdrop
@@ -44,7 +43,10 @@ namespace Airdrop
             {
                 IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAirdropAmount(assetHoldings, assetValues);
-                airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
+                if (amount > 0)
+                {
+                    airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
+                }
             }
 
             return airdropAmounts;
@@ -59,7 +61,7 @@ namespace Airdrop
 
         public override IDictionary<long, long> GetAssetValues()
         {
-            List<AssetValue> assets = JsonConvert.DeserializeObject<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/CryptoBunnyValues.json"));
+            List<AssetValue> assets = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/CryptoBunnyValues.json"));
 
             Dictionary<long, long> assetValues = assets.ToDictionary(av => av.AssetId, av => av.Value);
 
