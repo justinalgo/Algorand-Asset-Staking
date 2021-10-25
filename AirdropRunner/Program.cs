@@ -3,13 +3,14 @@ using Algorand.V2;
 using Util;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
 using Account = Algorand.Account;
 using Transaction = Algorand.Transaction;
 using Algorand;
 using Algorand.V2.Model;
+using Algorand.Client;
+using System.Collections.Generic;
 
 namespace AirdropRunner
 {
@@ -26,37 +27,39 @@ namespace AirdropRunner
             var kvUri = "https://cavernavault.vault.azure.net";
             var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(true));
 
-            var mnemonic = client.GetSecret("lingLingMnemonic");
+            var mnemonic = client.GetSecret("lingLingMnemonic").Value.Value;
 
             AlgodApi algod = new AlgodApi(ALGOD_API_ADDR, ALGOD_API_TOKEN);
             IndexerApi indexer = new IndexerApi(INDEXER_API_ADDR, INDEXER_API_TOKEN);
             Api api = new Api(algod, indexer);
 
-            ShrimpAirdropFactory airdropFactory = new ShrimpAirdropFactory(api);
+            Account account = new Account(mnemonic);
+
+            AirdropFactory airdropFactory = new ShrimpAirdropFactory(api);
 
             IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
 
             IEnumerable<AirdropAmount> airdropAmounts = airdropFactory.FetchAirdropAmounts(assetValues);
 
-            Account account = new Account(mnemonic.Value.Value);
-
-            List<SignedTransaction> transactions = new List<SignedTransaction>();
-
             foreach (AirdropAmount airdropAmount in airdropAmounts)
             {
+                Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount);
                 TransactionParametersResponse transactionParameters = algod.TransactionParams();
+
                 Transaction txn = Utils.GetTransferAssetTransaction(
                         account.Address,
                         new Address(airdropAmount.Wallet),
                         airdropFactory.AssetId,
                         (ulong)airdropAmount.Amount,
-                        transactionParameters,
-                        message: "Welcome to the new Shrimp airdrop system! Enjoy :)"
+                        transactionParameters
                     );
-                transactions.Add(account.SignTransaction(txn));
+                SignedTransaction stxn = account.SignTransaction(txn);
+
+                api.SubmitTransaction(stxn);
             }
 
-            api.SubmitTransactions(transactions);
+            Console.WriteLine("Total: " + airdropAmounts.Sum(aa => aa.Amount));
+            Console.WriteLine("Number of wallets: " + airdropAmounts.Count());
         }
     }
 }

@@ -42,7 +42,7 @@
     "Value": 20
   },
   {
-    "Name": "Troctor", //THIS
+    "Name": "Troctor",
     "UnitName": "ALCH0008",
     "AssetId": 306188337,
     "Value": 40
@@ -150,7 +150,7 @@
     "Value": 20
   },
   {
-    "Name": "Igniter", //THIS
+    "Name": "Igniter",
     "UnitName": "ALCH0026",
     "AssetId": 337238291,
     "Value": 40

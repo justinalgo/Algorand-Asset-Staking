@@ -19,7 +19,7 @@ namespace Airdrop
 
         public override IDictionary<long, long> GetAssetValues()
         {
-            List<AssetValue> values = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/AlcheCoinAirdrop/AlchemonValues.json"));
+            List<AssetValue> values = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/AlchemonValues.json"));
 
             Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
@@ -59,10 +59,11 @@ namespace Airdrop
             foreach (AssetHolding assetHolding in assetHoldings)
             {
                 if (assetHolding.AssetId.HasValue &&
+                    assetHolding.Amount.HasValue &&
                     assetHolding.Amount > 0 &&
                     assetValues.ContainsKey(assetHolding.AssetId.Value))
                 {
-                    numberOfAssets++;
+                    numberOfAssets += (int)assetHolding.Amount;
 
                     if (assetValues[assetHolding.AssetId.Value] > baseAmount)
                     {

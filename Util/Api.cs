@@ -65,29 +65,13 @@ namespace Util
             return addresses.OrderBy(a => a);
         }
 
-        private PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
+        public PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
         {
             PostTransactionsResponse id = Utils.SubmitTransaction(_algod, signedTxn);
             Console.WriteLine("Successfully sent tx with id: " + id.TxId);
             PendingTransactionResponse resp = Utils.WaitTransactionToComplete(_algod, id.TxId);
             Console.WriteLine("Confirmed Round is: " + resp.ConfirmedRound);
             return resp;
-        }
-
-        public void SubmitTransactions(IEnumerable<SignedTransaction> signedTxns)
-        {
-            foreach (SignedTransaction signedTxn in signedTxns)
-            {
-                try
-                {
-                    this.SubmitTransaction(signedTxn);
-                }
-                catch (ApiException e)
-                {
-                    // This is generally expected, but should give us an informative error message.
-                    Console.WriteLine("Exception when calling algod#rawTransaction: " + e.Message);
-                }
-            }
         }
 
         public Asset GetAssetById(long assetId)

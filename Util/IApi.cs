@@ -13,6 +13,6 @@ namespace Util
         IEnumerable<AssetHolding> GetAssetsByAddress(string walletAddress);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId, params long[] assetIds);
-        void SubmitTransactions(IEnumerable<SignedTransaction> signedTxns);
+        PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn);
     }
 }
