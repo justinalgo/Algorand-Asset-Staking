@@ -41,7 +41,7 @@ namespace Airdrop
             foreach (string walletAddress in walletAddresses)
             {
                 IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
-                long amount = this.GetAirdropAmount(assetHoldings, assetValues);
+                long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
                 if (amount > 0)
                 {
                     airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
@@ -51,7 +51,7 @@ namespace Airdrop
             return airdropAmounts;
         }
 
-        private long GetAirdropAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
+        public override long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
         {
             long baseAmount = 0;
             int numberOfAssets = 0;

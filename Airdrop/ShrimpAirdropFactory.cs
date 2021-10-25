@@ -30,12 +30,9 @@ namespace Airdrop
             foreach (string walletAddress in walletAddresses)
             {
                 IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
-                long amount = this.GetAssetHoldingAmount(assetHoldings, assetValues);
+                long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
-                if (ab2Values.ContainsKey(walletAddress))
-                {
-                    amount += ab2Values[walletAddress];
-                }
+                amount += this.GetAb2Amount(walletAddress, ab2Values);
 
                 if (amount != 0)
                 {
@@ -62,7 +59,7 @@ namespace Airdrop
             return assetValues;
         }
 
-        private long GetAssetHoldingAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
+        public override long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
         {
             long airdropAmount = 0;
 
@@ -78,6 +75,16 @@ namespace Airdrop
             }
 
             return airdropAmount;
+        }
+
+        public long GetAb2Amount(string walletAddress, IDictionary<string, long> ab2Values)
+        {
+            if (ab2Values.ContainsKey(walletAddress))
+            {
+                return ab2Values[walletAddress];
+            }
+
+            return 0;
         }
 
         private IDictionary<string, long> GetAb2Values(IDictionary<long, long> assetValues)
