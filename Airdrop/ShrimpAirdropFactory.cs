@@ -11,17 +11,22 @@ using Util;
 
 namespace Airdrop
 {
-    public class ShrimpAirdropFactory : AirdropFactory
+    public class ShrimpAirdropFactory : IAirdropFactory
     {
-        private readonly IApi _api;
-        private readonly HttpClient _client;
+        public long AssetId { get; set; }
+        public long Decimals { get; set; }
+        private readonly IApi api;
+        private readonly HttpClient client;
 
-        public ShrimpAirdropFactory(IApi api) : base(360019122) {
-            this._api = api;
-            this._client = new HttpClient();
+        public ShrimpAirdropFactory(IApi api)
+        {
+            this.AssetId = 360019122;
+            this.Decimals = 0;
+            this.api = api;
+            this.client = new HttpClient();
         }
 
-        public override IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
+        public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
         {
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
@@ -29,7 +34,7 @@ namespace Airdrop
 
             foreach (string walletAddress in walletAddresses)
             {
-                IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
                 amount += this.GetAb2Amount(walletAddress, ab2Values);
@@ -43,14 +48,14 @@ namespace Airdrop
             return airdropAmounts;
         }
 
-        public override IEnumerable<string> FetchWalletAddresses()
+        public IEnumerable<string> FetchWalletAddresses()
         {
-            IEnumerable<string> walletAddresses = this._api.GetWalletAddressesWithAsset(this.AssetId);
+            IEnumerable<string> walletAddresses = this.api.GetWalletAddressesWithAsset(this.AssetId);
 
             return walletAddresses;
         }
 
-        public override IDictionary<long, long> GetAssetValues()
+        public IDictionary<long, long> GetAssetValues()
         {
             List<AssetValue> values = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/ShrimpValues.json"));
 
@@ -59,7 +64,7 @@ namespace Airdrop
             return assetValues;
         }
 
-        public override long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
+        public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
         {
             long airdropAmount = 0;
 
@@ -135,7 +140,7 @@ namespace Airdrop
         {
             string ab2endpoint = "https://linglingab2.vercel.app/api";
 
-            EscrowInfo escrowInfo = await this._client.GetFromJsonAsync<EscrowInfo>(ab2endpoint);
+            EscrowInfo escrowInfo = await this.client.GetFromJsonAsync<EscrowInfo>(ab2endpoint);
             
             return escrowInfo;
         }

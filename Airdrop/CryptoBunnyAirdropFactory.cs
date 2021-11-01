@@ -8,19 +8,24 @@ using Util;
 
 namespace Airdrop
 {
-    public class CryptoBunnyAirdropFactory : AirdropFactory
+    public class CryptoBunnyAirdropFactory : IAirdropFactory
     {
-        private readonly IApi _api;
-        public CryptoBunnyAirdropFactory(IApi api) : base(329532956)
+        public long AssetId { get; set; }
+        public long Decimals { get; set; }
+        private readonly IApi api;
+
+        public CryptoBunnyAirdropFactory(IApi api)
         {
-            this._api = api;
+            this.AssetId = 329532956;
+            this.Decimals = 0;
+            this.api = api;
         }
         public IEnumerable<RetrievedAsset> CheckAssets()
         {
-            IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
+            IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
 
             List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this._api.GetAssetById(assetIds);
+            IEnumerable<Asset> assets = this.api.GetAssetById(assetIds);
             List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
 
             foreach (Asset asset in assets)
@@ -34,14 +39,14 @@ namespace Airdrop
             return retrievedAssets;
         }
 
-        public override IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
+        public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
         {
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
             foreach (string walletAddress in walletAddresses)
             {
-                IEnumerable<AssetHolding> assetHoldings = this._api.GetAssetsByAddress(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
                 if (amount > 0)
                 {
@@ -52,14 +57,14 @@ namespace Airdrop
             return airdropAmounts;
         }
 
-        public override IEnumerable<string> FetchWalletAddresses()
+        public IEnumerable<string> FetchWalletAddresses()
         {
-            IEnumerable<string> walletAddresses = this._api.GetWalletAddressesWithAsset(this.AssetId);
+            IEnumerable<string> walletAddresses = this.api.GetWalletAddressesWithAsset(this.AssetId);
 
             return walletAddresses;
         }
 
-        public override IDictionary<long, long> GetAssetValues()
+        public IDictionary<long, long> GetAssetValues()
         {
             List<AssetValue> assets = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/CryptoBunnyValues.json"));
 
@@ -68,7 +73,7 @@ namespace Airdrop
             return assetValues;
         }
 
-        public override long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
+        public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
         {
             long airdropAmount = 0;
 
