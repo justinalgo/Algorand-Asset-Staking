@@ -9,8 +9,14 @@ using Account = Algorand.Account;
 using Transaction = Algorand.Transaction;
 using Algorand;
 using Algorand.V2.Model;
-using Algorand.Client;
 using System.Collections.Generic;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using Algorand.V2.Algod;
+using Microsoft.Extensions.Logging;
 
 namespace AirdropRunner
 {
@@ -18,24 +24,11 @@ namespace AirdropRunner
     {
         static void Main(string[] args)
         {
-            string ALGOD_API_ADDR = "http://cavernatech.eastus.cloudapp.azure.com:8080";
-            string ALGOD_API_TOKEN = "0c9add6d713cefb54c8106282e12b700735afef18b073f91f86e9e2142df695d";
+            using IHost host = CreateHostBuilder(args).Build();
 
-            string INDEXER_API_ADDR = "https://mainnet-algorand.api.purestake.io/idx2";
-            string INDEXER_API_TOKEN = "HFoxXc2sQf7ut4bAVmfg0adKQ6RRqTCi6nEg0YIs";
+            host.Services.GetService<App>().Run();
 
-            var kvUri = "https://cavernavault.vault.azure.net";
-            var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(true));
-
-            var mnemonic = client.GetSecret("lingLingMnemonic").Value.Value;
-
-            AlgodApi algod = new AlgodApi(ALGOD_API_ADDR, ALGOD_API_TOKEN);
-            IndexerApi indexer = new IndexerApi(INDEXER_API_ADDR, INDEXER_API_TOKEN);
-            Api api = new Api(algod, indexer);
-
-            Account account = new Account(mnemonic);
-
-            AirdropFactory airdropFactory = new ShrimpAirdropFactory(api);
+            /*AirdropFactory airdropFactory = new AlchemonAirdropFactory(api);
 
             IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
 
@@ -59,7 +52,25 @@ namespace AirdropRunner
             }
 
             Console.WriteLine("Total: " + airdropAmounts.Sum(aa => aa.Amount));
-            Console.WriteLine("Number of wallets: " + airdropAmounts.Count());
+            Console.WriteLine("Number of wallets: " + airdropAmounts.Count());*/
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    var settings = config.Build();
+
+                    string azureKeyVaultEndpoint = settings.GetValue<string>("Endpoints:AzureKeyVault");
+
+                    config.AddAzureKeyVault(azureKeyVaultEndpoint);
+                })
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddLogging(configure => configure.AddConsole());
+                    services.AddTransient<IApi, Api>();
+                    services.AddTransient<IAirdropFactory, ShrimpAirdropFactory>();
+                    services.AddTransient<App>();
+                });
     }
 }

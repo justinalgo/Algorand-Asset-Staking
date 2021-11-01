@@ -21460,5 +21460,95 @@
     "UnitName": "LNGUR019",
     "AssetId": 345402419,
     "Value": 5
+  },
+  {
+    "Name": "Ling Ling Special #004",
+    "UnitName": "LNGS004",
+    "AssetId": 357739578,
+    "Value": 10
+  },
+  {
+    "Name": "Stupid Ling Ling #001",
+    "UnitName": "LNGSH001",
+    "AssetId": 370322880,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #002",
+    "UnitName": "LNGSH002",
+    "AssetId": 370326209,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #003",
+    "UnitName": "LNGSH003",
+    "AssetId": 370328427,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #004",
+    "UnitName": "LNGSH004",
+    "AssetId": 370332210,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #005",
+    "UnitName": "LNGSH005",
+    "AssetId": 370333859,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #006",
+    "UnitName": "LNGSH006",
+    "AssetId": 370335104,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #007",
+    "UnitName": "LNGSH007",
+    "AssetId": 370335730,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #008",
+    "UnitName": "LNGSH008",
+    "AssetId": 370336988,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #009",
+    "UnitName": "LNGSH009",
+    "AssetId": 370338445,
+    "Value": 5
+  },
+  {
+    "Name": "Stupid Ling Ling #010",
+    "UnitName": "LNGSH010",
+    "AssetId": 370338594,
+    "Value": 5
+  },
+  {
+    "Name": "Ling Ling Flocket #006",
+    "UnitName": "LNGF006",
+    "AssetId": 388072168,
+    "Value": 10
+  },
+  {
+    "Name": "Ling Ling Flocket #007",
+    "UnitName": "LNGF007",
+    "AssetId": 388072575,
+    "Value": 10
+  },
+  {
+    "Name": "Ling Ling Flocket #008",
+    "UnitName": "LNGF008",
+    "AssetId": 389178485,
+    "Value": 10
+  },
+  {
+    "Name": "Ling Ling #015 - Jump",
+    "UnitName": "LNG015",
+    "AssetId": 389148669,
+    "Value": 10
   }
 ]

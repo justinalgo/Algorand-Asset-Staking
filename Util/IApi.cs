@@ -14,5 +14,6 @@ namespace Util
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId, params long[] assetIds);
         PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn);
+        TransactionParametersResponse GetTransactionParams();
     }
 }

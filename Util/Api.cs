@@ -7,25 +7,23 @@ using Algorand.V2;
 using Algorand.V2.Model;
 using System.Threading;
 using Algorand.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace Util
 {
     public class Api : IApi
     {
-        private readonly ILogger<Api> _log;
-        private readonly AlgodApi _algod;
-        private readonly IndexerApi _indexer;
+        private readonly ILogger<Api> log;
+        private readonly IConfiguration config;
+        private readonly AlgodApi algod;
+        private readonly IndexerApi indexer;
 
-        public Api(ILogger<Api> log, AlgodApi algod, IndexerApi indexer)
+        public Api(ILogger<Api> log, IConfiguration config)
         {
-            this._log = log;
-            this._algod = algod;
-            this._indexer = indexer;
-        }
-        public Api(AlgodApi algod, IndexerApi indexer)
-        {
-            this._algod = algod;
-            this._indexer = indexer;
+            this.log = log;
+            this.config = config;
+            this.algod = new AlgodApi(config["Endpoints:Algod"], config["AlgodToken"]);
+            this.indexer = new IndexerApi(config["Endpoints:Indexer"], config["IndexerToken"]);
         }
 
         public IEnumerable<string> GetWalletAddressesWithAsset(long assetId)
@@ -67,10 +65,8 @@ namespace Util
 
         public PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
         {
-            PostTransactionsResponse id = Utils.SubmitTransaction(_algod, signedTxn);
-            Console.WriteLine("Successfully sent tx with id: " + id.TxId);
-            PendingTransactionResponse resp = Utils.WaitTransactionToComplete(_algod, id.TxId);
-            Console.WriteLine("Confirmed Round is: " + resp.ConfirmedRound);
+            PostTransactionsResponse id = Utils.SubmitTransaction(algod, signedTxn);
+            PendingTransactionResponse resp = Utils.WaitTransactionToComplete(algod, id.TxId);
             return resp;
         }
 
@@ -84,7 +80,7 @@ namespace Util
             {
                 try
                 {
-                    asset = _indexer.LookupAssetByID(assetId).Asset;
+                    asset = indexer.LookupAssetByID(assetId).Asset;
                 }
                 catch (ApiException apiException)
                 {
@@ -142,11 +138,11 @@ namespace Util
                 {
                     if (next == null)
                     {
-                        assetInfo = _indexer.LookupAssetBalances(assetId);
+                        assetInfo = indexer.LookupAssetBalances(assetId);
                     }
                     else
                     {
-                        assetInfo = _indexer.LookupAssetBalances(assetId, next: next);
+                        assetInfo = indexer.LookupAssetBalances(assetId, next: next);
                     }
                 }
                 catch (ApiException apiException)
@@ -174,17 +170,22 @@ namespace Util
 
         public long GetAssetDecimals(int assetId)
         {
-            return _algod.GetAssetByID(assetId).Params.Decimals.Value;
+            return algod.GetAssetByID(assetId).Params.Decimals.Value;
         }
 
         public Algorand.V2.Model.Account GetAccountByAddress(string walletAddress)
         {
-            return _algod.AccountInformation(walletAddress);
+            return algod.AccountInformation(walletAddress);
         }
 
         public IEnumerable<AssetHolding> GetAssetsByAddress(string walletAddress)
         {
             return this.GetAccountByAddress(walletAddress).Assets;
+        }
+
+        public TransactionParametersResponse GetTransactionParams()
+        {
+            return this.algod.TransactionParams();
         }
     }
 }
