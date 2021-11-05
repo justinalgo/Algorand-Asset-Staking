@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Util;
 
 namespace Airdrop
@@ -12,13 +13,15 @@ namespace Airdrop
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
-        private readonly IApi api;
+        private readonly IAlgoApi api;
+        private readonly ICosmos cosmos;
 
-        public CryptoBunnyAirdropFactory(IApi api)
+        public CryptoBunnyAirdropFactory(IAlgoApi api, ICosmos cosmos)
         {
             this.AssetId = 329532956;
             this.Decimals = 0;
             this.api = api;
+            this.cosmos = cosmos;
         }
         public IEnumerable<RetrievedAsset> CheckAssets()
         {
@@ -64,9 +67,9 @@ namespace Airdrop
             return walletAddresses;
         }
 
-        public IDictionary<long, long> GetAssetValues()
+        public async Task<IDictionary<long, long>> GetAssetValues()
         {
-            List<AssetValue> assets = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/CryptoBunnyValues.json"));
+            IEnumerable<AssetValue> assets = await cosmos.GetAssetValues("CryptoBunny");
 
             Dictionary<long, long> assetValues = assets.ToDictionary(av => av.AssetId, av => av.Value);
 

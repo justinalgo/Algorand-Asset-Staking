@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Util;
 
 namespace Airdrop
@@ -11,19 +12,21 @@ namespace Airdrop
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
-        private readonly IApi api;
+        private readonly IAlgoApi api;
+        private readonly ICosmos cosmos;
         private readonly long stakeFlagAssetId;
 
-        public AlchemonAirdropFactory(IApi api) {
+        public AlchemonAirdropFactory(IAlgoApi api, ICosmos cosmos) {
             this.AssetId = 310014962;
             this.Decimals = 0;
             this.api = api;
+            this.cosmos = cosmos;
             this.stakeFlagAssetId = 320570576;
         }
 
-        public IDictionary<long, long> GetAssetValues()
+        public async Task<IDictionary<long, long>> GetAssetValues()
         {
-            List<AssetValue> values = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/AlchemonValues.json"));
+            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("Alchemon");
 
             Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 

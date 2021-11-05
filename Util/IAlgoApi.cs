@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Util
 {
-    public interface IApi
+    public interface IAlgoApi
     {
         Algorand.V2.Model.Account GetAccountByAddress(string walletAddress);
         Asset GetAssetById(long assetId);

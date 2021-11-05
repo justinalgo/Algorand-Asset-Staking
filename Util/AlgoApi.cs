@@ -11,14 +11,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace Util
 {
-    public class Api : IApi
+    public class AlgoApi : IAlgoApi
     {
-        private readonly ILogger<Api> log;
+        private readonly ILogger<AlgoApi> log;
         private readonly IConfiguration config;
         private readonly AlgodApi algod;
         private readonly IndexerApi indexer;
 
-        public Api(ILogger<Api> log, IConfiguration config)
+        public AlgoApi(ILogger<AlgoApi> log, IConfiguration config)
         {
             this.log = log;
             this.config = config;

@@ -1,4 +1,5 @@
 ﻿using Algorand.V2.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,14 +16,16 @@ namespace Airdrop
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
-        private readonly IApi api;
+        private readonly IAlgoApi api;
+        private readonly ICosmos cosmos;
         private readonly HttpClient client;
 
-        public ShrimpAirdropFactory(IApi api)
+        public ShrimpAirdropFactory(IAlgoApi api, ICosmos cosmos)
         {
             this.AssetId = 360019122;
             this.Decimals = 0;
             this.api = api;
+            this.cosmos = cosmos;
             this.client = new HttpClient();
         }
 
@@ -55,9 +58,9 @@ namespace Airdrop
             return walletAddresses;
         }
 
-        public IDictionary<long, long> GetAssetValues()
+        public async Task<IDictionary<long, long>> GetAssetValues()
         {
-            List<AssetValue> values = JsonSerializer.Deserialize<List<AssetValue>>(File.ReadAllText("C:/Users/ParkG/source/repos/Airdrop/Airdrop/ShrimpValues.json"));
+            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("LingLing", "MNGO", "Yieldling");
 
             Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 

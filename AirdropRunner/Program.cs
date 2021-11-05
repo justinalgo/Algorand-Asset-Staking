@@ -22,11 +22,11 @@ namespace AirdropRunner
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();
 
-            host.Services.GetService<App>().Run();
+            await host.Services.GetService<App>().Run();
 
             /*AirdropFactory airdropFactory = new AlchemonAirdropFactory(api);
 
@@ -68,7 +68,9 @@ namespace AirdropRunner
                 .ConfigureServices((context, services) =>
                 {
                     services.AddLogging(configure => configure.AddConsole());
-                    services.AddTransient<IApi, Api>();
+                    services.AddTransient<ICosmos, Cosmos>();
+                    services.AddTransient<IKeyManager, ShrimpKey>();
+                    services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IAirdropFactory, ShrimpAirdropFactory>();
                     services.AddTransient<App>();
                 });
