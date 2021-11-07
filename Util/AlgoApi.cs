@@ -168,6 +168,43 @@ namespace Util
             return assetInfo;
         }
 
+        public IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string startsWithString = "", string projectId = null, long? value = null)
+        {
+            IEnumerable<AssetHolding> assetHoldings = this.GetAssetsByAddress("4XKREKGYJ2PYXYY2A3CRLK673ANJB3M26ZBJF53KZ37FAE62GPPXY6JVG4");
+            List<AssetValue> assetValues = new List<AssetValue>();
+
+            foreach (AssetHolding assetHolding in assetHoldings)
+            {
+                Console.WriteLine(assetHolding.AssetId.Value);
+                Asset asset = this.GetAssetById(assetHolding.AssetId.Value);
+
+                if (asset.Params.UnitName.StartsWith(startsWithString))
+                {
+                    AssetValue assetValue = new AssetValue
+                    {
+                        Id = asset.Index.Value.ToString(),
+                        AssetId = asset.Index.Value,
+                        UnitName = asset.Params.UnitName,
+                        Name = asset.Params.Name,
+                    };
+                    
+                    if (projectId != null)
+                    {
+                        assetValue.ProjectId = projectId;
+                    }
+                    
+                    if (value.HasValue)
+                    {
+                        assetValue.Value = value.Value;
+                    }
+
+                    assetValues.Add(assetValue);
+                }
+            }
+
+            return assetValues;
+        }
+
         public long GetAssetDecimals(int assetId)
         {
             return algod.GetAssetByID(assetId).Params.Decimals.Value;

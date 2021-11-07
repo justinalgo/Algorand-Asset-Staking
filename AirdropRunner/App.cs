@@ -6,14 +6,13 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Util;
 using Transaction = Algorand.Transaction;
 using AssetValue = Util.AssetValue;
-using System.Text.Json;
 using System.IO;
 using Microsoft.Azure.Cosmos;
+using Newtonsoft.Json;
 
 namespace AirdropRunner
 {
@@ -39,6 +38,7 @@ namespace AirdropRunner
 
             Console.WriteLine(amounts.Sum(a => a.Amount));
             Console.WriteLine(amounts.Count());
+            Console.ReadKey();
 
             Parallel.ForEach<AirdropAmount>(amounts, airdropAmount =>
             {
@@ -73,11 +73,5 @@ namespace AirdropRunner
                 }
             });
         }
-    }
-
-    class Wallet
-    {
-        [JsonPropertyName("wallet")]
-        public string Address { get; set; }
     }
 }

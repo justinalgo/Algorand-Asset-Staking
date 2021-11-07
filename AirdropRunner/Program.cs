@@ -27,32 +27,6 @@ namespace AirdropRunner
             using IHost host = CreateHostBuilder(args).Build();
 
             await host.Services.GetService<App>().Run();
-
-            /*AirdropFactory airdropFactory = new AlchemonAirdropFactory(api);
-
-            IDictionary<long, long> assetValues = airdropFactory.GetAssetValues();
-
-            IEnumerable<AirdropAmount> airdropAmounts = airdropFactory.FetchAirdropAmounts(assetValues);
-
-            foreach (AirdropAmount airdropAmount in airdropAmounts)
-            {
-                Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount);
-                TransactionParametersResponse transactionParameters = algod.TransactionParams();
-
-                Transaction txn = Utils.GetTransferAssetTransaction(
-                        account.Address,
-                        new Address(airdropAmount.Wallet),
-                        airdropFactory.AssetId,
-                        (ulong)airdropAmount.Amount,
-                        transactionParameters
-                    );
-                SignedTransaction stxn = account.SignTransaction(txn);
-
-                api.SubmitTransaction(stxn);
-            }
-
-            Console.WriteLine("Total: " + airdropAmounts.Sum(aa => aa.Amount));
-            Console.WriteLine("Number of wallets: " + airdropAmounts.Count());*/
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -69,9 +43,9 @@ namespace AirdropRunner
                 {
                     services.AddLogging(configure => configure.AddConsole());
                     services.AddTransient<ICosmos, Cosmos>();
-                    services.AddTransient<IKeyManager, ShrimpKey>();
+                    services.AddTransient<IKeyManager, AirdropKey>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
-                    services.AddTransient<IAirdropFactory, ShrimpAirdropFactory>();
+                    services.AddTransient<IAirdropFactory, AlchemonAirdropFactory>();
                     services.AddTransient<App>();
                 });
     }

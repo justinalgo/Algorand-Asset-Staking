@@ -1,0 +1,842 @@
+[
+  {
+    "id": "394082003",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo Banner 001",
+    "unitName": "MB001",
+    "assetId": 394082003,
+    "value": 1
+  },
+  {
+    "id": "394084493",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo Banner 002",
+    "unitName": "MB002",
+    "assetId": 394084493,
+    "value": 1
+  },
+  {
+    "id": "342045479",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo001",
+    "unitName": "M001",
+    "assetId": 342045479,
+    "value": 1
+  },
+  {
+    "id": "344242047",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo002",
+    "unitName": "M002",
+    "assetId": 344242047,
+    "value": 1
+  },
+  {
+    "id": "346292999",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo003",
+    "unitName": "M003",
+    "assetId": 346292999,
+    "value": 1
+  },
+  {
+    "id": "346295561",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo004",
+    "unitName": "M004",
+    "assetId": 346295561,
+    "value": 1
+  },
+  {
+    "id": "346298045",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo005",
+    "unitName": "M005",
+    "assetId": 346298045,
+    "value": 1
+  },
+  {
+    "id": "346300063",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo006",
+    "unitName": "M006",
+    "assetId": 346300063,
+    "value": 1
+  },
+  {
+    "id": "346301597",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo007",
+    "unitName": "M007",
+    "assetId": 346301597,
+    "value": 1
+  },
+  {
+    "id": "346303688",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo008",
+    "unitName": "M008",
+    "assetId": 346303688,
+    "value": 1
+  },
+  {
+    "id": "346305511",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo009",
+    "unitName": "M009",
+    "assetId": 346305511,
+    "value": 1
+  },
+  {
+    "id": "346307704",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo010",
+    "unitName": "M010",
+    "assetId": 346307704,
+    "value": 1
+  },
+  {
+    "id": "346311531",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo011",
+    "unitName": "M011",
+    "assetId": 346311531,
+    "value": 1
+  },
+  {
+    "id": "346313998",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo012",
+    "unitName": "M012",
+    "assetId": 346313998,
+    "value": 1
+  },
+  {
+    "id": "346315746",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo013",
+    "unitName": "M013",
+    "assetId": 346315746,
+    "value": 1
+  },
+  {
+    "id": "346318000",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo014",
+    "unitName": "M014",
+    "assetId": 346318000,
+    "value": 1
+  },
+  {
+    "id": "346320083",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo015",
+    "unitName": "M015",
+    "assetId": 346320083,
+    "value": 1
+  },
+  {
+    "id": "347080641",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo016",
+    "unitName": "M016",
+    "assetId": 347080641,
+    "value": 1
+  },
+  {
+    "id": "347084692",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo017",
+    "unitName": "M017",
+    "assetId": 347084692,
+    "value": 1
+  },
+  {
+    "id": "347087517",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo018",
+    "unitName": "M018",
+    "assetId": 347087517,
+    "value": 1
+  },
+  {
+    "id": "347090258",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo019",
+    "unitName": "M019",
+    "assetId": 347090258,
+    "value": 1
+  },
+  {
+    "id": "347092756",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo020",
+    "unitName": "M020",
+    "assetId": 347092756,
+    "value": 1
+  },
+  {
+    "id": "347097706",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo021",
+    "unitName": "M021",
+    "assetId": 347097706,
+    "value": 1
+  },
+  {
+    "id": "347101111",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo022",
+    "unitName": "M022",
+    "assetId": 347101111,
+    "value": 1
+  },
+  {
+    "id": "347214972",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo023",
+    "unitName": "M023",
+    "assetId": 347214972,
+    "value": 1
+  },
+  {
+    "id": "347311114",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo024",
+    "unitName": "M024",
+    "assetId": 347311114,
+    "value": 1
+  },
+  {
+    "id": "347312883",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo025",
+    "unitName": "M025",
+    "assetId": 347312883,
+    "value": 1
+  },
+  {
+    "id": "349373378",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo026",
+    "unitName": "M026",
+    "assetId": 349373378,
+    "value": 1
+  },
+  {
+    "id": "357284732",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo027",
+    "unitName": "M027",
+    "assetId": 357284732,
+    "value": 1
+  },
+  {
+    "id": "357286145",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo028",
+    "unitName": "M028",
+    "assetId": 357286145,
+    "value": 1
+  },
+  {
+    "id": "357287508",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo029",
+    "unitName": "M029",
+    "assetId": 357287508,
+    "value": 1
+  },
+  {
+    "id": "357288852",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo030",
+    "unitName": "M030",
+    "assetId": 357288852,
+    "value": 1
+  },
+  {
+    "id": "357309818",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo031",
+    "unitName": "M031",
+    "assetId": 357309818,
+    "value": 1
+  },
+  {
+    "id": "357311013",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo032",
+    "unitName": "M032",
+    "assetId": 357311013,
+    "value": 1
+  },
+  {
+    "id": "357312818",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo033",
+    "unitName": "M033",
+    "assetId": 357312818,
+    "value": 1
+  },
+  {
+    "id": "357314527",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo034",
+    "unitName": "M034",
+    "assetId": 357314527,
+    "value": 1
+  },
+  {
+    "id": "357315969",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo035",
+    "unitName": "M035",
+    "assetId": 357315969,
+    "value": 1
+  },
+  {
+    "id": "357317774",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo036",
+    "unitName": "M036",
+    "assetId": 357317774,
+    "value": 1
+  },
+  {
+    "id": "357319623",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo037",
+    "unitName": "M037",
+    "assetId": 357319623,
+    "value": 1
+  },
+  {
+    "id": "358180546",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo038",
+    "unitName": "M038",
+    "assetId": 358180546,
+    "value": 1
+  },
+  {
+    "id": "358181842",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo039",
+    "unitName": "M039",
+    "assetId": 358181842,
+    "value": 1
+  },
+  {
+    "id": "358182898",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo040",
+    "unitName": "M040",
+    "assetId": 358182898,
+    "value": 1
+  },
+  {
+    "id": "358184385",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo041",
+    "unitName": "M041",
+    "assetId": 358184385,
+    "value": 1
+  },
+  {
+    "id": "358185804",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo042",
+    "unitName": "M042",
+    "assetId": 358185804,
+    "value": 1
+  },
+  {
+    "id": "359084363",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo043",
+    "unitName": "M043",
+    "assetId": 359084363,
+    "value": 1
+  },
+  {
+    "id": "359086494",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo044",
+    "unitName": "M044",
+    "assetId": 359086494,
+    "value": 1
+  },
+  {
+    "id": "359088550",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo045",
+    "unitName": "M045",
+    "assetId": 359088550,
+    "value": 1
+  },
+  {
+    "id": "359097133",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo046",
+    "unitName": "M046",
+    "assetId": 359097133,
+    "value": 1
+  },
+  {
+    "id": "359144385",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo047",
+    "unitName": "M047",
+    "assetId": 359144385,
+    "value": 1
+  },
+  {
+    "id": "359145634",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo048",
+    "unitName": "M048",
+    "assetId": 359145634,
+    "value": 1
+  },
+  {
+    "id": "359254463",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo049",
+    "unitName": "M049",
+    "assetId": 359254463,
+    "value": 1
+  },
+  {
+    "id": "359334765",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo050",
+    "unitName": "M050",
+    "assetId": 359334765,
+    "value": 1
+  },
+  {
+    "id": "369629282",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo051",
+    "unitName": "M051",
+    "assetId": 369629282,
+    "value": 1
+  },
+  {
+    "id": "369638455",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo052",
+    "unitName": "M052",
+    "assetId": 369638455,
+    "value": 1
+  },
+  {
+    "id": "371783203",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo053",
+    "unitName": "M053",
+    "assetId": 371783203,
+    "value": 1
+  },
+  {
+    "id": "371784691",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo054",
+    "unitName": "M054",
+    "assetId": 371784691,
+    "value": 1
+  },
+  {
+    "id": "371786094",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo055",
+    "unitName": "M055",
+    "assetId": 371786094,
+    "value": 1
+  },
+  {
+    "id": "371788936",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo056",
+    "unitName": "M056",
+    "assetId": 371788936,
+    "value": 1
+  },
+  {
+    "id": "371790852",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo057",
+    "unitName": "M057",
+    "assetId": 371790852,
+    "value": 1
+  },
+  {
+    "id": "371793866",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo058",
+    "unitName": "M058",
+    "assetId": 371793866,
+    "value": 1
+  },
+  {
+    "id": "371796096",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo059",
+    "unitName": "M059",
+    "assetId": 371796096,
+    "value": 1
+  },
+  {
+    "id": "371797702",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo060",
+    "unitName": "M060",
+    "assetId": 371797702,
+    "value": 1
+  },
+  {
+    "id": "371799659",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo061",
+    "unitName": "M061",
+    "assetId": 371799659,
+    "value": 1
+  },
+  {
+    "id": "371801630",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo062",
+    "unitName": "M062",
+    "assetId": 371801630,
+    "value": 1
+  },
+  {
+    "id": "371803302",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo063",
+    "unitName": "M063",
+    "assetId": 371803302,
+    "value": 1
+  },
+  {
+    "id": "371804817",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo064",
+    "unitName": "M064",
+    "assetId": 371804817,
+    "value": 1
+  },
+  {
+    "id": "371831189",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo065",
+    "unitName": "M065",
+    "assetId": 371831189,
+    "value": 1
+  },
+  {
+    "id": "372031626",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo066",
+    "unitName": "M066",
+    "assetId": 372031626,
+    "value": 1
+  },
+  {
+    "id": "372033982",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo067",
+    "unitName": "M067",
+    "assetId": 372033982,
+    "value": 1
+  },
+  {
+    "id": "372036609",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo068",
+    "unitName": "M068",
+    "assetId": 372036609,
+    "value": 1
+  },
+  {
+    "id": "372038487",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo069",
+    "unitName": "M069",
+    "assetId": 372038487,
+    "value": 1
+  },
+  {
+    "id": "372040336",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo070",
+    "unitName": "M070",
+    "assetId": 372040336,
+    "value": 1
+  },
+  {
+    "id": "372042304",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo071",
+    "unitName": "M071",
+    "assetId": 372042304,
+    "value": 1
+  },
+  {
+    "id": "372043736",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo072",
+    "unitName": "M072",
+    "assetId": 372043736,
+    "value": 1
+  },
+  {
+    "id": "373344885",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo073",
+    "unitName": "M073",
+    "assetId": 373344885,
+    "value": 1
+  },
+  {
+    "id": "375909807",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo074",
+    "unitName": "M074",
+    "assetId": 375909807,
+    "value": 1
+  },
+  {
+    "id": "382155008",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo075",
+    "unitName": "M075",
+    "assetId": 382155008,
+    "value": 1
+  },
+  {
+    "id": "382156683",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo076",
+    "unitName": "M076",
+    "assetId": 382156683,
+    "value": 1
+  },
+  {
+    "id": "382158773",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo077",
+    "unitName": "M077",
+    "assetId": 382158773,
+    "value": 1
+  },
+  {
+    "id": "382162405",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo078",
+    "unitName": "M078",
+    "assetId": 382162405,
+    "value": 1
+  },
+  {
+    "id": "382165102",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo079",
+    "unitName": "M079",
+    "assetId": 382165102,
+    "value": 1
+  },
+  {
+    "id": "383484689",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo080",
+    "unitName": "M080",
+    "assetId": 383484689,
+    "value": 1
+  },
+  {
+    "id": "383485778",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo081",
+    "unitName": "M081",
+    "assetId": 383485778,
+    "value": 1
+  },
+  {
+    "id": "383486976",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo082",
+    "unitName": "M082",
+    "assetId": 383486976,
+    "value": 1
+  },
+  {
+    "id": "383488097",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo083",
+    "unitName": "M083",
+    "assetId": 383488097,
+    "value": 1
+  },
+  {
+    "id": "383489686",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo084",
+    "unitName": "M084",
+    "assetId": 383489686,
+    "value": 1
+  },
+  {
+    "id": "383491218",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo085",
+    "unitName": "M085",
+    "assetId": 383491218,
+    "value": 1
+  },
+  {
+    "id": "383492362",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo086",
+    "unitName": "M086",
+    "assetId": 383492362,
+    "value": 1
+  },
+  {
+    "id": "383493582",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo087",
+    "unitName": "M087",
+    "assetId": 383493582,
+    "value": 1
+  },
+  {
+    "id": "383495151",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo088",
+    "unitName": "M088",
+    "assetId": 383495151,
+    "value": 1
+  },
+  {
+    "id": "383497330",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo089",
+    "unitName": "M089",
+    "assetId": 383497330,
+    "value": 1
+  },
+  {
+    "id": "383499876",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo090",
+    "unitName": "M090",
+    "assetId": 383499876,
+    "value": 1
+  },
+  {
+    "id": "392840404",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo091",
+    "unitName": "M091",
+    "assetId": 392840404,
+    "value": 1
+  },
+  {
+    "id": "401528443",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo092",
+    "unitName": "M092",
+    "assetId": 401528443,
+    "value": 1
+  },
+  {
+    "id": "401530782",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo093",
+    "unitName": "M093",
+    "assetId": 401530782,
+    "value": 1
+  },
+  {
+    "id": "401531980",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo094",
+    "unitName": "M094",
+    "assetId": 401531980,
+    "value": 1
+  },
+  {
+    "id": "401533104",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo095",
+    "unitName": "M095",
+    "assetId": 401533104,
+    "value": 1
+  },
+  {
+    "id": "401534201",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo096",
+    "unitName": "M096",
+    "assetId": 401534201,
+    "value": 1
+  },
+  {
+    "id": "401539111",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo097",
+    "unitName": "M097",
+    "assetId": 401539111,
+    "value": 1
+  },
+  {
+    "id": "401540282",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo098",
+    "unitName": "M098",
+    "assetId": 401540282,
+    "value": 1
+  },
+  {
+    "id": "401541884",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo099",
+    "unitName": "M099",
+    "assetId": 401541884,
+    "value": 1
+  },
+  {
+    "id": "401544135",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo100",
+    "unitName": "M100",
+    "assetId": 401544135,
+    "value": 1
+  },
+  {
+    "id": "401545073",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo101",
+    "unitName": "M101",
+    "assetId": 401545073,
+    "value": 1
+  },
+  {
+    "id": "401546765",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo102",
+    "unitName": "M102",
+    "assetId": 401546765,
+    "value": 1
+  },
+  {
+    "id": "401548477",
+    "projectId": "Mafialgo",
+    "name": "Mafialgo103",
+    "unitName": "M103",
+    "assetId": 401548477,
+    "value": 1
+  }
+]
