@@ -260,7 +260,6 @@ namespace Util
 
             foreach (AssetHolding assetHolding in assetHoldings)
             {
-                Console.WriteLine(assetHolding.AssetId.Value);
                 Asset asset = this.GetAssetById(assetHolding.AssetId.Value);
 
                 if (asset.Params.UnitName.StartsWith(startsWithString))

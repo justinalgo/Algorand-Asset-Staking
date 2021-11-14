@@ -31,7 +31,7 @@ namespace ShrimpAirdropFunction
 
         //0 0 12 * * Mon,Fri
         [FunctionName("ShrimpAirdrop")]
-        public async Task Run([TimerTrigger("0 6 * * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 12 * * Mon,Fri")]TimerInfo myTimer, ILogger log)
         {
             IDictionary<long, long> values = await airdropFactory.GetAssetValues();
             IEnumerable<AirdropAmount> amounts = airdropFactory.FetchAirdropAmounts(values);
