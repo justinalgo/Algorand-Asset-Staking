@@ -1,22 +1,12 @@
-﻿using Airdrop;
-using Algorand.V2;
-using Util;
-using System;
-using System.Linq;
-using Azure.Security.KeyVault.Secrets;
-using Azure.Identity;
-using Account = Algorand.Account;
-using Transaction = Algorand.Transaction;
-using Algorand;
-using Algorand.V2.Model;
-using System.Collections.Generic;
+﻿using Util;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
-using Algorand.V2.Algod;
 using Microsoft.Extensions.Logging;
+using Airdrop.AirdropFactories;
+using Util.KeyManagers;
+using Util.Cosmos;
 
 namespace AirdropRunner
 {
@@ -43,8 +33,8 @@ namespace AirdropRunner
                 {
                     services.AddLogging(configure => configure.AddConsole());
                     services.AddTransient<ICosmos, Cosmos>();
-                    services.AddTransient<IKeyManager, AirdropKey>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
+                    services.AddTransient<IKeyManager, AirdropKey>();
                     services.AddTransient<IAirdropFactory, AlchemonAirdropFactory>();
                     services.AddTransient<App>();
                 });

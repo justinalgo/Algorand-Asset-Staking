@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Util;
+using Util.Cosmos;
 
-namespace Airdrop
+namespace Airdrop.AirdropFactories
 {
     public class CryptoBunnyAirdropFactory : IAirdropFactory
     {
@@ -53,7 +54,7 @@ namespace Airdrop
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
                 if (amount > 0)
                 {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
+                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
                 }
             }
 

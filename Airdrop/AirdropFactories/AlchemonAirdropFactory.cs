@@ -1,12 +1,14 @@
 ﻿using Algorand.V2.Model;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Util;
+using Util.Cosmos;
 
-namespace Airdrop
+namespace Airdrop.AirdropFactories
 {
     public class AlchemonAirdropFactory : IAirdropFactory
     {
@@ -42,18 +44,18 @@ namespace Airdrop
 
         public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
         {
-            List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
+            ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
-            foreach (string walletAddress in walletAddresses)
+            Parallel.ForEach(walletAddresses, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
                 if (amount > 0)
                 {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, amount));
+                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
                 }
-            }
+            });
 
             return airdropAmounts;
         }

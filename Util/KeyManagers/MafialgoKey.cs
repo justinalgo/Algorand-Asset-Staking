@@ -1,16 +1,15 @@
 ﻿using Algorand;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace Util.KeyManagers
 {
-    public class AirdropKey : IKeyManager
+    public class MafialgoKey : IKeyManager
     {
         private readonly Account account;
 
-        public AirdropKey(IConfiguration config)
+        public MafialgoKey(IConfiguration config)
         {
-            this.account = new Account(config["airdropMnemonic"]);
+            this.account = new Account(config["MafialgoMnemonic"]);
         }
 
         public Address GetAddress()

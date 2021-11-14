@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Linq;
 using System;
 
-namespace Util
+namespace Util.Cosmos
 {
     public interface ICosmos
     {
@@ -15,6 +15,7 @@ namespace Util
         public Task<AssetValue> GetAssetValueById(long assetId, string key);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId, params string[] projectIds);
+        Task<IEnumerable<AssetValue>> GetAssetValuesSql(string sql, string projectId = null);
     }
 
     public class Cosmos : ICosmos
@@ -74,6 +75,29 @@ namespace Util
             FeedIterator<AssetValue> iterator = this.assetsContainer.GetItemLinqQueryable<AssetValue>()
                 .Where(av => ids.Contains(av.ProjectId))
                 .ToFeedIterator<AssetValue>();
+
+            while (iterator.HasMoreResults)
+            {
+                FeedResponse<AssetValue> response = await iterator.ReadNextAsync();
+                assetValues.AddRange(response);
+            }
+
+            return assetValues;
+        }
+
+        public async Task<IEnumerable<AssetValue>> GetAssetValuesSql(string sql, string projectId = null)
+        {
+
+            QueryRequestOptions options = new QueryRequestOptions();
+
+            if (projectId != null)
+            {
+                options.PartitionKey = new PartitionKey(projectId);
+            }
+
+            List<AssetValue> assetValues = new List<AssetValue>();
+
+            FeedIterator<AssetValue> iterator = this.assetsContainer.GetItemQueryIterator<AssetValue>(sql, requestOptions: options);
 
             while (iterator.HasMoreResults)
             {

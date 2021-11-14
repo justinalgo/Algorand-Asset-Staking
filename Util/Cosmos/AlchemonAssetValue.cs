@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Util
+namespace Util.Cosmos
 {
     public class AlchemonAssetValue : AssetValue
     {

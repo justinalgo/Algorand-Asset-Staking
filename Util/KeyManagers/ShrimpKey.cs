@@ -1,8 +1,7 @@
 ﻿using Algorand;
 using Microsoft.Extensions.Configuration;
-using System;
 
-namespace Util
+namespace Util.KeyManagers
 {
     public class ShrimpKey : IKeyManager
     {

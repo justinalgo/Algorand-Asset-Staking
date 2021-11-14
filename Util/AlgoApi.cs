@@ -8,6 +8,8 @@ using Algorand.V2.Model;
 using System.Threading;
 using Algorand.Client;
 using Microsoft.Extensions.Configuration;
+using Transaction = Algorand.V2.Model.Transaction;
+using Util.Cosmos;
 
 namespace Util
 {
@@ -63,11 +65,17 @@ namespace Util
             return addresses.OrderBy(a => a);
         }
 
-        public PendingTransactionResponse SubmitTransaction(SignedTransaction signedTxn)
+        public PendingTransactionResponse SubmitTransactionWait(SignedTransaction signedTxn)
         {
             PostTransactionsResponse id = Utils.SubmitTransaction(algod, signedTxn);
             PendingTransactionResponse resp = Utils.WaitTransactionToComplete(algod, id.TxId);
             return resp;
+        }
+
+        public PostTransactionsResponse SubmitTransaction(SignedTransaction signedTxn)
+        {
+            PostTransactionsResponse id = Utils.SubmitTransaction(algod, signedTxn);
+            return id;
         }
 
         public Asset GetAssetById(long assetId)
@@ -168,6 +176,83 @@ namespace Util
             return assetInfo;
         }
 
+        public IEnumerable<string> GetAddressesSent(string senderAddress, long assetId, long minRound, long limit = 100)
+        {
+            TransactionsResponse transactionsResponse = this.GetAssetTransactions(senderAddress, assetId, minRound, limit);
+
+            List<string> walletAddresses = new List<string>();
+
+            foreach (Transaction txn in transactionsResponse.Transactions)
+            {
+                walletAddresses.Add(txn.AssetTransferTransaction.Receiver);
+            }
+
+            while (transactionsResponse.NextToken != null)
+            {
+                transactionsResponse = this.GetAssetTransactions(senderAddress, assetId, minRound, limit, next: transactionsResponse.NextToken);
+
+                foreach (Transaction txn in transactionsResponse.Transactions)
+                {
+                    walletAddresses.Add(txn.AssetTransferTransaction.Receiver);
+                }
+            }
+
+            return walletAddresses;
+        }
+
+        public TransactionsResponse GetAssetTransactions(string senderAddress, long assetId, long minRound, long limit = 100, string next = null)
+        {
+            TransactionsResponse transactionsResponse = null;
+            int maxRetries = 5;
+            int currentRetry = 0;
+
+            while (transactionsResponse == null && currentRetry < maxRetries)
+            {
+                try
+                {
+                    if (next == null)
+                    {
+                        transactionsResponse = indexer.LookupAssetTransactions(
+                            assetId,
+                            address: senderAddress,
+                            addressRole: "sender",
+                            minRound: minRound,
+                            limit: limit);
+                    }
+                    else
+                    {
+                        transactionsResponse = indexer.LookupAssetTransactions(
+                            assetId,
+                            address: senderAddress,
+                            addressRole: "sender",
+                            minRound: minRound,
+                            limit: limit,
+                            next: next);
+                    }
+                }
+                catch (ApiException apiException)
+                {
+                    if (apiException.ErrorCode == 429)
+                    {
+                        currentRetry++;
+
+                        Thread.Sleep(1500); //PureStake Sleep
+                    }
+                    else
+                    {
+                        throw apiException;
+                    }
+                }
+            }
+
+            if (currentRetry > maxRetries - 1)
+            {
+                throw new Exception("GetAssetTransactions ran out of retries");
+            }
+
+            return transactionsResponse;
+        }
+
         public IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string startsWithString = "", string projectId = null, long? value = null)
         {
             IEnumerable<AssetHolding> assetHoldings = this.GetAssetsByAddress("4XKREKGYJ2PYXYY2A3CRLK673ANJB3M26ZBJF53KZ37FAE62GPPXY6JVG4");
@@ -203,6 +288,21 @@ namespace Util
             }
 
             return assetValues;
+        }
+
+        public NodeStatusResponse GetStatusAfterRound(long round)
+        {
+            return algod.WaitForBlock(round);
+        }
+
+        public NodeStatusResponse GetStatus()
+        {
+            return algod.GetStatus();
+        }
+
+        public long? GetLastRound()
+        {
+            return this.GetStatus().LastRound;
         }
 
         public long GetAssetDecimals(int assetId)

@@ -1,6 +1,6 @@
 ﻿using Algorand;
 
-namespace Util
+namespace Util.KeyManagers
 {
     public interface IKeyManager
     {

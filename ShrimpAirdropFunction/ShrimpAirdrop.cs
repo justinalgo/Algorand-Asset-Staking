@@ -1,54 +1,51 @@
-﻿using Airdrop;
-using Algorand;
-using Algorand.Client;
-using Algorand.V2.Model;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Util;
-using Transaction = Algorand.Transaction;
-using System.IO;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json;
+using Airdrop;
 using Airdrop.AirdropFactories;
+using Algorand;
+using Algorand.Client;
+using Algorand.V2.Model;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
+using Util;
 using Util.KeyManagers;
+using Transaction = Algorand.Transaction;
 
-namespace AirdropRunner
+namespace ShrimpAirdropFunction
 {
-    public class App
+    public class ShrimpAirdrop
     {
-        private readonly ILogger<App> logger;
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
         private readonly IAirdropFactory airdropFactory;
 
-        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
+        public ShrimpAirdrop(IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
         {
-            this.logger = logger;
             this.api = api;
             this.keyManager = keyManager;
             this.airdropFactory = airdropFactory;
         }
 
-        public async Task Run()
+        //0 0 12 * * Mon,Fri
+        [FunctionName("ShrimpAirdrop")]
+        public async Task Run([TimerTrigger("0 6 * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var values = await airdropFactory.GetAssetValues();
-            var amounts = airdropFactory.FetchAirdropAmounts(values);
+            IDictionary<long, long> values = await airdropFactory.GetAssetValues();
+            IEnumerable<AirdropAmount> amounts = airdropFactory.FetchAirdropAmounts(values);
 
             foreach (AirdropAmount amt in amounts)
             {
-                Console.WriteLine($"{amt.Wallet} : {amt.Amount}");
+                log.LogInformation($"{amt.Wallet} : {amt.Amount}");
             }
 
-            Console.WriteLine(amounts.Sum(a => a.Amount));
-            Console.WriteLine(amounts.Count());
-
-            Console.ReadKey();
+            log.LogInformation($"Total airdrop amount: {amounts.Sum(a => a.Amount)}");
+            log.LogInformation($"Number of wallets: {amounts.Count()}");
 
             long lastRound = api.GetLastRound().Value;
-            Console.WriteLine($"Round start: {lastRound}");
+            log.LogInformation($"Round start: {lastRound}");
 
             Parallel.ForEach<AirdropAmount>(amounts, airdropAmount =>
             {
@@ -69,25 +66,24 @@ namespace AirdropRunner
                     SignedTransaction stxn = keyManager.SignTransaction(txn);
 
                     PostTransactionsResponse resp = api.SubmitTransaction(stxn);
-                    Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount + " with TxId: " + resp.TxId);
+                    log.LogInformation($"{airdropAmount.Wallet} : {airdropAmount.Amount} with TxId: {resp.TxId}");
                 }
                 catch (ApiException ex)
                 {
-                    Console.WriteLine(ex.ErrorCode);
-                    Console.WriteLine(ex.ErrorContent);
-                    Console.WriteLine("ApiException on " + airdropAmount.Wallet);
+                    log.LogError("ApiException on {airdropAmount.Wallet}");
+                    log.LogError($"Error code: {ex.ErrorCode}; Error content: {ex.ErrorCode}");
                 }
                 catch (ArgumentException)
                 {
-                    Console.WriteLine(airdropAmount.Wallet + " is an invalid address");
+                    log.LogError($"{airdropAmount.Wallet} is an invalid address");
                 }
             });
 
             api.GetStatusAfterRound(api.GetLastRound().Value + 5);
 
             IEnumerable<string> walletAddresses = api.GetAddressesSent(
-                keyManager.GetAddress().EncodeAsString(),
-                airdropFactory.AssetId,
+                keyManager.GetAddress().EncodeAsString(), 
+                airdropFactory.AssetId, 
                 lastRound
             );
 
@@ -97,13 +93,13 @@ namespace AirdropRunner
                 {
                     if (!walletAddresses.Contains(amount.Wallet))
                     {
-                        Console.WriteLine($"Failed to drop: {amount.Wallet}");
+                        log.LogError($"Failed to drop: {amount.Wallet}");
                     }
                 }
             }
             else
             {
-                Console.WriteLine("All addresses dropped successfully!");
+                log.LogInformation("All addresses dropped successfully!");
             }
         }
     }
