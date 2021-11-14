@@ -29,9 +29,9 @@ namespace AlchemonAirdropFunction
             this.airdropFactory = airdropFactory;
         }
 
-        //0 0 12 * * Sat
+        //0 0 16 * * Sat
         [FunctionName("AlchemonAirdrop")]
-        public async Task Run([TimerTrigger("0 0 12 * * Sat")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 0 16 * * Sat")]TimerInfo myTimer, ILogger log)
         {
             IDictionary<long, long> values = await airdropFactory.GetAssetValues();
             IEnumerable<AirdropAmount> amounts = airdropFactory.FetchAirdropAmounts(values);

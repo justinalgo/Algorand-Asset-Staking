@@ -1,5 +1,6 @@
 ﻿using Algorand.V2.Model;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,11 +33,11 @@ namespace Airdrop.AirdropFactories
 
         public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
         {
-            List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
+            ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
             IDictionary<string, long> ab2Values = this.GetAb2Values(assetValues);
 
-            foreach (string walletAddress in walletAddresses)
+            Parallel.ForEach<string>(walletAddresses, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
@@ -47,7 +48,7 @@ namespace Airdrop.AirdropFactories
                 {
                     airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
                 }
-            }
+            });
 
             return airdropAmounts;
         }
