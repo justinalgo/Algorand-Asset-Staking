@@ -10,7 +10,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories
 {
-    public class CryptoBunnyAirdropFactory : IAirdropFactory
+    public class CryptoBunnyAirdropFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -24,27 +24,10 @@ namespace Airdrop.AirdropFactories
             this.api = api;
             this.cosmos = cosmos;
         }
-        public IEnumerable<RetrievedAsset> CheckAssets()
+
+        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
-            IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
-
-            List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this.api.GetAssetById(assetIds);
-            List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
-
-            foreach (Asset asset in assets)
-            {
-                if (asset.Params.UnitName.StartsWith("BNYL") || asset.Params.UnitName.StartsWith("BNYO"))
-                {
-                    retrievedAssets.Add(new RetrievedAsset(asset.Params.Name, asset.Params.UnitName, asset.Index.Value));
-                }
-            }
-
-            return retrievedAssets;
-        }
-
-        public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
-        {
+            IDictionary<long, long> assetValues = await this.FetchAssetValues();
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
@@ -68,7 +51,7 @@ namespace Airdrop.AirdropFactories
             return walletAddresses;
         }
 
-        public async Task<IDictionary<long, long>> GetAssetValues()
+        public async Task<IDictionary<long, long>> FetchAssetValues()
         {
             IEnumerable<AssetValue> assets = await cosmos.GetAssetValues("CryptoBunny");
 

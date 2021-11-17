@@ -22,9 +22,9 @@ namespace AirdropRunner
         private readonly ILogger<App> logger;
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
-        private readonly IAirdropFactory airdropFactory;
+        private readonly IHoldingsAirdropFactory airdropFactory;
 
-        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
+        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IHoldingsAirdropFactory airdropFactory)
         {
             this.logger = logger;
             this.api = api;
@@ -34,8 +34,7 @@ namespace AirdropRunner
 
         public async Task Run()
         {
-            var values = await airdropFactory.GetAssetValues();
-            var amounts = airdropFactory.FetchAirdropAmounts(values);
+            var amounts = await airdropFactory.FetchAirdropAmounts();
 
             foreach (AirdropAmount amt in amounts)
             {

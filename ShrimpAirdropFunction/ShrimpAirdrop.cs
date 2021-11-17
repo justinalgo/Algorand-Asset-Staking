@@ -20,9 +20,9 @@ namespace ShrimpAirdropFunction
     {
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
-        private readonly IAirdropFactory airdropFactory;
+        private readonly IHoldingsAirdropFactory airdropFactory;
 
-        public ShrimpAirdrop(IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
+        public ShrimpAirdrop(IAlgoApi api, IKeyManager keyManager, IHoldingsAirdropFactory airdropFactory)
         {
             this.api = api;
             this.keyManager = keyManager;
@@ -33,8 +33,7 @@ namespace ShrimpAirdropFunction
         [FunctionName("ShrimpAirdrop")]
         public async Task Run([TimerTrigger("0 0 16 * * Mon,Fri")]TimerInfo myTimer, ILogger log)
         {
-            IDictionary<long, long> values = await airdropFactory.GetAssetValues();
-            IEnumerable<AirdropAmount> amounts = airdropFactory.FetchAirdropAmounts(values);
+            IEnumerable<AirdropAmount> amounts = await airdropFactory.FetchAirdropAmounts();
 
             foreach (AirdropAmount amt in amounts)
             {

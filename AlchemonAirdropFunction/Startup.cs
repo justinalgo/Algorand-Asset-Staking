@@ -19,7 +19,7 @@ namespace AlchemonAirdropFunction
                 .AddTransient<ICosmos, Cosmos>()
                 .AddTransient<IAlgoApi, AlgoApi>()
                 .AddTransient<IKeyManager, AirdropKey>()
-                .AddTransient<IAirdropFactory, AlchemonAirdropFactory>();
+                .AddTransient<IHoldingsAirdropFactory, AlchemonAirdropFactory>();
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)

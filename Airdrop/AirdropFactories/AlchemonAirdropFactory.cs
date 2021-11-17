@@ -10,7 +10,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories
 {
-    public class AlchemonAirdropFactory : IAirdropFactory
+    public class AlchemonAirdropFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -26,7 +26,7 @@ namespace Airdrop.AirdropFactories
             this.stakeFlagAssetId = 320570576;
         }
 
-        public async Task<IDictionary<long, long>> GetAssetValues()
+        public async Task<IDictionary<long, long>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("Alchemon");
 
@@ -42,8 +42,9 @@ namespace Airdrop.AirdropFactories
             return walletAddresses;
         }
 
-        public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
+        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
+            IDictionary<long, long> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
@@ -82,25 +83,6 @@ namespace Airdrop.AirdropFactories
             }
 
             return baseAmount + (numberOfAssets > 0 ? 2 * (numberOfAssets - 1) : 0);
-        }
-
-        public IEnumerable<RetrievedAsset> CheckAssets()
-        {
-            IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress("BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4");
-
-            List<long> assetIds = assetHoldings.ToList().ConvertAll<long>(ah => ah.AssetId.Value);
-            IEnumerable<Asset> assets = this.api.GetAssetById(assetIds);
-            List<RetrievedAsset> retrievedAssets = new List<RetrievedAsset>();
-
-            foreach (Asset asset in assets)
-            {
-                if (asset.Params.UnitName.StartsWith("ALCH"))
-                {
-                    retrievedAssets.Add(new RetrievedAsset(asset.Params.Name, asset.Params.UnitName, asset.Index.Value));
-                }
-            }
-
-            return retrievedAssets;
         }
     }
 }

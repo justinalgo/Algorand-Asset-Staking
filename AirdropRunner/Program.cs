@@ -35,7 +35,7 @@ namespace AirdropRunner
                     services.AddTransient<ICosmos, Cosmos>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IKeyManager, AirdropKey>();
-                    services.AddTransient<IAirdropFactory, AlchemonAirdropFactory>();
+                    services.AddTransient<IHoldingsAirdropFactory, AlchemonAirdropFactory>();
                     services.AddTransient<App>();
                 });
     }

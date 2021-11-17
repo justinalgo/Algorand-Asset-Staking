@@ -14,7 +14,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories
 {
-    public class ShrimpAirdropFactory : IAirdropFactory
+    public class ShrimpAirdropFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -31,11 +31,12 @@ namespace Airdrop.AirdropFactories
             this.client = new HttpClient();
         }
 
-        public IEnumerable<AirdropAmount> FetchAirdropAmounts(IDictionary<long, long> assetValues)
+        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
+            IDictionary<long, long> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
-            IDictionary<string, long> ab2Values = this.GetAb2Values(assetValues);
+            IDictionary<string, long> ab2Values = await this.GetAb2Values(assetValues);
 
             Parallel.ForEach<string>(walletAddresses, walletAddress =>
             {
@@ -60,7 +61,7 @@ namespace Airdrop.AirdropFactories
             return walletAddresses;
         }
 
-        public async Task<IDictionary<long, long>> GetAssetValues()
+        public async Task<IDictionary<long, long>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("LingLing", "MNGO", "Yieldling");
 
@@ -97,10 +98,10 @@ namespace Airdrop.AirdropFactories
             return 0;
         }
 
-        private IDictionary<string, long> GetAb2Values(IDictionary<long, long> assetValues)
+        private async Task<IDictionary<string, long>> GetAb2Values(IDictionary<long, long> assetValues)
         {
             Dictionary<string, long> walletValues = new Dictionary<string, long>();
-            EscrowInfo escrowInfo = GetAb2EscrowInfo().Result;
+            EscrowInfo escrowInfo = await GetAb2EscrowInfo();
 
             foreach (Escrow escrow in escrowInfo.MngoEscrows)
             {
