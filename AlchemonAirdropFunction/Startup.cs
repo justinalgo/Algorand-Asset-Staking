@@ -1,4 +1,5 @@
 ﻿using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories.Liquidity;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,8 @@ namespace AlchemonAirdropFunction
                 .AddTransient<ICosmos, Cosmos>()
                 .AddTransient<IAlgoApi, AlgoApi>()
                 .AddTransient<IKeyManager, AirdropKey>()
-                .AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
+                .AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>()
+                .AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)

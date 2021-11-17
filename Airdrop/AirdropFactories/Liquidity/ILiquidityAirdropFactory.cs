@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
-    interface ILiquidityAirdropFactory : IAirdropFactory
+    public interface ILiquidityAirdropFactory : IAirdropFactory
     {
         public long LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
