@@ -1,4 +1,4 @@
-﻿using Airdrop.AirdropFactories;
+﻿using Airdrop.AirdropFactories.Holdings;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

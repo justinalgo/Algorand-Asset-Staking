@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
 
-namespace Airdrop.AirdropFactories
+namespace Airdrop.AirdropFactories.Holdings
 {
     public class AlchemonAirdropFactory : IHoldingsAirdropFactory
     {

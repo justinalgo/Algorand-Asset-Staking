@@ -12,8 +12,8 @@ using Transaction = Algorand.Transaction;
 using System.IO;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
-using Airdrop.AirdropFactories;
 using Util.KeyManagers;
+using Airdrop.AirdropFactories.Holdings;
 
 namespace AirdropRunner
 {

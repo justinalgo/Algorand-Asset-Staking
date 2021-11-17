@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Airdrop.AirdropFactories;
 using Util.KeyManagers;
 using Util.Cosmos;
+using Airdrop.AirdropFactories.Holdings;
 
 namespace AirdropRunner
 {

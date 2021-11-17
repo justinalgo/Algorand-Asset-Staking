@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Airdrop.AirdropFactories
+namespace Airdrop.AirdropFactories.Holdings
 {
     public interface IHoldingsAirdropFactory : IAirdropFactory
     {
