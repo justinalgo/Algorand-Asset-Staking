@@ -10,14 +10,14 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class CryptoBunnyAirdropFactory : IHoldingsAirdropFactory
+    public class CryptoBunnyHoldingsFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
         private readonly IAlgoApi api;
         private readonly ICosmos cosmos;
 
-        public CryptoBunnyAirdropFactory(IAlgoApi api, ICosmos cosmos)
+        public CryptoBunnyHoldingsFactory(IAlgoApi api, ICosmos cosmos)
         {
             this.AssetId = 329532956;
             this.Decimals = 0;

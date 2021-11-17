@@ -14,7 +14,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class ShrimpAirdropFactory : IHoldingsAirdropFactory
+    public class ShrimpHoldingsFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -22,7 +22,7 @@ namespace Airdrop.AirdropFactories.Holdings
         private readonly ICosmos cosmos;
         private readonly HttpClient client;
 
-        public ShrimpAirdropFactory(IAlgoApi api, ICosmos cosmos)
+        public ShrimpHoldingsFactory(IAlgoApi api, ICosmos cosmos)
         {
             this.AssetId = 360019122;
             this.Decimals = 0;

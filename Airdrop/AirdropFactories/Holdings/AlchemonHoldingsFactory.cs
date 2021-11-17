@@ -10,7 +10,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class AlchemonAirdropFactory : IHoldingsAirdropFactory
+    public class AlchemonHoldingsFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -18,7 +18,7 @@ namespace Airdrop.AirdropFactories.Holdings
         private readonly ICosmos cosmos;
         private readonly long stakeFlagAssetId;
 
-        public AlchemonAirdropFactory(IAlgoApi api, ICosmos cosmos) {
+        public AlchemonHoldingsFactory(IAlgoApi api, ICosmos cosmos) {
             this.AssetId = 310014962;
             this.Decimals = 0;
             this.api = api;

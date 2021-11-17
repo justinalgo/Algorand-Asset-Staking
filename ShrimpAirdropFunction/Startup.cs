@@ -19,7 +19,7 @@ namespace ShrimpAirdropFunction
                 .AddTransient<ICosmos, Cosmos>()
                 .AddTransient<IAlgoApi, AlgoApi>()
                 .AddTransient<IKeyManager, ShrimpKey>()
-                .AddTransient<IHoldingsAirdropFactory, ShrimpAirdropFactory>();
+                .AddTransient<IHoldingsAirdropFactory, ShrimpHoldingsFactory>();
         }
 
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
