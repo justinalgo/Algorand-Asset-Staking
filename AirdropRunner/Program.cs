@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Util.KeyManagers;
 using Util.Cosmos;
 using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories;
+using Airdrop.AirdropFactories.Liquidity;
 
 namespace AirdropRunner
 {
@@ -35,7 +37,8 @@ namespace AirdropRunner
                     services.AddTransient<ICosmos, Cosmos>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IKeyManager, AirdropKey>();
-                    services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
+                    /*services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();*/
+                    services.AddTransient<IAirdropFactory, AlchemonLiquidityFactory>();
                     services.AddTransient<App>();
                 });
     }

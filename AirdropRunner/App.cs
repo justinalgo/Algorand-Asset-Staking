@@ -13,7 +13,7 @@ using System.IO;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using Util.KeyManagers;
-using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories;
 
 namespace AirdropRunner
 {
@@ -22,9 +22,9 @@ namespace AirdropRunner
         private readonly ILogger<App> logger;
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
-        private readonly IHoldingsAirdropFactory airdropFactory;
+        private readonly IAirdropFactory airdropFactory;
 
-        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IHoldingsAirdropFactory airdropFactory)
+        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
         {
             this.logger = logger;
             this.api = api;
@@ -36,7 +36,7 @@ namespace AirdropRunner
         {
             var amounts = await airdropFactory.FetchAirdropAmounts();
 
-            foreach (AirdropAmount amt in amounts)
+            foreach (AirdropAmount amt in amounts.OrderByDescending(a => a.Amount))
             {
                 Console.WriteLine($"{amt.Wallet} : {amt.Amount}");
             }
