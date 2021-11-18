@@ -17,7 +17,7 @@ variables:
   vmImageName: 'vs2017-win2016'
 
   # Working Directory
-  workingDirectory: '$(System.DefaultWorkingDirectory)/AlchemonAirdropFunction'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/*'
 
 stages:
 - stage: Build
@@ -35,9 +35,15 @@ stages:
       inputs:
         command: 'build'
         projects: |
-          $(workingDirectory)/AlchemonAirdropFunction.csproj
+          $(workingDirectory)/AlchemonAirdropFunction/AlchemonAirdropFunction.csproj
+          $(workingDirectory)/AlchemonAirdropFunctionTest/AlchemonAirdropFunctionTest.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
-
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: test
+        projects: '$(workingDirectory)/AlchemonAirdropFunctionTest/AlchemonAirdropFunctionTest.csproj'
+        arguments: '--configuration $(buildConfiguration)'
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
