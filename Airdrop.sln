@@ -11,7 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Util", "Util\Util.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShrimpAirdropFunction", "ShrimpAirdropFunction\ShrimpAirdropFunction.csproj", "{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemonAirdropFunction", "AlchemonAirdropFunction\AlchemonAirdropFunction.csproj", "{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlchemonAirdropFunction", "AlchemonAirdropFunction\AlchemonAirdropFunction.csproj", "{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemonAirdropFunctionTest", "AlchemonAirdropFunctionTest\AlchemonAirdropFunctionTest.csproj", "{20C7A5D1-E804-4233-8006-73C8B27227CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShrimpAirdropFunctionTest", "ShrimpAirdropFunctionTest\ShrimpAirdropFunctionTest.csproj", "{5653E9EB-18F7-486C-9662-3CA7D13A1948}"
+	ProjectSection(ProjectDependencies) = postProject
+		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E} = {230B0F46-5ED2-4DB1-8797-8CA48FB4573E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +46,14 @@ Global
 		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

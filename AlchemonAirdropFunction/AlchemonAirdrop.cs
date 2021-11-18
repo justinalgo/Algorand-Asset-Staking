@@ -38,7 +38,7 @@ namespace AlchemonAirdropFunction
 
         //0 0 16 * * Sat
         [FunctionName("AlchemonHoldingsAirdrop")]
-        public async Task RunHoldingsAirdrop([TimerTrigger("0 0 16 * * Sat")]TimerInfo myTimer, ILogger log)
+        public async Task RunHoldingsAirdrop([TimerTrigger("%HoldingsAirdropSchedule%")]TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
 
@@ -111,9 +111,9 @@ namespace AlchemonAirdropFunction
 
         //0 0 17 * * Sat
         [FunctionName("AlchemonLiquidityAirdrop")]
-        public async Task RunLiquidityAirdrop([TimerTrigger("0 0 17 * * Sat")] TimerInfo myTimer, ILogger log)
+        public async Task RunLiquidityAirdrop([TimerTrigger("%LiquidityAirdropSchedule%")] TimerInfo myTimer, ILogger log)
         {
-            IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
+            IEnumerable<AirdropAmount> amounts = await liquidityAirdropFactory.FetchAirdropAmounts();
 
             foreach (AirdropAmount amt in amounts)
             {
