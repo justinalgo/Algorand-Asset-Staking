@@ -1,5 +1,6 @@
 using Xunit;
 using Microsoft.Extensions.Configuration;
+using AlchemonAirdropFunction;
 
 namespace AlchemonAirdropFunctionTest
 {
@@ -8,23 +9,13 @@ namespace AlchemonAirdropFunctionTest
         [Fact]
         public void HoldingsAirdropScheduleTest()
         {
-            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-
-            var settings = configurationBuilder.Build();
-
-            Assert.Equal("0 0 16 * * Sat", settings["HoldingsAirdropSchedule"]);
+            Assert.Equal("0 0 16 * * Sat", AlchemonAirdrop.HoldingsAirdropSchedule);
         }
 
         [Fact]
         public void LiquidityAirdropScheduleTest()
         {
-            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-
-            var settings = configurationBuilder.Build();
-
-            Assert.Equal("0 30 16 * * Sat", settings["LiquidityAirdropSchedule"]);
+            Assert.Equal("0 30 16 * * Sat", AlchemonAirdrop.LiquidityAirdropSchedule);
         }
     }
 }

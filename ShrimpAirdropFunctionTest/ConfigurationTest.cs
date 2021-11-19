@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Configuration;
+using ShrimpAirdropFunction;
 using System;
 using Xunit;
 
@@ -9,12 +9,7 @@ namespace ShrimpAirdropFunctionTest
         [Fact]
         public void HoldingsAirdropScheduleTest()
         {
-            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-
-            var settings = configurationBuilder.Build();
-
-            Assert.Equal("0 0 16 * * Mon,Fri", settings["HoldingsAirdropSchedule"]);
+            Assert.Equal("0 0 16 * * Mon,Fri", ShrimpAirdrop.HoldingsAirdropSchedule);
         }
     }
 }

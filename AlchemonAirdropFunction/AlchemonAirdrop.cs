@@ -19,6 +19,8 @@ namespace AlchemonAirdropFunction
 {
     public class AlchemonAirdrop
     {
+        public const string HoldingsAirdropSchedule = "0 0 16 * * Sat";
+        public const string LiquidityAirdropSchedule = "0 30 16 * * Sat";
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
         private readonly IHoldingsAirdropFactory holdingsAirdropFactory;
@@ -36,9 +38,8 @@ namespace AlchemonAirdropFunction
             this.liquidityAirdropFactory = liquidityAirdropFactory;
         }
 
-        //0 0 16 * * Sat
         [FunctionName("AlchemonHoldingsAirdrop")]
-        public async Task RunHoldingsAirdrop([TimerTrigger("%HoldingsAirdropSchedule%")]TimerInfo myTimer, ILogger log)
+        public async Task RunHoldingsAirdrop([TimerTrigger(HoldingsAirdropSchedule)]TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
 
@@ -109,9 +110,8 @@ namespace AlchemonAirdropFunction
             }
         }
 
-        //0 0 17 * * Sat
         [FunctionName("AlchemonLiquidityAirdrop")]
-        public async Task RunLiquidityAirdrop([TimerTrigger("%LiquidityAirdropSchedule%")] TimerInfo myTimer, ILogger log)
+        public async Task RunLiquidityAirdrop([TimerTrigger(LiquidityAirdropSchedule)] TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await liquidityAirdropFactory.FetchAirdropAmounts();
 

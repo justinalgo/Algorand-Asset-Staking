@@ -18,6 +18,7 @@ namespace ShrimpAirdropFunction
 {
     public class ShrimpAirdrop
     {
+        public const string HoldingsAirdropSchedule = "0 0 16 * * Mon,Fri";
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
         private readonly IHoldingsAirdropFactory airdropFactory;
@@ -30,7 +31,7 @@ namespace ShrimpAirdropFunction
         }
 
         [FunctionName("ShrimpHoldingsAirdrop")]
-        public async Task Run([TimerTrigger("%HoldingsAirdropSchedule%")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger(HoldingsAirdropSchedule)]TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await airdropFactory.FetchAirdropAmounts();
 
