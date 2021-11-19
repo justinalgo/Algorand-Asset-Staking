@@ -17,7 +17,7 @@ variables:
   vmImageName: 'vs2017-win2016'
 
   # Working Directory
-  workingDirectory: '$(System.DefaultWorkingDirectory)/ShrimpAirdropFunction'
+  workingDirectory: '$(System.DefaultWorkingDirectory)'
 
 stages:
 - stage: Build
@@ -35,9 +35,17 @@ stages:
       inputs:
         command: 'build'
         projects: |
-          $(workingDirectory)/ShrimpAirdropFunction.csproj
+          $(workingDirectory)/ShrimpAirdropFunction/ShrimpAirdropFunction.csproj
+          $(workingDirectory)/ShrimpAirdropFunctionTest/ShrimpAirdropFunctionTest.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
 
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: test
+        projects: '$(workingDirectory)/ShrimpAirdropFunctionTest/ShrimpAirdropFunctionTest.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+    
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
