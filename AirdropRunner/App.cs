@@ -14,6 +14,8 @@ using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using Util.KeyManagers;
 using Airdrop.AirdropFactories;
+using Util.Cosmos;
+using Airdrop.AirdropFactories.Holdings;
 
 namespace AirdropRunner
 {
@@ -22,19 +24,20 @@ namespace AirdropRunner
         private readonly ILogger<App> logger;
         private readonly IAlgoApi api;
         private readonly IKeyManager keyManager;
-        private readonly IAirdropFactory airdropFactory;
+        private readonly IHoldingsAirdropFactory holdingsAirdropFactory;
+        private readonly ICosmos cosmos;
 
-        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IAirdropFactory airdropFactory)
+        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IHoldingsAirdropFactory holdingsAirdropFactory)
         {
             this.logger = logger;
             this.api = api;
             this.keyManager = keyManager;
-            this.airdropFactory = airdropFactory;
+            this.holdingsAirdropFactory = holdingsAirdropFactory;
         }
 
         public async Task Run()
         {
-            var amounts = await airdropFactory.FetchAirdropAmounts();
+            var amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
 
             foreach (AirdropAmount amt in amounts.OrderByDescending(a => a.Amount))
             {
@@ -44,7 +47,7 @@ namespace AirdropRunner
             Console.WriteLine(amounts.Sum(a => a.Amount));
             Console.WriteLine(amounts.Count());
 
-            Console.ReadKey();
+            /*Console.ReadKey();
 
             long lastRound = api.GetLastRound().Value;
             Console.WriteLine($"Round start: {lastRound}");
@@ -103,7 +106,7 @@ namespace AirdropRunner
             else
             {
                 Console.WriteLine("All addresses dropped successfully!");
-            }
+            }*/
         }
     }
 }

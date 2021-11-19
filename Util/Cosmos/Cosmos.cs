@@ -6,12 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Linq;
 using System;
+using System.Dynamic;
 
 namespace Util.Cosmos
 {
     public interface ICosmos
     {
         Task<AssetValue> CreateAsset(AssetValue assetValue);
+        Task CreateAsset(dynamic assetValue, string projectId);
         public Task<AssetValue> GetAssetValueById(long assetId, string key);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId, params string[] projectIds);
@@ -39,8 +41,13 @@ namespace Util.Cosmos
 
         public async Task<AssetValue> CreateAsset(AssetValue assetValue)
         {
-            AssetValue av = await assetsContainer.CreateItemAsync<AssetValue>(assetValue);
+            AssetValue av = await assetsContainer.CreateItemAsync<AssetValue>(assetValue, new PartitionKey(assetValue.ProjectId));
             return av;
+        }
+
+        public async Task CreateAsset(dynamic assetValue, string projectId)
+        {
+            await assetsContainer.CreateItemAsync(assetValue, new PartitionKey(projectId));
         }
 
         public async Task<IEnumerable<AssetValue>> GetAssetValues(string projectId)
