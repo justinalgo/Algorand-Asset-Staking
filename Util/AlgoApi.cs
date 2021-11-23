@@ -16,14 +16,12 @@ namespace Util
     public class AlgoApi : IAlgoApi
     {
         private readonly ILogger<AlgoApi> log;
-        private readonly IConfiguration config;
         private readonly AlgodApi algod;
         private readonly IndexerApi indexer;
 
         public AlgoApi(ILogger<AlgoApi> log, IConfiguration config)
         {
             this.log = log;
-            this.config = config;
             this.algod = new AlgodApi(config["Endpoints:Algod"], config["AlgodToken"]);
             this.indexer = new IndexerApi(config["Endpoints:Indexer"], config["IndexerToken"]);
         }

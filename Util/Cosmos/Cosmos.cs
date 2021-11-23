@@ -73,8 +73,10 @@ namespace Util.Cosmos
 
         public async Task<IEnumerable<AssetValue>> GetAssetValues(string projectId, params string[] projectIds)
         {
-            List<string> ids = new List<string>();
-            ids.Add(projectId);
+            List<string> ids = new List<string>
+            {
+                projectId
+            };
             ids.AddRange(projectIds);
 
             List<AssetValue> assetValues = new List<AssetValue>();

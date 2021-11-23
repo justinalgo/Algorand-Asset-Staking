@@ -9,13 +9,13 @@ namespace AlchemonAirdropFunctionTest
         [Fact]
         public void HoldingsAirdropScheduleTest()
         {
-            Assert.Equal("0 0 16 * * Sat", AlchemonAirdrop.HoldingsAirdropSchedule);
+            Assert.Equal("0 30 16 * * Sat", AlchemonAirdrop.HoldingsAirdropSchedule);
         }
 
         [Fact]
         public void LiquidityAirdropScheduleTest()
         {
-            Assert.Equal("0 30 16 * * Sat", AlchemonAirdrop.LiquidityAirdropSchedule);
+            Assert.Equal("0 0 16 * * Sat", AlchemonAirdrop.LiquidityAirdropSchedule);
         }
     }
 }

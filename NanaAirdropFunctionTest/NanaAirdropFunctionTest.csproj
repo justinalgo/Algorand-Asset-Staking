@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShrimpAirdropFunction\ShrimpAirdropFunction.csproj" />
+    <ProjectReference Include="..\NanaAirdropFunction\NanaAirdropFunction.csproj" />
   </ItemGroup>
 
 </Project>
