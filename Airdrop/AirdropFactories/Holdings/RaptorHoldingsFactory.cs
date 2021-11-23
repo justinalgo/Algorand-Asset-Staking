@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -13,7 +12,7 @@ using Util.Cosmos;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class NanaHoldingsFactory : IHoldingsAirdropFactory
+    public class RaptorHoldingsFactory : IHoldingsAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -21,10 +20,10 @@ namespace Airdrop.AirdropFactories.Holdings
         private readonly ICosmos cosmos;
         private readonly HttpClient client;
 
-        public NanaHoldingsFactory(IAlgoApi api, ICosmos cosmos)
+        public RaptorHoldingsFactory(IAlgoApi api, ICosmos cosmos)
         {
-            this.AssetId = 418706707;
-            this.Decimals = 0;
+            this.AssetId = 426980914;
+            this.Decimals = 2;
             this.api = api;
             this.cosmos = cosmos;
             this.client = new HttpClient();
@@ -35,14 +34,14 @@ namespace Airdrop.AirdropFactories.Holdings
             IDictionary<long, long> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
-            IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
+            //IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
 
             Parallel.ForEach(walletAddresses, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
-                amount += this.GetRandAmount(walletAddress, randValues);
+                //amount += this.GetRandAmount(walletAddress, randValues);
 
                 if (amount > 0)
                 {
@@ -55,7 +54,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public async Task<IDictionary<long, long>> FetchAssetValues()
         {
-            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("NanaCoin");
+            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin");
 
             Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
@@ -80,7 +79,7 @@ namespace Airdrop.AirdropFactories.Holdings
                     miniAssetHolding.Amount > 0 &&
                     assetValues.ContainsKey(miniAssetHolding.AssetId.Value))
                 {
-                    airdropAmount += (long)miniAssetHolding.Amount.Value * assetValues[miniAssetHolding.AssetId.Value];
+                    airdropAmount += (long)(assetValues[miniAssetHolding.AssetId.Value] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount.Value);
                 }
             }
 

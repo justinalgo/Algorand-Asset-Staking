@@ -253,16 +253,16 @@ namespace Util
             return transactionsResponse;
         }
 
-        public IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string startsWithString = "", string projectId = null, long? value = null)
+        public IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string unitNameContainsString = "", string projectId = null, long? value = null)
         {
-            IEnumerable<AssetHolding> assetHoldings = this.GetAssetsByAddress("4XKREKGYJ2PYXYY2A3CRLK673ANJB3M26ZBJF53KZ37FAE62GPPXY6JVG4");
+            IEnumerable<AssetHolding> assetHoldings = this.GetAssetsByAddress(walletAddress);
             List<AssetValue> assetValues = new List<AssetValue>();
 
             foreach (AssetHolding assetHolding in assetHoldings)
             {
                 Asset asset = this.GetAssetById(assetHolding.AssetId.Value);
 
-                if (asset.Params.UnitName.StartsWith(startsWithString))
+                if (asset.Params.UnitName.Contains(unitNameContainsString))
                 {
                     AssetValue assetValue = new AssetValue
                     {

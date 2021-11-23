@@ -15,7 +15,7 @@ namespace Util
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId);
         IEnumerable<string> GetWalletAddressesWithAsset(long assetId, params long[] assetIds);
         TransactionParametersResponse GetTransactionParams();
-        IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string startsWithString = "", string projectId = null, long? value = null);
+        IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, string unitNameContainsString = "", string projectId = null, long? value = null);
         TransactionsResponse GetAssetTransactions(string senderAddress, long assetId, long minRound, long limit = 100, string next = null);
         IEnumerable<string> GetAddressesSent(string senderAddress, long assetId, long minRound, long limit = 100);
         PendingTransactionResponse SubmitTransactionWait(SignedTransaction signedTxn);

@@ -37,7 +37,9 @@ namespace AirdropRunner
                     services.AddTransient<ICosmos, Cosmos>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IKeyManager, AirdropKey>();
-                    services.AddTransient<IHoldingsAirdropFactory, NanaHoldingsFactory>();
+                    services.AddTransient<IHoldingsAirdropFactory, RaptorHoldingsFactory>();
+                    /*services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
+                    services.AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();*/
                     services.AddTransient<App>();
                 });
     }

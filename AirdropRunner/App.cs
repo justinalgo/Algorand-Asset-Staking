@@ -16,6 +16,7 @@ using Util.KeyManagers;
 using Airdrop.AirdropFactories;
 using Util.Cosmos;
 using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories.Liquidity;
 
 namespace AirdropRunner
 {
@@ -23,21 +24,24 @@ namespace AirdropRunner
     {
         private readonly ILogger<App> logger;
         private readonly IAlgoApi api;
+        private readonly ICosmos cosmos;
         private readonly IKeyManager keyManager;
         private readonly IHoldingsAirdropFactory holdingsAirdropFactory;
-        private readonly ICosmos cosmos;
+        private readonly ILiquidityAirdropFactory liquidityAirdropFactory;
 
-        public App(ILogger<App> logger, IAlgoApi api, IKeyManager keyManager, IHoldingsAirdropFactory holdingsAirdropFactory)
+        public App(ILogger<App> logger, IAlgoApi api, ICosmos cosmos, IKeyManager keyManager, IHoldingsAirdropFactory holdingsAirdropFactory) //, ILiquidityAirdropFactory liquidityAirdropFactory)
         {
             this.logger = logger;
             this.api = api;
+            this.cosmos = cosmos;
             this.keyManager = keyManager;
             this.holdingsAirdropFactory = holdingsAirdropFactory;
+            //this.liquidityAirdropFactory = liquidityAirdropFactory;
         }
 
         public async Task Run()
         {
-            var amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
+            IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
 
             foreach (AirdropAmount amt in amounts.OrderByDescending(a => a.Amount))
             {
@@ -47,7 +51,7 @@ namespace AirdropRunner
             Console.WriteLine(amounts.Sum(a => a.Amount));
             Console.WriteLine(amounts.Count());
 
-            /*Console.ReadKey();
+            Console.ReadKey();
 
             long lastRound = api.GetLastRound().Value;
             Console.WriteLine($"Round start: {lastRound}");
@@ -89,7 +93,7 @@ namespace AirdropRunner
 
             IEnumerable<string> walletAddresses = api.GetAddressesSent(
                 keyManager.GetAddress().EncodeAsString(),
-                airdropFactory.AssetId,
+                holdingsAirdropFactory.AssetId,
                 lastRound
             );
 
@@ -106,7 +110,7 @@ namespace AirdropRunner
             else
             {
                 Console.WriteLine("All addresses dropped successfully!");
-            }*/
+            }
         }
     }
 }
