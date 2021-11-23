@@ -1,6 +1,5 @@
-using Xunit;
-using Microsoft.Extensions.Configuration;
 using AlchemonAirdropFunction;
+using Xunit;
 
 namespace AlchemonAirdropFunctionTest
 {

@@ -1,13 +1,10 @@
 ﻿using Algorand.V2.Model;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
@@ -18,17 +15,27 @@ namespace Airdrop.AirdropFactories.Holdings
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
+        public string[] CreatorAddresses { get; set; }
         private readonly IAlgoApi api;
         private readonly ICosmos cosmos;
-        private readonly HttpClient client;
+        private readonly HttpClient httpClient;
 
-        public ShrimpHoldingsFactory(IAlgoApi api, ICosmos cosmos)
+        public ShrimpHoldingsFactory(IAlgoApi api, ICosmos cosmos, IHttpClientFactory httpClientFactory)
         {
             this.AssetId = 360019122;
             this.Decimals = 0;
+            this.CreatorAddresses = new string[]
+            {
+                "TIMPJ6P5FZRNNKYJLAYD44XFOSUWEOUAR6NRWJMQR66BRM3QH7UUWEHA24",
+                "MNGOLDXO723TDRM6527G7OZ2N7JLNGCIH6U2R4MOCPPLONE3ZATOBN7OQM",
+                "MNGORTG4A3SLQXVRICQXOSGQ7CPXUPMHZT3FJZBIZHRYAQCYMEW6VORBIA",
+                "MNGOZ3JAS3C4QTGDQ5NVABUEZIIF4GAZY52L3EZE7BQIBFTZCNLQPXHRHE",
+                "MNGO4JTLBN64PJLWTQZYHDMF2UBHGJGW5L7TXDVTJV7JGVD5AE4Y3HTEZM",
+                "5DYIZMX7N4SAB44HLVRUGLYBPSN4UMPDZVTX7V73AIRMJQA3LKTENTLFZ4",
+            };
             this.api = api;
             this.cosmos = cosmos;
-            this.client = new HttpClient();
+            this.httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
@@ -37,13 +44,15 @@ namespace Airdrop.AirdropFactories.Holdings
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
             IDictionary<string, long> ab2Values = await this.GetAb2Values(assetValues);
+            IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
 
-            Parallel.ForEach<string>(walletAddresses, walletAddress =>
+            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
                 amount += this.GetAb2Amount(walletAddress, ab2Values);
+                amount += this.GetRandAmount(walletAddress, randValues);
 
                 if (amount != 0)
                 {
@@ -146,31 +155,85 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             string ab2endpoint = "https://linglingab2.vercel.app/api";
 
-            EscrowInfo escrowInfo = await this.client.GetFromJsonAsync<EscrowInfo>(ab2endpoint);
-            
+            string jsonResponse = await httpClient.GetStringAsync(ab2endpoint);
+            EscrowInfo escrowInfo = JsonConvert.DeserializeObject<EscrowInfo>(jsonResponse);
+
             return escrowInfo;
+        }
+
+        private long GetRandAmount(string walletAddress, IDictionary<string, long> randValues)
+        {
+            if (randValues.ContainsKey(walletAddress))
+            {
+                return randValues[walletAddress];
+            }
+
+            return 0;
+        }
+
+        public async Task<IDictionary<string, long>> GetRandValues(IDictionary<long, long> assetValues)
+        {
+            Dictionary<string, long> walletValues = new Dictionary<string, long>();
+            IEnumerable<(long, string)> randSellers = await GetRandSellers();
+
+            foreach ((long, string) randSeller in randSellers)
+            {
+                if (walletValues.ContainsKey(randSeller.Item2) && assetValues.ContainsKey(randSeller.Item1))
+                {
+                    walletValues[randSeller.Item2] += assetValues[randSeller.Item1];
+                }
+                else if (assetValues.ContainsKey(randSeller.Item1))
+                {
+                    walletValues[randSeller.Item2] = assetValues[randSeller.Item1];
+                }
+            }
+
+            return walletValues;
+        }
+
+        private async Task<IEnumerable<(long, string)>> GetRandSellers()
+        {
+            List<(long, string)> randSellers = new List<(long, string)>();
+
+            foreach (string creatorAddress in this.CreatorAddresses)
+            {
+                string randEndpoint = "https://www.randswap.com/v1/secondary/get-listings-for-creator?creatorAddress=" + creatorAddress;
+
+                string jsonResponse = await httpClient.GetStringAsync(randEndpoint);
+                Dictionary<string, dynamic> sellers = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonResponse);
+
+                foreach (var assetId in sellers.Keys)
+                {
+                    if (assetId != "name" && assetId != "royalty" && assetId != "escrowAddress")
+                    {
+                        randSellers.Add((long.Parse(assetId), sellers[assetId]["seller"]));
+                    }
+                }
+            }
+
+            return randSellers;
         }
     }
 
     class EscrowInfo
     {
-        [JsonPropertyName("lingLingAb2Escrows")]
+        [JsonProperty("lingLingAb2Escrows")]
         public List<Escrow> LingLingEscrows { get; set; }
-        [JsonPropertyName("mngosAb2Escrows")]
+        [JsonProperty("mngosAb2Escrows")]
         public List<Escrow> MngoEscrows { get; set; }
-        [JsonPropertyName("yieldlingsAb2Escrows")]
+        [JsonProperty("yieldlingsAb2Escrows")]
         public List<Escrow> YieldingEscrows { get; set; }
     }
 
     class Escrow
     {
-        [JsonPropertyName("escrow")]
+        [JsonProperty("escrow")]
         public string EscrowWalletAddress { get; set; }
-        [JsonPropertyName("seller")]
+        [JsonProperty("seller")]
         public string SellerWalletAddress { get; set; }
-        [JsonPropertyName("asset")]
+        [JsonProperty("asset")]
         public string UnitName { get; set; }
-        [JsonPropertyName("assetId")]
+        [JsonProperty("assetId")]
         public long AssetId { get; set; }
     }
 }

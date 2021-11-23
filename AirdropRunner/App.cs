@@ -1,4 +1,6 @@
 ﻿using Airdrop;
+using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories.Liquidity;
 using Algorand;
 using Algorand.Client;
 using Algorand.V2.Model;
@@ -8,15 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Util;
-using Transaction = Algorand.Transaction;
-using System.IO;
-using Microsoft.Azure.Cosmos;
-using Newtonsoft.Json;
-using Util.KeyManagers;
-using Airdrop.AirdropFactories;
 using Util.Cosmos;
-using Airdrop.AirdropFactories.Holdings;
-using Airdrop.AirdropFactories.Liquidity;
+using Util.KeyManagers;
+using Transaction = Algorand.Transaction;
 
 namespace AirdropRunner
 {
@@ -29,14 +25,14 @@ namespace AirdropRunner
         private readonly IHoldingsAirdropFactory holdingsAirdropFactory;
         private readonly ILiquidityAirdropFactory liquidityAirdropFactory;
 
-        public App(ILogger<App> logger, IAlgoApi api, ICosmos cosmos, IKeyManager keyManager, IHoldingsAirdropFactory holdingsAirdropFactory) //, ILiquidityAirdropFactory liquidityAirdropFactory)
+        public App(ILogger<App> logger, IAlgoApi api, ICosmos cosmos, IKeyManager keyManager, IHoldingsAirdropFactory holdingsAirdropFactory, ILiquidityAirdropFactory liquidityAirdropFactory)
         {
             this.logger = logger;
             this.api = api;
             this.cosmos = cosmos;
             this.keyManager = keyManager;
             this.holdingsAirdropFactory = holdingsAirdropFactory;
-            //this.liquidityAirdropFactory = liquidityAirdropFactory;
+            this.liquidityAirdropFactory = liquidityAirdropFactory;
         }
 
         public async Task Run()
@@ -56,7 +52,7 @@ namespace AirdropRunner
             long lastRound = api.GetLastRound().Value;
             Console.WriteLine($"Round start: {lastRound}");
 
-            Parallel.ForEach<AirdropAmount>(amounts, airdropAmount =>
+            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 20 }, airdropAmount =>
             {
                 try
                 {

@@ -27,13 +27,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirdropFunctions", "Airdrop
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirdropFunctionTests", "AirdropFunctionTests", "{BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanaAirdropFunction", "NanaAirdropFunction\NanaAirdropFunction.csproj", "{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanaAirdropFunction", "NanaAirdropFunction\NanaAirdropFunction.csproj", "{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanaAirdropFunctionTest", "NanaAirdropFunctionTest\NanaAirdropFunctionTest.csproj", "{2771C5F5-F9B3-4A63-8204-00E850FB2F38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanaAirdropFunctionTest", "NanaAirdropFunctionTest\NanaAirdropFunctionTest.csproj", "{2771C5F5-F9B3-4A63-8204-00E850FB2F38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorAirdropFunction", "RaptorAirdropFunction\RaptorAirdropFunction.csproj", "{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorAirdropFunction", "RaptorAirdropFunction\RaptorAirdropFunction.csproj", "{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorAirdropFunctionTest", "RaptorAirdropFunctionTest\RaptorAirdropFunctionTest.csproj", "{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorAirdropFunctionTest", "RaptorAirdropFunctionTest\RaptorAirdropFunctionTest.csproj", "{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

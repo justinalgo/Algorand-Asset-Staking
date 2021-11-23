@@ -1,9 +1,7 @@
 ﻿using Algorand.V2.Model;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
@@ -14,13 +12,16 @@ namespace Airdrop.AirdropFactories.Holdings
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
+        public string[] CreatorAddresses { get; set; }
         private readonly IAlgoApi api;
         private readonly ICosmos cosmos;
         private readonly long stakeFlagAssetId;
 
-        public AlchemonHoldingsFactory(IAlgoApi api, ICosmos cosmos) {
+        public AlchemonHoldingsFactory(IAlgoApi api, ICosmos cosmos)
+        {
             this.AssetId = 310014962;
             this.Decimals = 0;
+            this.CreatorAddresses = new string[] { "OJGTHEJ2O5NXN7FVXDZZEEJTUEQHHCIYIE5MWY6BEFVVLZ2KANJODBOKGA" };
             this.api = api;
             this.cosmos = cosmos;
             this.stakeFlagAssetId = 320570576;
@@ -48,7 +49,7 @@ namespace Airdrop.AirdropFactories.Holdings
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
-            Parallel.ForEach(walletAddresses, walletAddress =>
+            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);

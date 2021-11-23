@@ -1,14 +1,13 @@
-﻿using Util;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Util.KeyManagers;
-using Util.Cosmos;
-using Airdrop.AirdropFactories.Holdings;
-using Airdrop.AirdropFactories;
+﻿using Airdrop.AirdropFactories.Holdings;
 using Airdrop.AirdropFactories.Liquidity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using Util;
+using Util.Cosmos;
+using Util.KeyManagers;
 
 namespace AirdropRunner
 {
@@ -34,12 +33,12 @@ namespace AirdropRunner
                 .ConfigureServices((context, services) =>
                 {
                     services.AddLogging(configure => configure.AddConsole());
+                    services.AddHttpClient();
                     services.AddTransient<ICosmos, Cosmos>();
                     services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IKeyManager, AirdropKey>();
-                    services.AddTransient<IHoldingsAirdropFactory, RaptorHoldingsFactory>();
-                    /*services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
-                    services.AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();*/
+                    services.AddTransient<IHoldingsAirdropFactory, ShrimpHoldingsFactory>();
+                    services.AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();
                     services.AddTransient<App>();
                 });
     }

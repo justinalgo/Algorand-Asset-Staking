@@ -17,6 +17,7 @@ namespace AlchemonAirdropFunction
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services
+                .AddHttpClient()
                 .AddTransient<ICosmos, Cosmos>()
                 .AddTransient<IAlgoApi, AlgoApi>()
                 .AddTransient<IKeyManager, AirdropKey>()

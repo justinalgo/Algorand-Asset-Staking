@@ -1,6 +1,5 @@
 ﻿using Algorand;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace Util.KeyManagers
 {

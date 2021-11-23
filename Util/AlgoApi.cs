@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
-using Algorand;
+﻿using Algorand;
+using Algorand.Client;
 using Algorand.V2;
 using Algorand.V2.Model;
-using System.Threading;
-using Algorand.Client;
 using Microsoft.Extensions.Configuration;
-using Transaction = Algorand.V2.Model.Transaction;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Util.Cosmos;
+using Transaction = Algorand.V2.Model.Transaction;
 
 namespace Util
 {
@@ -269,12 +269,12 @@ namespace Util
                         UnitName = asset.Params.UnitName,
                         Name = asset.Params.Name,
                     };
-                    
+
                     if (projectId != null)
                     {
                         assetValue.ProjectId = projectId;
                     }
-                    
+
                     if (value.HasValue)
                     {
                         assetValue.Value = value.Value;

@@ -1,5 +1,4 @@
 using ShrimpAirdropFunction;
-using System;
 using Xunit;
 
 namespace ShrimpAirdropFunctionTest

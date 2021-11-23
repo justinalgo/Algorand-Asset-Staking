@@ -1,9 +1,6 @@
 ﻿using Algorand.V2.Model;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
@@ -14,6 +11,7 @@ namespace Airdrop.AirdropFactories.Holdings
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
+        public string[] CreatorAddresses { get; set; }
         private readonly IAlgoApi api;
         private readonly ICosmos cosmos;
 
@@ -21,6 +19,7 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             this.AssetId = 329532956;
             this.Decimals = 0;
+            this.CreatorAddresses = new string[] { "BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4" };
             this.api = api;
             this.cosmos = cosmos;
         }

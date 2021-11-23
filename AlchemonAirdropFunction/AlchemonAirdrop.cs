@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Airdrop;
 using Airdrop.AirdropFactories.Holdings;
 using Airdrop.AirdropFactories.Liquidity;
@@ -9,8 +5,11 @@ using Algorand;
 using Algorand.Client;
 using Algorand.V2.Model;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Util;
 using Util.KeyManagers;
 using Transaction = Algorand.Transaction;
@@ -27,8 +26,8 @@ namespace AlchemonAirdropFunction
         private readonly ILiquidityAirdropFactory liquidityAirdropFactory;
 
         public AlchemonAirdrop(
-            IAlgoApi api, 
-            IKeyManager keyManager, 
+            IAlgoApi api,
+            IKeyManager keyManager,
             IHoldingsAirdropFactory holdingsAirdropFactory,
             ILiquidityAirdropFactory liquidityAirdropFactory)
         {
@@ -39,7 +38,7 @@ namespace AlchemonAirdropFunction
         }
 
         [FunctionName("AlchemonHoldingsAirdrop")]
-        public async Task RunHoldingsAirdrop([TimerTrigger(HoldingsAirdropSchedule)]TimerInfo myTimer, ILogger log)
+        public async Task RunHoldingsAirdrop([TimerTrigger(HoldingsAirdropSchedule)] TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
 
@@ -54,7 +53,7 @@ namespace AlchemonAirdropFunction
             long lastRound = api.GetLastRound().Value;
             log.LogInformation($"Round start: {lastRound}");
 
-            Parallel.ForEach<AirdropAmount>(amounts, airdropAmount =>
+            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 20 }, airdropAmount =>
             {
                 try
                 {

@@ -1,12 +1,9 @@
 ﻿using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Linq;
-using System;
-using System.Dynamic;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Util.Cosmos
 {
@@ -35,7 +32,7 @@ namespace Util.Cosmos
         public async Task<AssetValue> GetAssetValueById(long assetId, string key)
         {
             AssetValue assetValue = await assetsContainer.ReadItemAsync<AssetValue>(assetId.ToString(), new PartitionKey(key));
-            
+
             return assetValue;
         }
 

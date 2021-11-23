@@ -1,5 +1,4 @@
 using RaptorAirdropFunction;
-using System;
 using Xunit;
 
 namespace NanaAirdropFunctionTest

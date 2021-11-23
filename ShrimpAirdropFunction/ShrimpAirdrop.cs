@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Airdrop;
 using Airdrop.AirdropFactories.Holdings;
 using Algorand;
 using Algorand.Client;
 using Algorand.V2.Model;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Util;
 using Util.KeyManagers;
 using Transaction = Algorand.Transaction;
@@ -31,7 +30,7 @@ namespace ShrimpAirdropFunction
         }
 
         [FunctionName("ShrimpHoldingsAirdrop")]
-        public async Task Run([TimerTrigger(HoldingsAirdropSchedule)]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger(HoldingsAirdropSchedule)] TimerInfo myTimer, ILogger log)
         {
             IEnumerable<AirdropAmount> amounts = await airdropFactory.FetchAirdropAmounts();
 
@@ -46,7 +45,7 @@ namespace ShrimpAirdropFunction
             long lastRound = api.GetLastRound().Value;
             log.LogInformation($"Round start: {lastRound}");
 
-            Parallel.ForEach<AirdropAmount>(amounts, airdropAmount =>
+            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 20 }, airdropAmount =>
             {
                 try
                 {
@@ -81,8 +80,8 @@ namespace ShrimpAirdropFunction
             api.GetStatusAfterRound(api.GetLastRound().Value + 5);
 
             IEnumerable<string> walletAddresses = api.GetAddressesSent(
-                keyManager.GetAddress().EncodeAsString(), 
-                airdropFactory.AssetId, 
+                keyManager.GetAddress().EncodeAsString(),
+                airdropFactory.AssetId,
                 lastRound
             );
 

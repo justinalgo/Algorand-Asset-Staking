@@ -1,9 +1,7 @@
 ﻿using Algorand.V2.Model;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Util;
 
@@ -57,7 +55,7 @@ namespace Airdrop.AirdropFactories.Liquidity
         {
             ConcurrentBag<(string, long)> liquidityAmounts = new ConcurrentBag<(string, long)>();
 
-            Parallel.ForEach(walletAddresses, walletAddress =>
+            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
             {
                 Account account = api.GetAccountByAddress(walletAddress);
                 ulong? liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);

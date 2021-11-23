@@ -1,5 +1,4 @@
 using NanaAirdropFunction;
-using System;
 using Xunit;
 
 namespace NanaAirdropFunctionTest
