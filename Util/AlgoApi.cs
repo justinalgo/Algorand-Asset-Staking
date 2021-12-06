@@ -176,7 +176,7 @@ namespace Util
 
         public IEnumerable<string> GetAddressesSent(string senderAddress, long assetId, long minRound, long limit = 100)
         {
-            TransactionsResponse transactionsResponse = this.GetAssetTransactions(senderAddress, assetId, minRound, limit);
+            TransactionsResponse transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound, limit);
 
             List<string> walletAddresses = new List<string>();
 
@@ -187,7 +187,7 @@ namespace Util
 
             while (transactionsResponse.NextToken != null)
             {
-                transactionsResponse = this.GetAssetTransactions(senderAddress, assetId, minRound, limit, next: transactionsResponse.NextToken);
+                transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound, limit, next: transactionsResponse.NextToken);
 
                 foreach (Transaction txn in transactionsResponse.Transactions)
                 {
@@ -198,7 +198,7 @@ namespace Util
             return walletAddresses;
         }
 
-        public TransactionsResponse GetAssetTransactions(string senderAddress, long assetId, long minRound, long limit = 100, string next = null)
+        public TransactionsResponse GetAssetTransactions(string address, string addressRole, long assetId, long minRound, long limit = 100, string next = null)
         {
             TransactionsResponse transactionsResponse = null;
             int maxRetries = 5;
@@ -212,8 +212,8 @@ namespace Util
                     {
                         transactionsResponse = indexer.LookupAssetTransactions(
                             assetId,
-                            address: senderAddress,
-                            addressRole: "sender",
+                            address: address,
+                            addressRole: addressRole,
                             minRound: minRound,
                             limit: limit);
                     }
@@ -221,9 +221,108 @@ namespace Util
                     {
                         transactionsResponse = indexer.LookupAssetTransactions(
                             assetId,
-                            address: senderAddress,
-                            addressRole: "sender",
+                            address: address,
+                            addressRole: addressRole,
                             minRound: minRound,
+                            limit: limit,
+                            next: next);
+                    }
+                }
+                catch (ApiException apiException)
+                {
+                    if (apiException.ErrorCode == 429)
+                    {
+                        currentRetry++;
+
+                        Thread.Sleep(1500); //PureStake Sleep
+                    }
+                    else
+                    {
+                        throw apiException;
+                    }
+                }
+            }
+
+            if (currentRetry > maxRetries - 1)
+            {
+                throw new Exception("GetAssetTransactions ran out of retries");
+            }
+
+            return transactionsResponse;
+        }
+
+        public long GetAssetLowest(string address, long assetId, long assetAmount, DateTime afterTime, long limit = 100)
+        {
+            TransactionsResponse transactionsResponse = this.GetAssetTransactions(address, assetId, afterTime, limit);
+
+            long lowestAmount = assetAmount;
+
+            foreach (Transaction txn in transactionsResponse.Transactions)
+            {
+                if (txn.Sender == address)
+                {
+                    assetAmount += (long)txn.AssetTransferTransaction.Amount;
+                }
+                else
+                {
+                    assetAmount -= (long)txn.AssetTransferTransaction.Amount;
+
+                    if (assetAmount < lowestAmount)
+                    {
+                        lowestAmount = assetAmount;
+                    }
+                }
+            }
+
+            while (transactionsResponse.NextToken != null)
+            {
+                transactionsResponse = this.GetAssetTransactions(address, assetId, afterTime, limit, next: transactionsResponse.NextToken);
+
+                foreach (Transaction txn in transactionsResponse.Transactions)
+                {
+                    if (txn.Sender == address)
+                    {
+                        assetAmount -= (long)txn.AssetTransferTransaction.Amount;
+
+                        if (assetAmount < lowestAmount)
+                        {
+                            lowestAmount = assetAmount;
+                        }
+                    }
+                    else
+                    {
+                        assetAmount += (long)txn.AssetTransferTransaction.Amount;
+                    }
+                }
+            }
+
+            return lowestAmount;
+        }
+
+        public TransactionsResponse GetAssetTransactions(string address, long assetId, DateTime afterTime, long limit = 100, string next = null)
+        {
+            TransactionsResponse transactionsResponse = null;
+            int maxRetries = 5;
+            int currentRetry = 0;
+
+            while (transactionsResponse == null && currentRetry < maxRetries)
+            {
+                try
+                {
+                    if (next == null)
+                    {
+                        transactionsResponse = indexer.LookupAssetTransactions(
+                            assetId,
+                            address: address,
+                            afterTime: afterTime,
+                            limit: limit);
+                    }
+                    else
+                    {
+                        transactionsResponse = indexer.LookupAssetTransactions(
+                            assetId,
+                            address: address,
+                            afterTime: afterTime,
                             limit: limit,
                             next: next);
                     }

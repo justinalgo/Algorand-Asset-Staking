@@ -46,7 +46,7 @@ namespace Airdrop.AirdropFactories.Holdings
             IDictionary<string, long> ab2Values = await this.GetAb2Values(assetValues);
             IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
 
-            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
+            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);

@@ -6,5 +6,7 @@ namespace Util.Cosmos
     {
         [JsonProperty("rarity")]
         public string Rarity { get; set; }
+        [JsonProperty("set")]
+        public int Set { get; set; }
     }
 }

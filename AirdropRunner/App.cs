@@ -52,7 +52,7 @@ namespace AirdropRunner
             long lastRound = api.GetLastRound().Value;
             Console.WriteLine($"Round start: {lastRound}");
 
-            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 20 }, airdropAmount =>
+            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, airdropAmount =>
             {
                 try
                 {

@@ -1,4 +1,5 @@
 ﻿using Algorand.V2.Model;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace Airdrop.AirdropFactories.Holdings
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
             IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
+            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
             {
                 IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
                 long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
@@ -64,26 +65,20 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
         {
-            long baseAmount = 0;
-            int numberOfAssets = 0;
+            long airdropAmount = 0;
 
-            foreach (AssetHolding assetHolding in assetHoldings)
+            foreach (AssetHolding miniAssetHolding in assetHoldings)
             {
-                if (assetHolding.AssetId.HasValue &&
-                    assetHolding.Amount.HasValue &&
-                    assetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(assetHolding.AssetId.Value))
+                if (miniAssetHolding.AssetId.HasValue &&
+                    miniAssetHolding.Amount.HasValue &&
+                    miniAssetHolding.Amount > 0 &&
+                    assetValues.ContainsKey(miniAssetHolding.AssetId.Value))
                 {
-                    numberOfAssets += (int)assetHolding.Amount;
-
-                    if (assetValues[assetHolding.AssetId.Value] > baseAmount)
-                    {
-                        baseAmount = assetValues[assetHolding.AssetId.Value];
-                    }
+                    airdropAmount += (long)(assetValues[miniAssetHolding.AssetId.Value] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount.Value);
                 }
             }
 
-            return baseAmount + (numberOfAssets > 0 ? 2 * (numberOfAssets - 1) : 0);
+            return airdropAmount;
         }
     }
 }

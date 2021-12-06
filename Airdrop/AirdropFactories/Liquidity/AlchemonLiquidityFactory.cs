@@ -1,4 +1,5 @@
 ﻿using Algorand.V2.Model;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Airdrop.AirdropFactories.Liquidity
             this.Decimals = 0;
             this.LiquidityAssetId = 359448756;
             this.LiquidityWallet = "O6CDEA7NCJASQSYSAMLPGLICTTPP3BGVOCPYFGCFT54O4SCXGN3ULAOYPU";
-            this.DropTotal = 12500;
+            this.DropTotal = 12000;
             this.DropMinimum = 0;
             this.api = api;
         }
@@ -55,16 +56,18 @@ namespace Airdrop.AirdropFactories.Liquidity
         {
             ConcurrentBag<(string, long)> liquidityAmounts = new ConcurrentBag<(string, long)>();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 20 }, walletAddress =>
+            //Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            foreach (string walletAddress in walletAddresses)
             {
                 Account account = api.GetAccountByAddress(walletAddress);
                 ulong? liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);
 
-                if (liquidityAmount.HasValue)
+                if (liquidityAmount.HasValue && liquidityAmount > 0)
                 {
-                    liquidityAmounts.Add((walletAddress, (long)liquidityAmount.Value));
+                    long weekLowAmount = api.GetAssetLowest(walletAddress, this.LiquidityAssetId, (long)liquidityAmount.Value, DateTime.Now.AddDays(-7));
+                    liquidityAmounts.Add((walletAddress, weekLowAmount));
                 }
-            });
+            }
 
             return liquidityAmounts;
         }
