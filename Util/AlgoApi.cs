@@ -198,7 +198,8 @@ namespace Util
             return walletAddresses;
         }
 
-        public TransactionsResponse GetAssetTransactions(string address, string addressRole, long assetId, long minRound, long limit = 100, string next = null)
+        public TransactionsResponse GetAssetTransactions(string address, string addressRole, long assetId, long? currencyGreaterThan = null, 
+            long? currencyLessThan = null, long? minRound = null, long limit = 100, string next = null)
         {
             TransactionsResponse transactionsResponse = null;
             int maxRetries = 5;
@@ -215,6 +216,8 @@ namespace Util
                             address: address,
                             addressRole: addressRole,
                             minRound: minRound,
+                            currencyGreaterThan: currencyGreaterThan,
+                            currencyLessThan: currencyLessThan,
                             limit: limit);
                     }
                     else
@@ -224,6 +227,8 @@ namespace Util
                             address: address,
                             addressRole: addressRole,
                             minRound: minRound,
+                            currencyGreaterThan: currencyGreaterThan,
+                            currencyLessThan: currencyLessThan,
                             limit: limit,
                             next: next);
                     }
