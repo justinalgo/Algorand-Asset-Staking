@@ -26,5 +26,6 @@ namespace Util
         long? GetLastRound();
         NodeStatusResponse GetStatusAfterRound(long round);
         long GetAssetLowest(string address, long assetId, long assetAmount, DateTime afterTime, long limit = 100);
+        IDictionary<string, long> GetAlgoReceived(string receiverAddress);
     }
 }
