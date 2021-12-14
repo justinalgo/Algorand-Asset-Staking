@@ -24,7 +24,7 @@ namespace Airdrop.AirdropFactories.Liquidity
             this.Decimals = 0;
             this.LiquidityAssetId = 359448756;
             this.LiquidityWallet = "O6CDEA7NCJASQSYSAMLPGLICTTPP3BGVOCPYFGCFT54O4SCXGN3ULAOYPU";
-            this.DropTotal = 12000;
+            this.DropTotal = 12500;
             this.DropMinimum = 0;
             this.api = api;
         }
