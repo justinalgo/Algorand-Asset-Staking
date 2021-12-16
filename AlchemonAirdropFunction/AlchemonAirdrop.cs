@@ -76,7 +76,7 @@ namespace AlchemonAirdropFunction
                 }
                 catch (ApiException ex)
                 {
-                    log.LogError("ApiException on {airdropAmount.Wallet}");
+                    log.LogError($"ApiException on {airdropAmount.Wallet}");
                     log.LogError($"Error code: {ex.ErrorCode}; Error content: {ex.ErrorCode}");
                 }
                 catch (ArgumentException)
