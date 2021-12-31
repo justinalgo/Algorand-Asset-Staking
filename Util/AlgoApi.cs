@@ -176,7 +176,7 @@ namespace Util
 
         public IEnumerable<string> GetAddressesSent(string senderAddress, long assetId, long minRound, long limit = 100)
         {
-            TransactionsResponse transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound, limit);
+            TransactionsResponse transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound: minRound, limit: limit);
 
             List<string> walletAddresses = new List<string>();
 
@@ -187,7 +187,7 @@ namespace Util
 
             while (transactionsResponse.NextToken != null)
             {
-                transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound, limit, next: transactionsResponse.NextToken);
+                transactionsResponse = this.GetAssetTransactions(senderAddress, "sender", assetId, minRound: minRound, limit: limit, next: transactionsResponse.NextToken);
 
                 foreach (Transaction txn in transactionsResponse.Transactions)
                 {
@@ -198,7 +198,8 @@ namespace Util
             return walletAddresses;
         }
 
-        public TransactionsResponse GetAssetTransactions(string address, string addressRole, long assetId, long minRound, long limit = 100, string next = null)
+        public TransactionsResponse GetAssetTransactions(string address, string addressRole, long assetId, long? currencyGreaterThan = null, 
+            long? currencyLessThan = null, long? minRound = null, long limit = 100, string next = null)
         {
             TransactionsResponse transactionsResponse = null;
             int maxRetries = 5;
@@ -215,6 +216,8 @@ namespace Util
                             address: address,
                             addressRole: addressRole,
                             minRound: minRound,
+                            currencyGreaterThan: currencyGreaterThan,
+                            currencyLessThan: currencyLessThan,
                             limit: limit);
                     }
                     else
@@ -224,6 +227,8 @@ namespace Util
                             address: address,
                             addressRole: addressRole,
                             minRound: minRound,
+                            currencyGreaterThan: currencyGreaterThan,
+                            currencyLessThan: currencyLessThan,
                             limit: limit,
                             next: next);
                     }
@@ -249,6 +254,53 @@ namespace Util
             }
 
             return transactionsResponse;
+        }
+
+        public IDictionary<string, long> GetAlgoReceived(string receiverAddress)
+        {
+            Dictionary<string, long> received = new Dictionary<string, long>();
+            TransactionsResponse transactionsResponse = this.GetAssetTransactions(receiverAddress, "receiver", 0);
+
+            foreach (Transaction txn in transactionsResponse.Transactions)
+            {
+                if (txn.PaymentTransaction != null &&
+                    txn.PaymentTransaction.Amount.HasValue &&
+                    txn.PaymentTransaction.Amount > 0)
+                {
+                    if (received.ContainsKey(txn.Sender))
+                    {
+                        received[txn.Sender] += txn.PaymentTransaction.Amount.Value;
+                    }
+                    else
+                    {
+                        received[txn.Sender] = txn.PaymentTransaction.Amount.Value;
+                    }
+                }
+            }
+
+            while (transactionsResponse.NextToken != null)
+            {
+                transactionsResponse = this.GetAssetTransactions(receiverAddress, "receiver", 0, next: transactionsResponse.NextToken);
+
+                foreach (Transaction txn in transactionsResponse.Transactions)
+                {
+                    if (txn.PaymentTransaction != null &&
+                        txn.PaymentTransaction.Amount.HasValue &&
+                        txn.PaymentTransaction.Amount > 0)
+                    {
+                        if (!received.ContainsKey(txn.Sender))
+                        {
+                            received[txn.Sender] = txn.PaymentTransaction.Amount.Value;
+                        }
+                        else
+                        {
+                            received[txn.Sender] += txn.PaymentTransaction.Amount.Value;
+                        }
+                    }
+                }
+            }
+
+            return received;
         }
 
         public long GetAssetLowest(string address, long assetId, long assetAmount, DateTime afterTime, long limit = 100)
