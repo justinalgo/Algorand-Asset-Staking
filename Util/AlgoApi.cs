@@ -22,7 +22,7 @@ namespace Util
         public AlgoApi(ILogger<AlgoApi> log, IConfiguration config)
         {
             this.log = log;
-            this.algod = new AlgodApi(config["Endpoints:Algod"], config["AlgodToken"]);
+            this.algod = new AlgodApi(config["Endpoints:Algod"], config["Node2ApiToken"]);
             this.indexer = new IndexerApi(config["Endpoints:Indexer"], config["IndexerToken"]);
         }
 
@@ -378,6 +378,39 @@ namespace Util
                     {
                         assetValue.Value = value.Value;
                     }
+
+                    assetValues.Add(assetValue);
+                }
+            }
+
+            return assetValues;
+        }
+
+        public IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, Func<ulong, long> valueCalc, string unitNameContainsString = "", string projectId = null)
+        {
+            IEnumerable<AssetHolding> assetHoldings = this.GetAssetsByAddress(walletAddress);
+            List<AssetValue> assetValues = new List<AssetValue>();
+
+            foreach (AssetHolding assetHolding in assetHoldings)
+            {
+                Asset asset = this.GetAssetById(assetHolding.AssetId.Value);
+
+                if (asset.Params.UnitName != null && asset.Params.UnitName.Contains(unitNameContainsString))
+                {
+                    AssetValue assetValue = new AssetValue
+                    {
+                        Id = asset.Index.Value.ToString(),
+                        AssetId = asset.Index.Value,
+                        UnitName = asset.Params.UnitName,
+                        Name = asset.Params.Name,
+                    };
+
+                    if (projectId != null)
+                    {
+                        assetValue.ProjectId = projectId;
+                    }
+
+                    assetValue.Value = valueCalc(asset.Params.Total.Value);
 
                     assetValues.Add(assetValue);
                 }

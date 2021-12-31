@@ -3,30 +3,34 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Util;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
-    public class AlchemonLiquidityFactory : ILiquidityAirdropFactory
+    public class RaptorCoinLiquidityFactory : ILiquidityAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
+        public string CreatorWallet { get; set; }
         public long LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
         public long LiquidityMinimum { get; set; }
         public long DropTotal { get; set; }
         public long DropMinimum { get; set; }
+
         private readonly IAlgoApi api;
 
-        public AlchemonLiquidityFactory(IAlgoApi api)
+        public RaptorCoinLiquidityFactory(IAlgoApi api)
         {
-            this.AssetId = 310014962;
-            this.Decimals = 0;
-            this.LiquidityAssetId = 359448756;
-            this.LiquidityWallet = "O6CDEA7NCJASQSYSAMLPGLICTTPP3BGVOCPYFGCFT54O4SCXGN3ULAOYPU";
-            this.LiquidityMinimum = 0;
-            this.DropTotal = 12000;
+            this.AssetId = 426980914;
+            this.Decimals = 2;
+            this.CreatorWallet = "SBKN5JI72DS4USUUIFO3MMNZLPVDKERA2D3HOPZMSXAK5VBBEM364TGS3A";
+            this.LiquidityAssetId = 428917669;
+            this.LiquidityWallet = "AIFU57RAPPX672WDLAUGZE46677XNGYQEX2KQM54DJZ4HUTQ264M2TALQA";
+            this.LiquidityMinimum = 400000;
+            this.DropTotal = 20000000;
             this.DropMinimum = 0;
             this.api = api;
         }
@@ -35,6 +39,7 @@ namespace Airdrop.AirdropFactories.Liquidity
         {
             List<string> walletAddresses = this.FetchWalletAddresses().ToList();
             walletAddresses.Remove(this.LiquidityWallet);
+            walletAddresses.Remove(this.CreatorWallet);
 
             IEnumerable<(string, long)> liquidityAmounts = this.GetLiquidityAmounts(walletAddresses);
 
@@ -66,7 +71,7 @@ namespace Airdrop.AirdropFactories.Liquidity
 
                 if (liquidityAmount.HasValue && (long)liquidityAmount.Value > this.LiquidityMinimum)
                 {
-                    long weekLowAmount = api.GetAssetLowest(walletAddress, this.LiquidityAssetId, (long)liquidityAmount.Value, DateTime.Now.AddDays(-7));
+                    long weekLowAmount = api.GetAssetLowest(walletAddress, this.LiquidityAssetId, (long)liquidityAmount.Value, DateTime.Now.AddDays(-14));
                     liquidityAmounts.Add((walletAddress, weekLowAmount));
                 }
             }
