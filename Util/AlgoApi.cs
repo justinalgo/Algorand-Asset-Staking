@@ -22,7 +22,7 @@ namespace Util
         public AlgoApi(ILogger<AlgoApi> log, IConfiguration config)
         {
             this.log = log;
-            this.algod = new AlgodApi(config["Endpoints:Algod"], config["Node2ApiToken"]);
+            this.algod = new AlgodApi(config["Endpoints:Algod"], config["AlgodToken"]);
             this.indexer = new IndexerApi(config["Endpoints:Indexer"], config["IndexerToken"]);
         }
 
