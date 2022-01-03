@@ -27,5 +27,6 @@ namespace Util
         NodeStatusResponse GetStatusAfterRound(long round);
         long GetAssetLowest(string address, long assetId, long assetAmount, DateTime afterTime, long limit = 100);
         IDictionary<string, long> GetAlgoReceived(string receiverAddress);
+        IEnumerable<AssetValue> GetAccountAssetValues(string walletAddress, Func<ulong, long> valueCalc, string unitNameContainsString = "", string projectId = null);
     }
 }
