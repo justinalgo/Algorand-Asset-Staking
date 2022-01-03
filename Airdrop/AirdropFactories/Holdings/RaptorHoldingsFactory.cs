@@ -24,7 +24,11 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             this.AssetId = 426980914;
             this.Decimals = 2;
-            this.CreatorAddresses = new string[] { "EYERHFMTLLBVVDV4RKGKSTMWU4QZ7IG5HUEXQYO3UVX4ABQ5MDNJIKN7HQ" };
+            this.CreatorAddresses = new string[] { 
+                "EYERHFMTLLBVVDV4RKGKSTMWU4QZ7IG5HUEXQYO3UVX4ABQ5MDNJIKN7HQ",
+                "MOON3QNZT5XBPIYLMASRS5RSFRVVZF4SAMG4Q22KQFRLWKXXW2S2MY2WD4",
+                "OPBIE5S3IUKLNFU6C2DK5B3FTYD7W7BMVDTNMTFFLKVQXPUUNAFBHZHVBY",
+            };
             this.api = api;
             this.cosmos = cosmos;
             this.httpClient = httpClientFactory.CreateClient();
@@ -55,7 +59,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public async Task<IDictionary<long, long>> FetchAssetValues()
         {
-            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin");
+            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin", "MoonDude", "Numbers");
 
             Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
