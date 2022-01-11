@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Airdrop\Airdrop.csproj" />
-    <ProjectReference Include="..\Util\Util.csproj" />
+    <ProjectReference Include="..\Util\Utils.csproj" />
   </ItemGroup>
   <ItemGroup>
 	  <None Update="host.json">

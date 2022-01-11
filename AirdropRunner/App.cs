@@ -46,8 +46,8 @@ namespace AirdropRunner
 
             Console.WriteLine(amounts.Sum(a => a.Amount));
             Console.WriteLine(amounts.Count());
-
-            Console.ReadKey();
+            
+            /*Console.ReadKey();
 
             long lastRound = api.GetLastRound().Value;
             Console.WriteLine($"Round start: {lastRound}");
@@ -106,7 +106,7 @@ namespace AirdropRunner
             else
             {
                 Console.WriteLine("All addresses dropped successfully!");
-            }
+            }*/
         }
     }
 }

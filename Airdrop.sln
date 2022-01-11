@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Airdrop", "Airdrop\Airdrop.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirdropRunner", "AirdropRunner\AirdropRunner.csproj", "{E51911FE-7A76-4509-B2CE-A8F738994D9B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Util", "Util\Util.csproj", "{A773FEAA-B8EC-4194-891A-9E88618F7D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Util\Utils.csproj", "{A773FEAA-B8EC-4194-891A-9E88618F7D46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShrimpAirdropFunction", "ShrimpAirdropFunction\ShrimpAirdropFunction.csproj", "{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}"
 EndProject
