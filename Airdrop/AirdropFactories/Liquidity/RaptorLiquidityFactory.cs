@@ -9,7 +9,7 @@ using Util;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
-    public class RaptorCoinLiquidityFactory : ILiquidityAirdropFactory
+    public class RaptorLiquidityFactory : ILiquidityAirdropFactory
     {
         public long AssetId { get; set; }
         public long Decimals { get; set; }
@@ -22,7 +22,7 @@ namespace Airdrop.AirdropFactories.Liquidity
 
         private readonly IAlgoApi api;
 
-        public RaptorCoinLiquidityFactory(IAlgoApi api)
+        public RaptorLiquidityFactory(IAlgoApi api)
         {
             this.AssetId = 426980914;
             this.Decimals = 2;
