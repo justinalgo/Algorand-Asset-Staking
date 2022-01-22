@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Airdrop", "Airdrop\Airdrop.csproj", "{9738AD26-1D65-4968-BC76-38B6DB597E30}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirdropRunner", "AirdropRunner\AirdropRunner.csproj", "{E51911FE-7A76-4509-B2CE-A8F738994D9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A773FEAA-B8EC-4194-891A-9E88618F7D46} = {A773FEAA-B8EC-4194-891A-9E88618F7D46}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Util\Utils.csproj", "{A773FEAA-B8EC-4194-891A-9E88618F7D46}"
 EndProject

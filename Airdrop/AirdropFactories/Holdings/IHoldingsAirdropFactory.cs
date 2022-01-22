@@ -1,4 +1,4 @@
-﻿using Algorand.V2.Model;
+﻿using Algorand.V2.Indexer.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,7 +7,7 @@ namespace Airdrop.AirdropFactories.Holdings
     public interface IHoldingsAirdropFactory : IAirdropFactory
     {
         public string[] CreatorAddresses { get; set; }
-        public Task<IDictionary<long, long>> FetchAssetValues();
-        public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues);
+        public Task<IDictionary<ulong, ulong>> FetchAssetValues();
+        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues);
     }
 }

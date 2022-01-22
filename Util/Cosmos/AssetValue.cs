@@ -13,8 +13,8 @@ namespace Util.Cosmos
         [JsonProperty("unitName")]
         public string UnitName { get; set; }
         [JsonProperty("assetId")]
-        public long AssetId { get; set; }
+        public ulong AssetId { get; set; }
         [JsonProperty("value")]
-        public long Value { get; set; }
+        public ulong Value { get; set; }
     }
 }

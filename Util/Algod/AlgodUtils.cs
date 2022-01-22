@@ -13,12 +13,12 @@ using System.IO;
 
 namespace Utils.Algod
 {
-    public class AlgodUtils
+    public class AlgodUtils : IAlgodUtils
     {
         private readonly ILogger<AlgodUtils> log;
         private readonly DefaultApi algod;
 
-        public AlgodUtils (ILogger<AlgodUtils> log, IConfiguration config)
+        public AlgodUtils(ILogger<AlgodUtils> log, IConfiguration config)
         {
             this.log = log;
             var httpClient = HttpClientConfigurator.ConfigureHttpClient(config["Endpoints:Algod"], config["AlgodToken"]);

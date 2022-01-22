@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
 using Util.KeyManagers;
+using Utils.Algod;
+using Utils.Indexer;
 
 namespace AirdropRunner
 {
@@ -34,8 +36,9 @@ namespace AirdropRunner
                 {
                     services.AddLogging(configure => configure.AddConsole());
                     services.AddHttpClient();
+                    services.AddTransient<IAlgodUtils, AlgodUtils>();
+                    services.AddTransient<IIndexerUtils, IndexerUtils>();
                     services.AddTransient<ICosmos, Cosmos>();
-                    services.AddTransient<IAlgoApi, AlgoApi>();
                     services.AddTransient<IKeyManager, AirdropKey>();
                     services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
                     services.AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();

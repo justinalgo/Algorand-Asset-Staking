@@ -1,5 +1,6 @@
-﻿using Algorand.V2.Model;
+﻿using Algorand.V2.Indexer.Model;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +9,20 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
+using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
     public class ShrimpHoldingsFactory : IHoldingsAirdropFactory
     {
-        public long AssetId { get; set; }
-        public long Decimals { get; set; }
+        public ulong AssetId { get; set; }
+        public ulong Decimals { get; set; }
         public string[] CreatorAddresses { get; set; }
-        private readonly IAlgoApi api;
+        private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
         private readonly HttpClient httpClient;
 
-        public ShrimpHoldingsFactory(IAlgoApi api, ICosmos cosmos, IHttpClientFactory httpClientFactory)
+        public ShrimpHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory)
         {
             this.AssetId = 360019122;
             this.Decimals = 0;
@@ -33,23 +35,24 @@ namespace Airdrop.AirdropFactories.Holdings
                 "MNGO4JTLBN64PJLWTQZYHDMF2UBHGJGW5L7TXDVTJV7JGVD5AE4Y3HTEZM",
                 "5DYIZMX7N4SAB44HLVRUGLYBPSN4UMPDZVTX7V73AIRMJQA3LKTENTLFZ4",
             };
-            this.api = api;
+            this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
             this.httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
-            IDictionary<long, long> assetValues = await this.FetchAssetValues();
+            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
-            IDictionary<string, long> ab2Values = await this.GetAb2Values(assetValues);
-            IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
+            IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
+            IDictionary<string, ulong> ab2Values = await this.GetAb2Values(assetValues);
+            IDictionary<string, ulong> randValues = await this.GetRandValues(assetValues);
 
-            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async walletAddress =>
             {
-                IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
-                long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
+                Account account = await this.indexerUtils.GetAccount(walletAddress);
+                IEnumerable<AssetHolding> assetHoldings = account.Assets;
+                ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
                 amount += this.GetAb2Amount(walletAddress, ab2Values);
                 amount += this.GetRandAmount(walletAddress, randValues);
@@ -63,41 +66,39 @@ namespace Airdrop.AirdropFactories.Holdings
             return airdropAmounts;
         }
 
-        public IEnumerable<string> FetchWalletAddresses()
+        public async Task<IEnumerable<string>> FetchWalletAddresses()
         {
-            IEnumerable<string> walletAddresses = this.api.GetWalletAddressesWithAsset(this.AssetId);
+            IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId);
 
             return walletAddresses;
         }
 
-        public async Task<IDictionary<long, long>> FetchAssetValues()
+        public async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("LingLing", "MNGO", "Yieldling");
 
-            Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
+            Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
             return assetValues;
         }
 
-        public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
+        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
         {
-            long airdropAmount = 0;
+            ulong airdropAmount = 0;
 
             foreach (AssetHolding miniAssetHolding in assetHoldings)
             {
-                if (miniAssetHolding.AssetId.HasValue &&
-                    miniAssetHolding.Amount.HasValue &&
-                    miniAssetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(miniAssetHolding.AssetId.Value))
+                if (miniAssetHolding.Amount > 0 &&
+                    assetValues.ContainsKey(miniAssetHolding.AssetId))
                 {
-                    airdropAmount += (long)miniAssetHolding.Amount.Value * assetValues[miniAssetHolding.AssetId.Value];
+                    airdropAmount += (ulong)(assetValues[miniAssetHolding.AssetId] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount);
                 }
             }
 
             return airdropAmount;
         }
 
-        public long GetAb2Amount(string walletAddress, IDictionary<string, long> ab2Values)
+        public ulong GetAb2Amount(string walletAddress, IDictionary<string, ulong> ab2Values)
         {
             if (ab2Values.ContainsKey(walletAddress))
             {
@@ -107,9 +108,9 @@ namespace Airdrop.AirdropFactories.Holdings
             return 0;
         }
 
-        private async Task<IDictionary<string, long>> GetAb2Values(IDictionary<long, long> assetValues)
+        private async Task<IDictionary<string, ulong>> GetAb2Values(IDictionary<ulong, ulong> assetValues)
         {
-            Dictionary<string, long> walletValues = new Dictionary<string, long>();
+            Dictionary<string, ulong> walletValues = new Dictionary<string, ulong>();
             EscrowInfo escrowInfo = await GetAb2EscrowInfo();
 
             foreach (Escrow escrow in escrowInfo.MngoEscrows)
@@ -161,7 +162,7 @@ namespace Airdrop.AirdropFactories.Holdings
             return escrowInfo;
         }
 
-        private long GetRandAmount(string walletAddress, IDictionary<string, long> randValues)
+        private ulong GetRandAmount(string walletAddress, IDictionary<string, ulong> randValues)
         {
             if (randValues.ContainsKey(walletAddress))
             {
@@ -171,12 +172,12 @@ namespace Airdrop.AirdropFactories.Holdings
             return 0;
         }
 
-        public async Task<IDictionary<string, long>> GetRandValues(IDictionary<long, long> assetValues)
+        public async Task<IDictionary<string, ulong>> GetRandValues(IDictionary<ulong, ulong> assetValues)
         {
-            Dictionary<string, long> walletValues = new Dictionary<string, long>();
-            IEnumerable<(long, string)> randSellers = await GetRandSellers();
+            Dictionary<string, ulong> walletValues = new Dictionary<string, ulong>();
+            IEnumerable<(ulong, string)> randSellers = await GetRandSellers();
 
-            foreach ((long, string) randSeller in randSellers)
+            foreach ((ulong, string) randSeller in randSellers)
             {
                 if (walletValues.ContainsKey(randSeller.Item2) && assetValues.ContainsKey(randSeller.Item1))
                 {
@@ -191,9 +192,9 @@ namespace Airdrop.AirdropFactories.Holdings
             return walletValues;
         }
 
-        private async Task<IEnumerable<(long, string)>> GetRandSellers()
+        private async Task<IEnumerable<(ulong, string)>> GetRandSellers()
         {
-            List<(long, string)> randSellers = new List<(long, string)>();
+            List<(ulong, string)> randSellers = new List<(ulong, string)>();
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
@@ -206,7 +207,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 {
                     if (assetId != "name" && assetId != "royalty" && assetId != "escrowAddress")
                     {
-                        randSellers.Add((long.Parse(assetId), sellers[assetId]["seller"]));
+                        randSellers.Add((ulong.Parse(assetId), sellers[assetId]["seller"]));
                     }
                 }
             }
@@ -234,6 +235,6 @@ namespace Airdrop.AirdropFactories.Holdings
         [JsonProperty("asset")]
         public string UnitName { get; set; }
         [JsonProperty("assetId")]
-        public long AssetId { get; set; }
+        public ulong AssetId { get; set; }
     }
 }

@@ -1,14 +1,15 @@
-﻿using Algorand.V2.Model;
+﻿using Algorand.V2.Indexer.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
     public interface ILiquidityAirdropFactory : IAirdropFactory
     {
-        public long LiquidityAssetId { get; set; }
+        public ulong LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
-        long LiquidityMinimum { get; set; }
-        public ulong? GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings);
-        public IEnumerable<(string, long)> GetLiquidityAmounts(IEnumerable<string> walletAddresses);
+        ulong LiquidityMinimum { get; set; }
+        public ulong GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings);
+        public Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses);
     }
 }

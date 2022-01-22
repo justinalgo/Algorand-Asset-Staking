@@ -5,9 +5,9 @@ namespace Airdrop.AirdropFactories
 {
     public interface IAirdropFactory
     {
-        public long AssetId { get; set; }
-        public long Decimals { get; set; }
-        public IEnumerable<string> FetchWalletAddresses();
+        public ulong AssetId { get; set; }
+        public ulong Decimals { get; set; }
+        public Task<IEnumerable<string>> FetchWalletAddresses();
         public Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts();
     }
 }
