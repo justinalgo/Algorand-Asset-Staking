@@ -47,5 +47,10 @@ namespace Utils.Algod
             NodeStatusResponse status = await this.GetStatus();
             return status.LastRound;
         }
+
+        public async Task<TransactionParametersResponse> GetTransactionParams()
+        {
+            return await this.algod.ParamsAsync();
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Utils.Algod
         Task<NodeStatusResponse> GetStatus();
         Task<NodeStatusResponse> GetStatusAfterRound(ulong round);
         Task<PostTransactionsResponse> SubmitTransaction(SignedTransaction signedTransaction);
+        Task<TransactionParametersResponse> GetTransactionParams();
     }
 }
