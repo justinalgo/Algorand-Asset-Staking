@@ -66,7 +66,7 @@ namespace Airdrop.AirdropFactories.Liquidity
 
                 if (liquidityAmount > this.LiquidityMinimum)
                 {
-                    IEnumerable<Transaction> transactions = await this.indexerUtils.GetTransactions(walletAddress, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-2), txType: TxType.Axfer);
+                    IEnumerable<Transaction> transactions = await this.indexerUtils.GetTransactions(walletAddress, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-7), txType: TxType.Axfer);
                     ulong lowAmount = this.GetAssetLowest(walletAddress, liquidityAmount, transactions);
                     liquidityAmounts.Add((walletAddress, lowAmount));
                 }
