@@ -63,7 +63,6 @@ namespace Airdrop.AirdropFactories.Liquidity
             {
                 Account account = await this.indexerUtils.GetAccount(walletAddress);
                 ulong liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);
-                Console.WriteLine(walletAddress + " : " + liquidityAmount);
 
                 if (liquidityAmount > this.LiquidityMinimum)
                 {
