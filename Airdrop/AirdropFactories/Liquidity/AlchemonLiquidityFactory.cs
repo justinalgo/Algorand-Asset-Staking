@@ -24,7 +24,7 @@ namespace Airdrop.AirdropFactories.Liquidity
             this.AssetId = 310014962;
             this.Decimals = 0;
             this.LiquidityAssetId = 552701368;
-            this.LiquidityWallet = "O6CDEA7NCJASQSYSAMLPGLICTTPP3BGVOCPYFGCFT54O4SCXGN3ULAOYPU";
+            this.LiquidityWallet = "EJGN54S3OSQXDX5NYOGYZBGLIZZEKQSROO3AXKX2WPJ2CRMAW57YMDXWWE";
             this.LiquidityMinimum = 0;
             this.DropTotal = 12500;
             this.DropMinimum = 0;
@@ -39,10 +39,10 @@ namespace Airdrop.AirdropFactories.Liquidity
             IEnumerable<(string, ulong)> liquidityAmounts = await this.GetLiquidityAmounts(walletAddresses);
 
             ulong liquidityTotal = (ulong)liquidityAmounts.Sum(la => (double)la.Item2);
-
+            
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
 
-            foreach ((string, long) liquidityAmount in liquidityAmounts)
+            foreach ((string, ulong) liquidityAmount in liquidityAmounts)
             {
                 ulong dropAmount = (ulong)(this.DropTotal * ((double)liquidityAmount.Item2 / (double)liquidityTotal));
                 if (dropAmount > DropMinimum)
@@ -54,24 +54,27 @@ namespace Airdrop.AirdropFactories.Liquidity
             return airdropAmounts;
         }
 
-        public Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses)
+        public async Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses)
         {
             ConcurrentBag<(string, ulong)> liquidityAmounts = new ConcurrentBag<(string, ulong)>();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async walletAddress =>
+            //Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async walletAddress =>
+            foreach (string walletAddress in walletAddresses)
             {
                 Account account = await this.indexerUtils.GetAccount(walletAddress);
                 ulong liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);
+                Console.WriteLine(walletAddress + " : " + liquidityAmount);
 
                 if (liquidityAmount > this.LiquidityMinimum)
                 {
-                    IEnumerable<Transaction> transactions = await this.indexerUtils.GetTransactions(walletAddress, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-7), txType: TxType.Axfer);
+                    IEnumerable<Transaction> transactions = await this.indexerUtils.GetTransactions(walletAddress, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-2), txType: TxType.Axfer);
                     ulong lowAmount = this.GetAssetLowest(walletAddress, liquidityAmount, transactions);
                     liquidityAmounts.Add((walletAddress, lowAmount));
                 }
-            });
+            };
 
-            return Task.FromResult<IEnumerable<(string, ulong)>>(liquidityAmounts);
+            //return Task.FromResult<IEnumerable<(string, ulong)>>(liquidityAmounts);
+            return liquidityAmounts;
         }
 
         public ulong GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings)
