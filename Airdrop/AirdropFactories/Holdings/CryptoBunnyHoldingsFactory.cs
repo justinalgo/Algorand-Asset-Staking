@@ -9,11 +9,8 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class CryptoBunnyHoldingsFactory : IHoldingsAirdropFactory
+    public class CryptoBunnyHoldingsFactory : HoldingsAirdropFactory
     {
-        public ulong AssetId { get; set; }
-        public ulong Decimals { get; set; }
-        public string[] CreatorAddresses { get; set; }
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
 
@@ -26,7 +23,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.cosmos = cosmos;
         }
 
-        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
+        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
@@ -46,36 +43,20 @@ namespace Airdrop.AirdropFactories.Holdings
             return airdropAmounts;
         }
 
-        public async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<string>> FetchWalletAddresses()
         {
             IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId);
 
             return walletAddresses;
         }
 
-        public async Task<IDictionary<ulong, ulong>> FetchAssetValues()
+        public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             IEnumerable<AssetValue> assets = await cosmos.GetAssetValues("CryptoBunny");
 
             Dictionary<ulong, ulong> assetValues = assets.ToDictionary(av => av.AssetId, av => av.Value);
 
             return assetValues;
-        }
-
-        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
-        {
-            ulong airdropAmount = 0;
-
-            foreach (AssetHolding miniAssetHolding in assetHoldings)
-            {
-                if (miniAssetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(miniAssetHolding.AssetId))
-                {
-                    airdropAmount += (ulong)(assetValues[miniAssetHolding.AssetId] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount);
-                }
-            }
-
-            return airdropAmount;
         }
     }
 }

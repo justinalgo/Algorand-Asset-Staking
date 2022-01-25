@@ -12,11 +12,8 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class NanaHoldingsFactory : IHoldingsAirdropFactory
+    public class NanaHoldingsFactory : HoldingsAirdropFactory
     {
-        public ulong AssetId { get; set; }
-        public ulong Decimals { get; set; }
-        public string[] CreatorAddresses { get; set; }
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
         private readonly HttpClient httpClient;
@@ -31,7 +28,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
+        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
@@ -55,7 +52,7 @@ namespace Airdrop.AirdropFactories.Holdings
             return airdropAmounts;
         }
 
-        public async Task<IDictionary<ulong, ulong>> FetchAssetValues()
+        public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("NanaCoin");
 
@@ -64,27 +61,11 @@ namespace Airdrop.AirdropFactories.Holdings
             return assetValues;
         }
 
-        public async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<string>> FetchWalletAddresses()
         {
             IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId);
 
             return walletAddresses;
-        }
-
-        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
-        {
-            ulong airdropAmount = 0;
-
-            foreach (AssetHolding miniAssetHolding in assetHoldings)
-            {
-                if (miniAssetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(miniAssetHolding.AssetId))
-                {
-                    airdropAmount += (ulong)(assetValues[miniAssetHolding.AssetId] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount);
-                }
-            }
-
-            return airdropAmount;
         }
 
         public ulong GetRandAmount(string walletAddress, IDictionary<string, ulong> randValues)

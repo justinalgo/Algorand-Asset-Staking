@@ -9,11 +9,8 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class AlchemonHoldingsFactory : IHoldingsAirdropFactory
+    public class AlchemonHoldingsFactory : HoldingsAirdropFactory
     {
-        public ulong AssetId { get; set; }
-        public ulong Decimals { get; set; }
-        public string[] CreatorAddresses { get; set; }
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
         private readonly ulong stakeFlagAssetId;
@@ -28,7 +25,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.stakeFlagAssetId = 320570576;
         }
 
-        public async Task<IDictionary<ulong, ulong>> FetchAssetValues()
+        public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("Alchemon");
 
@@ -37,14 +34,14 @@ namespace Airdrop.AirdropFactories.Holdings
             return assetValues;
         }
 
-        public async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<string>> FetchWalletAddresses()
         {
             IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId, this.stakeFlagAssetId);
 
             return walletAddresses;
         }
 
-        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
+        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
@@ -54,35 +51,16 @@ namespace Airdrop.AirdropFactories.Holdings
             {
                 Account account = await this.indexerUtils.GetAccount(walletAddress);
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
+                
+                ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
-                if (assetHoldings != null)
+                if (amount > 0)
                 {
-                    ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
-
-                    if (amount > 0)
-                    {
-                        airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
-                    }
+                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
                 }
             });
 
             return airdropAmounts;
-        }
-
-        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
-        {
-            ulong airdropAmount = 0;
-
-            foreach (AssetHolding miniAssetHolding in assetHoldings)
-            {
-                if (miniAssetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(miniAssetHolding.AssetId))
-                {
-                    airdropAmount += (ulong)(assetValues[miniAssetHolding.AssetId] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount);
-                }
-            }
-
-            return airdropAmount;
         }
     }
 }
