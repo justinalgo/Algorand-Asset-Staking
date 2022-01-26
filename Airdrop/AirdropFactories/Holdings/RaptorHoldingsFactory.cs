@@ -40,9 +40,9 @@ namespace Airdrop.AirdropFactories.Holdings
             IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
             IDictionary<string, ulong> randValues = await this.GetRandValues(assetValues);
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async walletAddress =>
+            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
             {
-                Account account = await this.indexerUtils.GetAccount(walletAddress);
+                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
                 ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 

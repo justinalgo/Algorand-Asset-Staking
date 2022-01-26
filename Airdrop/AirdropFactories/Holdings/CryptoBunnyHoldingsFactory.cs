@@ -29,16 +29,18 @@ namespace Airdrop.AirdropFactories.Holdings
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
             IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
 
-            foreach (string walletAddress in walletAddresses)
+            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
             {
-                Account account = await this.indexerUtils.GetAccount(walletAddress);
+                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
+
                 ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
+
                 if (amount > 0)
                 {
                     airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
                 }
-            }
+            });
 
             return airdropAmounts;
         }
