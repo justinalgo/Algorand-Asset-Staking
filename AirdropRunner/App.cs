@@ -84,9 +84,9 @@ namespace AirdropRunner
                     PostTransactionsResponse resp = await this.algodUtils.SubmitTransaction(stxn);
                     Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount + " with TxId: " + resp.TxId);
                 }
-                catch (ApiException ex)
+                catch (ApiException<ErrorResponse> ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Result.Message);
                     Console.WriteLine("ApiException on " + airdropAmount.Wallet);
                 }
                 catch (ArgumentException)
