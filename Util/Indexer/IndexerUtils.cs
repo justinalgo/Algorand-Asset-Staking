@@ -68,37 +68,28 @@ namespace Utils.Indexer
 
             IEnumerable<Transaction> transactions = await GetTransactions(address, assetId, addressRole, txType, currencyGreaterThan, currencyLessThan, minRound);
 
-            Func<Transaction, string> getAddress;
-
-            if (addressRole == AddressRole.Sender)
-            {
-                getAddress = (Transaction txn) => txn.Sender;
-            }
-            else
-            {
-                switch (txType)
-                {
-                    case TxType.Axfer:
-                        getAddress = (Transaction txn) => txn.AssetTransferTransaction.Receiver;
-                        break;
-                    case TxType.Pay:
-                        getAddress = (Transaction txn) => txn.PaymentTransaction.Receiver;
-                        break;
-                    case TxType.Afrz:
-                        getAddress = (Transaction txn) => txn.AssetFreezeTransaction.Address;
-                        break;
-                    default:
-                        getAddress = (Transaction txn) => null;
-                        break;
-                }
-            }
-
             foreach (Transaction transaction in transactions)
             {
-                string addr = getAddress(transaction);
-                if (addr != null)
+                if (addressRole == AddressRole.Receiver)
                 {
-                    walletAddresses.Add(addr);
+                    walletAddresses.Add(transaction.Sender);
+                }
+                else
+                {
+                    switch (transaction.TxType)
+                    {
+                        case TransactionTxType.Axfer:
+                            walletAddresses.Add(transaction.AssetTransferTransaction.Receiver);
+                            break;
+                        case TransactionTxType.Pay:
+                            walletAddresses.Add(transaction.PaymentTransaction.Receiver);
+                            break;
+                        case TransactionTxType.Afrz:
+                            walletAddresses.Add(transaction.AssetFreezeTransaction.Address);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 
