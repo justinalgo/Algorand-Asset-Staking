@@ -1,9 +1,13 @@
 ﻿using Airdrop.AirdropFactories.Holdings;
 using Airdrop.AirdropFactories.Liquidity;
+using Algorand.V2.Algod;
+using Algorand.V2.Indexer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Util;
 using Util.Cosmos;
@@ -35,7 +39,28 @@ namespace AirdropRunner
                 .ConfigureServices((context, services) =>
                 {
                     services.AddLogging(configure => configure.AddConsole());
-                    services.AddHttpClient();
+
+                    services.AddHttpClient<IDefaultApi, DefaultApi>(client =>
+                    {
+                        client.BaseAddress = new Uri(context.Configuration["Endpoints:Algod"]);
+                        client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["AlgodToken"]);
+                        client.Timeout = Timeout.InfiniteTimeSpan;
+                    });
+
+                    services.AddHttpClient<ILookupApi, LookupApi>(client =>
+                    {
+                        client.BaseAddress = new Uri(context.Configuration["Endpoints:Indexer"]);
+                        client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["IndexerToken"]);
+                        client.Timeout = Timeout.InfiniteTimeSpan;
+                    });
+
+                    services.AddHttpClient<ISearchApi, SearchApi>(client =>
+                    {
+                        client.BaseAddress = new Uri(context.Configuration["Endpoints:Indexer"]);
+                        client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["IndexerToken"]);
+                        client.Timeout = Timeout.InfiniteTimeSpan;
+                    });
+
                     services.AddTransient<IAlgodUtils, AlgodUtils>();
                     services.AddTransient<IIndexerUtils, IndexerUtils>();
                     services.AddTransient<ICosmos, Cosmos>();

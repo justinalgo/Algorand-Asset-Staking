@@ -16,13 +16,12 @@ namespace Utils.Algod
     public class AlgodUtils : IAlgodUtils
     {
         private readonly ILogger<AlgodUtils> log;
-        private readonly DefaultApi algod;
+        private readonly IDefaultApi algod;
 
-        public AlgodUtils(ILogger<AlgodUtils> log, IConfiguration config)
+        public AlgodUtils(ILogger<AlgodUtils> log, IDefaultApi algod)
         {
             this.log = log;
-            var httpClient = HttpClientConfigurator.ConfigureHttpClient(config["Endpoints:Algod"], config["AlgodToken"]);
-            this.algod = new DefaultApi(httpClient) { BaseUrl = config["Endpoints:Algod"] };
+            this.algod = algod;
         }
 
         public async Task<PostTransactionsResponse> SubmitTransaction(SignedTransaction signedTransaction)

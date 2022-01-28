@@ -14,17 +14,14 @@ namespace Utils.Indexer
     public class IndexerUtils : IIndexerUtils
     {
         private readonly ILogger<IndexerUtils> log;
-        private readonly LookupApi lookupApi;
-        private readonly SearchApi searchApi;
-        private readonly CommonApi commonApi;
+        private readonly ILookupApi lookupApi;
+        private readonly ISearchApi searchApi;
 
-        public IndexerUtils(ILogger<IndexerUtils> log, IConfiguration config)
+        public IndexerUtils(ILogger<IndexerUtils> log, ILookupApi lookupApi, ISearchApi searchApi)
         {
             this.log = log;
-            var httpClient = HttpClientConfigurator.ConfigureHttpClient(config["Endpoints:Indexer"], config["IndexerToken"]);
-            lookupApi = new LookupApi(httpClient) { BaseUrl = config["Endpoints:Indexer"] };
-            searchApi = new SearchApi(httpClient) { BaseUrl = config["Endpoints:Indexer"] };
-            commonApi = new CommonApi(httpClient) { BaseUrl = config["Endpoints:Indexer"] };
+            this.lookupApi = lookupApi;
+            this.searchApi = searchApi;
         }
 
         public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId)
