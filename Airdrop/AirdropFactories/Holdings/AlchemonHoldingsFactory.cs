@@ -14,12 +14,18 @@ namespace Airdrop.AirdropFactories.Holdings
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
         private readonly ulong stakeFlagAssetId;
+        private readonly string[] revokedAddresses;
 
         public AlchemonHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos)
         {
             this.AssetId = 310014962;
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "OJGTHEJ2O5NXN7FVXDZZEEJTUEQHHCIYIE5MWY6BEFVVLZ2KANJODBOKGA" };
+            this.revokedAddresses = new string[] {
+                "LEMO5ZPXGACO25UN4GFHWFRHP2MZNJTJL7OV3HYJU7KZF2TL7CHWZIYEWU",
+                "5W3QB7A7BFX2MD7XRMD3FLYEBS4AMOVFHRL5QAOP4QQC227L2GVIJIWNNM",
+                "C5UMHCZBPPVFUSPHCZT6YYFXB6IXTF7Z57JQ7SHUGIC5PBU7BSLNPKSSSY",
+            };
             this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
             this.stakeFlagAssetId = 320570576;
@@ -37,6 +43,8 @@ namespace Airdrop.AirdropFactories.Holdings
         public override async Task<IEnumerable<string>> FetchWalletAddresses()
         {
             IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId, this.stakeFlagAssetId);
+
+            walletAddresses.Except(this.revokedAddresses);
 
             return walletAddresses;
         }
