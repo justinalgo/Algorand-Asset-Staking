@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Algorand" Version="0.2.1.1" />
+    <PackageReference Include="Algorand" Version="0.2.1.2" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.23.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.21" />
   </ItemGroup>
