@@ -9,7 +9,7 @@ namespace Airdrop.AirdropFactories.Liquidity
         public ulong LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
         ulong LiquidityMinimum { get; set; }
+        public IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> account);
         public ulong GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings);
-        public Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses);
     }
 }

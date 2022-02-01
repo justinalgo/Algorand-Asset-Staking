@@ -24,41 +24,67 @@ namespace Utils.Indexer
             this.searchApi = searchApi;
         }
 
-        public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId)
+        public async Task<IEnumerable<Account>> GetAccounts(ulong assetId)
         {
-            List<string> walletAddresses = new List<string>();
+            List<Account> accounts = new List<Account>();
 
-            Response response = await this.searchApi.AccountsAsync(asset_id: assetId);
+            Response response = await this.searchApi.AccountsAsync(asset_id: assetId, include_all: false);
 
-            foreach (Account account in response.Accounts)
-            {
-                walletAddresses.Add(account.Address);
-            }
+            accounts.AddRange(response.Accounts);
 
             while (response.NextToken != null)
             {
-                response = await this.searchApi.AccountsAsync(asset_id: assetId, next: response.NextToken);
+                response = await this.searchApi.AccountsAsync(asset_id: assetId, include_all: false, next: response.NextToken);
 
-                foreach (Account account in response.Accounts)
+                accounts.AddRange(response.Accounts);
+            }
+
+            return accounts;
+        }
+
+        public async Task<IEnumerable<Account>> GetAccounts(ulong assetId, params ulong[] assetIds)
+        {
+            IEnumerable<Account> accounts = await this.GetAccounts(assetId);
+            List<Account> cleanedAccounts = new List<Account>();
+
+            foreach(Account account in accounts)
+            {
+                HashSet<ulong> accountAssets = account.Assets.Select(a => a.AssetId).ToHashSet();
+
+                bool containsAllAssets = true;
+
+                foreach (ulong id in assetIds)
                 {
-                    walletAddresses.Add(account.Address);
+                    if (!accountAssets.Contains(id))
+                    {
+                        containsAllAssets = false;
+                        break;
+                    }
+                }
+
+                if (containsAllAssets)
+                {
+                    cleanedAccounts.Add(account);
                 }
             }
 
-            return walletAddresses;
+            return cleanedAccounts;
         }
+
+        public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId)
+        {
+            IEnumerable<Account> accounts = await this.GetAccounts(assetId);
+
+            return accounts.Select(a => a.Address);
+        }
+
         public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId, params ulong[] assetIds)
         {
-            IEnumerable<string> addresses = await GetWalletAddresses(assetId);
+            IEnumerable<Account> accounts = await this.GetAccounts(assetId, assetIds);
 
-            foreach (ulong id in assetIds)
-            {
-                IEnumerable<string> intersectAddresses = await GetWalletAddresses(id);
-                addresses = addresses.Intersect(intersectAddresses);
-            }
-
-            return addresses;
+            return accounts.Select(a => a.Address);
         }
+
         public async Task<IEnumerable<string>> GetWalletAddresses(string address, ulong assetId, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, DateTimeOffset? afterTime = null)
         {
             List<string> walletAddresses = new List<string>();

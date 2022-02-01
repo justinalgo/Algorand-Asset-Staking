@@ -41,33 +41,32 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
+            IEnumerable<Account> accounts = await this.FetchAccounts();
             IDictionary<string, ulong> ab2Values = await this.GetAb2Values(assetValues);
             IDictionary<string, ulong> randValues = await this.GetRandValues(assetValues);
             
-            Parallel.ForEach<string>(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
                 ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
-                amount += this.GetAb2Amount(walletAddress, ab2Values);
-                amount += this.GetRandAmount(walletAddress, randValues);
+                amount += this.GetAb2Amount(account.Address, ab2Values);
+                amount += this.GetRandAmount(account.Address, randValues);
 
                 if (amount != 0)
                 {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
+                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
                 }
             });
 
             return airdropAmounts;
         }
 
-        public override async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId);
 
-            return walletAddresses;
+            return accounts;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()

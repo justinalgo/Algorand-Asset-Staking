@@ -27,29 +27,28 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
-            IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
+            IEnumerable<Account> accounts = await this.FetchAccounts();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
 
                 ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
                 if (amount > 0)
                 {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
+                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
                 }
             });
 
             return airdropAmounts;
         }
 
-        public override async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId);
 
-            return walletAddresses;
+            return accounts;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()

@@ -15,7 +15,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public abstract Task<IDictionary<ulong, ulong>> FetchAssetValues();
 
-        public abstract Task<IEnumerable<string>> FetchWalletAddresses();
+        public abstract Task<IEnumerable<Account>> FetchAccounts();
 
         public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
         {

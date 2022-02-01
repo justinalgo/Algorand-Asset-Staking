@@ -40,31 +40,28 @@ namespace Airdrop.AirdropFactories.Holdings
             return assetValues;
         }
 
-        public override async Task<IEnumerable<string>> FetchWalletAddresses()
+        public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.AssetId, this.stakeFlagAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId, this.stakeFlagAssetId);
 
-            walletAddresses.Except(this.revokedAddresses);
-
-            return walletAddresses;
+            return accounts.Where(a => !this.revokedAddresses.Contains(a.Address));
         }
 
         public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
             IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
             ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<string> walletAddresses = await this.FetchWalletAddresses();
+            IEnumerable<Account> accounts = await this.FetchAccounts();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 IEnumerable<AssetHolding> assetHoldings = account.Assets;
                 
                 ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
 
                 if (amount > 0)
                 {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
+                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
                 }
             });
 

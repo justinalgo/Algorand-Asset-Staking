@@ -30,53 +30,49 @@ namespace Airdrop.AirdropFactories.Liquidity
         }
         public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
         {
-            List<string> walletAddresses = (await this.FetchWalletAddresses()).ToList();
-            walletAddresses.Remove(this.LiquidityWallet);
-            walletAddresses.Remove(this.CreatorWallet);
-
-            IEnumerable<(string, ulong)> liquidityAmounts = await this.GetLiquidityAmounts(walletAddresses);
+            IEnumerable<Account> accounts = await this.FetchAccounts();
+            IEnumerable<(Account, ulong)> liquidityAmounts = this.GetLiquidityAmounts(accounts);
 
             ulong liquidityTotal = (ulong)liquidityAmounts.Sum(la => (double)la.Item2);
 
             List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
 
-            foreach ((string, ulong) liquidityAmount in liquidityAmounts)
+            foreach ((Account, ulong) liquidityAmount in liquidityAmounts)
             {
                 ulong dropAmount = this.CalculateDropAmount(DropTotal, liquidityTotal, liquidityAmount.Item2);
                 if (dropAmount > DropMinimum)
                 {
-                    airdropAmounts.Add(new AirdropAmount(liquidityAmount.Item1, this.AssetId, dropAmount));
+                    airdropAmounts.Add(new AirdropAmount(liquidityAmount.Item1.Address, this.AssetId, dropAmount));
                 }
             }
 
             return airdropAmounts;
         }
 
-        public async override Task<IEnumerable<string>> FetchWalletAddresses()
+        public async override Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(this.LiquidityAssetId, this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.AssetId);
 
-            return walletAddresses;
+            return accounts.Where(a => a.Address != this.CreatorWallet && a.Address != this.LiquidityWallet);
         }
 
-        public override Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses)
+        public override IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> accounts)
         {
-            ConcurrentBag<(string, ulong)> liquidityAmounts = new ConcurrentBag<(string, ulong)>();
+            ConcurrentBag<(Account, ulong)> liquidityAmounts = new ConcurrentBag<(Account, ulong)>();
 
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                Account account = this.indexerUtils.GetAccount(walletAddress).Result;
                 ulong liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);
 
                 if (liquidityAmount > this.LiquidityMinimum)
                 {
-                    IEnumerable<Transaction> transactions = this.indexerUtils.GetTransactions(walletAddress, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-2), txType: TxType.Axfer).Result;
-                    ulong lowAmount = this.GetAssetLowest(walletAddress, liquidityAmount, transactions);
-                    liquidityAmounts.Add((walletAddress, lowAmount));
+                    IEnumerable<Transaction> transactions = this.indexerUtils.GetTransactions(account.Address, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-6.5), txType: TxType.Axfer).Result;
+                    ulong lowAmount = this.GetAssetLowest(account.Address, liquidityAmount, transactions);
+                    liquidityAmounts.Add((account, lowAmount));
                 }
             });
 
-            return Task.FromResult<IEnumerable<(string, ulong)>>(liquidityAmounts);
+            return liquidityAmounts;
         }
     }
 }

@@ -16,9 +16,9 @@ namespace Airdrop.AirdropFactories.Liquidity
         public ulong Decimals { get; set; }
         public abstract Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts();
 
-        public abstract Task<IEnumerable<string>> FetchWalletAddresses();
+        public abstract Task<IEnumerable<Account>> FetchAccounts();
 
-        public abstract Task<IEnumerable<(string, ulong)>> GetLiquidityAmounts(IEnumerable<string> walletAddresses);
+        public abstract IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> account);
 
         public ulong GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings)
         {
