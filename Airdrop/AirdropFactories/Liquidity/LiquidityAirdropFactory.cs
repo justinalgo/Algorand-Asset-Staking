@@ -1,6 +1,7 @@
 ﻿using Algorand.V2.Indexer.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utils.Indexer;
@@ -12,13 +13,43 @@ namespace Airdrop.AirdropFactories.Liquidity
         public ulong LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
         public ulong LiquidityMinimum { get; set; }
-        public ulong AssetId { get; set; }
+        public ulong DropTotal { get; set; }
+        public ulong DropMinimum { get; set; }
+        public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
-        public abstract Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts();
-
         public abstract Task<IEnumerable<Account>> FetchAccounts();
 
         public abstract IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> account);
+
+        public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
+        {
+            IEnumerable<Account> accounts = await this.FetchAccounts();
+            IEnumerable<(Account, ulong)> liquidityInfoItems = this.GetLiquidityAmounts(accounts);
+            AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
+
+            ulong liquidityTotal = (ulong)liquidityInfoItems.Sum(la => (double)la.Item2);
+            double dropValue = this.CalculateLiquidityValue(liquidityTotal);
+
+            foreach ((Account, ulong) liquidityInfo in liquidityInfoItems)
+            {
+                Account account = liquidityInfo.Item1;
+                ulong liquidityAmount = liquidityInfo.Item2;
+                double dropAmount = liquidityAmount * dropValue;
+
+                if (dropAmount > DropMinimum)
+                {
+                    collectionManager.AddAirdropUnit(new AirdropUnit(
+                        account.Address,
+                        this.DropAssetId,
+                        this.LiquidityAssetId,
+                        dropValue,
+                        numberOfSourceAsset: liquidityAmount,
+                        isMultiplied: true));
+                }
+            }
+
+            return collectionManager.GetAirdropUnitCollections();
+        }
 
         public ulong GetLiquidityAssetAmount(IEnumerable<AssetHolding> assetHoldings)
         {
@@ -57,9 +88,9 @@ namespace Airdrop.AirdropFactories.Liquidity
             return lowest;
         }
 
-        public ulong CalculateDropAmount(ulong dropTotal, ulong liquidityTotal, ulong liquidityAmount)
+        public double CalculateLiquidityValue( ulong liquidityTotal)
         {
-            return (ulong)(dropTotal * ((double)liquidityAmount / (double)liquidityTotal));
+            return (double)this.DropTotal / (double)liquidityTotal;
         }
     }
 }

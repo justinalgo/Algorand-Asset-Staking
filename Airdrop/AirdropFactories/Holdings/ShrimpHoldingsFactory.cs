@@ -13,15 +13,14 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class ShrimpHoldingsFactory : HoldingsAirdropFactory
+    public class ShrimpHoldingsFactory : RandHoldingsAirdropFactory
     {
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
-        private readonly HttpClient httpClient;
 
-        public ShrimpHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory)
+        public ShrimpHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient())
         {
-            this.AssetId = 360019122;
+            this.DropAssetId = 360019122;
             this.Decimals = 0;
             this.CreatorAddresses = new string[]
             {
@@ -34,37 +33,10 @@ namespace Airdrop.AirdropFactories.Holdings
             };
             this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
-            this.httpClient = httpClientFactory.CreateClient();
         }
-
-        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
-            ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-            IDictionary<string, ulong> ab2Values = await this.GetAb2Values(assetValues);
-            IDictionary<string, ulong> randValues = await this.GetRandValues(assetValues);
-            
-            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
-            {
-                IEnumerable<AssetHolding> assetHoldings = account.Assets;
-                ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
-
-                amount += this.GetAb2Amount(account.Address, ab2Values);
-                amount += this.GetRandAmount(account.Address, randValues);
-
-                if (amount != 0)
-                {
-                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
-                }
-            });
-
-            return airdropAmounts;
-        }
-
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
 
             return accounts;
         }
@@ -78,121 +50,89 @@ namespace Airdrop.AirdropFactories.Holdings
             return assetValues;
         }
 
-        public ulong GetAb2Amount(string walletAddress, IDictionary<string, ulong> ab2Values)
+        public new async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
-            if (ab2Values.ContainsKey(walletAddress))
-            {
-                return ab2Values[walletAddress];
-            }
+            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
+            IEnumerable<Account> accounts = await this.FetchAccounts();
+            IDictionary<string, List<(ulong, ulong)>> randAccounts = await this.FetchRandAccounts();
+            IDictionary<string, List<(ulong, ulong)>> ab2Accounts = await this.FetchAb2Accounts();
 
-            return 0;
+            AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
+
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
+            {
+                this.AddAssetsInAccount(collectionManager, account, assetValues);
+
+                string address = account.Address;
+
+                this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                this.AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
+            });
+
+            return collectionManager.GetAirdropUnitCollections();
         }
 
-        private async Task<IDictionary<string, ulong>> GetAb2Values(IDictionary<ulong, ulong> assetValues)
+        public async Task<Dictionary<string, List<(ulong, ulong)>>> FetchAb2Accounts()
         {
-            Dictionary<string, ulong> walletValues = new Dictionary<string, ulong>();
+            Dictionary<string, List<(ulong, ulong)>> ab2Accounts = new Dictionary<string, List<(ulong, ulong)>>();
             EscrowInfo escrowInfo = await GetAb2EscrowInfo();
+
+            foreach (Escrow escrow in escrowInfo.LingLingEscrows)
+            {
+                ulong assetId = escrow.AssetId;
+                string address = escrow.SellerWalletAddress;
+
+                if (ab2Accounts.ContainsKey(address))
+                {
+                    ab2Accounts[address].Add((assetId, 1));
+                }
+                else
+                {
+                    ab2Accounts[address] = new List<(ulong, ulong)>() { (assetId, 1) };
+                }
+            }
 
             foreach (Escrow escrow in escrowInfo.MngoEscrows)
             {
-                if (walletValues.ContainsKey(escrow.SellerWalletAddress) && assetValues.ContainsKey(escrow.AssetId))
+                ulong assetId = escrow.AssetId;
+                string address = escrow.SellerWalletAddress;
+
+                if (ab2Accounts.ContainsKey(address))
                 {
-                    walletValues[escrow.SellerWalletAddress] += assetValues[escrow.AssetId];
+                    ab2Accounts[address].Add((assetId, 1));
                 }
-                else if (assetValues.ContainsKey(escrow.AssetId))
+                else
                 {
-                    walletValues[escrow.SellerWalletAddress] = assetValues[escrow.AssetId];
+                    ab2Accounts[address] = new List<(ulong, ulong)>() { (assetId, 1) };
                 }
             }
 
             foreach (Escrow escrow in escrowInfo.YieldingEscrows)
             {
-                if (walletValues.ContainsKey(escrow.SellerWalletAddress) && assetValues.ContainsKey(escrow.AssetId))
+                ulong assetId = escrow.AssetId;
+                string address = escrow.SellerWalletAddress;
+
+                if (ab2Accounts.ContainsKey(address))
                 {
-                    walletValues[escrow.SellerWalletAddress] += assetValues[escrow.AssetId];
+                    ab2Accounts[address].Add((assetId, 1));
                 }
-                else if (assetValues.ContainsKey(escrow.AssetId))
+                else
                 {
-                    walletValues[escrow.SellerWalletAddress] = assetValues[escrow.AssetId];
+                    ab2Accounts[address] = new List<(ulong, ulong)>() { (assetId, 1) };
                 }
             }
 
-            foreach (Escrow escrow in escrowInfo.LingLingEscrows)
-            {
-                if (walletValues.ContainsKey(escrow.SellerWalletAddress) && assetValues.ContainsKey(escrow.AssetId))
-                {
-                    walletValues[escrow.SellerWalletAddress] += assetValues[escrow.AssetId];
-                }
-                else if (assetValues.ContainsKey(escrow.AssetId))
-                {
-                    walletValues[escrow.SellerWalletAddress] = assetValues[escrow.AssetId];
-                }
-            }
-
-            return walletValues;
+            return ab2Accounts;
         }
 
         private async Task<EscrowInfo> GetAb2EscrowInfo()
         {
             string ab2endpoint = "https://linglingab2.vercel.app/api";
 
-            string jsonResponse = await httpClient.GetStringAsync(ab2endpoint);
+            string jsonResponse = await this.HttpClient.GetStringAsync(ab2endpoint);
             EscrowInfo escrowInfo = JsonConvert.DeserializeObject<EscrowInfo>(jsonResponse);
 
             return escrowInfo;
-        }
-
-        private ulong GetRandAmount(string walletAddress, IDictionary<string, ulong> randValues)
-        {
-            if (randValues.ContainsKey(walletAddress))
-            {
-                return randValues[walletAddress];
-            }
-
-            return 0;
-        }
-
-        public async Task<IDictionary<string, ulong>> GetRandValues(IDictionary<ulong, ulong> assetValues)
-        {
-            Dictionary<string, ulong> walletValues = new Dictionary<string, ulong>();
-            IEnumerable<(ulong, string)> randSellers = await GetRandSellers();
-
-            foreach ((ulong, string) randSeller in randSellers)
-            {
-                if (walletValues.ContainsKey(randSeller.Item2) && assetValues.ContainsKey(randSeller.Item1))
-                {
-                    walletValues[randSeller.Item2] += assetValues[randSeller.Item1];
-                }
-                else if (assetValues.ContainsKey(randSeller.Item1))
-                {
-                    walletValues[randSeller.Item2] = assetValues[randSeller.Item1];
-                }
-            }
-
-            return walletValues;
-        }
-
-        private async Task<IEnumerable<(ulong, string)>> GetRandSellers()
-        {
-            List<(ulong, string)> randSellers = new List<(ulong, string)>();
-
-            foreach (string creatorAddress in this.CreatorAddresses)
-            {
-                string randEndpoint = "https://www.randswap.com/v1/secondary/get-listings-for-creator?creatorAddress=" + creatorAddress;
-
-                string jsonResponse = await httpClient.GetStringAsync(randEndpoint);
-                Dictionary<string, dynamic> sellers = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonResponse);
-
-                foreach (var assetId in sellers.Keys)
-                {
-                    if (assetId != "name" && assetId != "royalty" && assetId != "escrowAddress")
-                    {
-                        randSellers.Add((ulong.Parse(assetId), sellers[assetId]["seller"]));
-                    }
-                }
-            }
-
-            return randSellers;
         }
     }
 

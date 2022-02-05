@@ -16,37 +16,16 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public CryptoBunnyHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos)
         {
-            this.AssetId = 329532956;
+            this.DropAssetId = 329532956;
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "BNYSETPFTL2657B5RCSW64A3M766GYBVRV5ALOM7F7LIRUZKBEOGF6YSO4" };
             this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
         }
 
-        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
-            List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-
-            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
-            {
-                IEnumerable<AssetHolding> assetHoldings = account.Assets;
-
-                ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
-
-                if (amount > 0)
-                {
-                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
-                }
-            });
-
-            return airdropAmounts;
-        }
-
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
 
             return accounts;
         }

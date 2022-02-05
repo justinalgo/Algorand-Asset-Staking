@@ -6,9 +6,9 @@ namespace Airdrop.AirdropFactories
 {
     public interface IAirdropFactory
     {
-        public ulong AssetId { get; set; }
+        public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
         public Task<IEnumerable<Account>> FetchAccounts();
-        public Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts();
+        public Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections();
     }
 }

@@ -8,6 +8,6 @@ namespace Airdrop.AirdropFactories.Holdings
     {
         public string[] CreatorAddresses { get; set; }
         public Task<IDictionary<ulong, ulong>> FetchAssetValues();
-        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues);
+        public void AddAssetsInAccount(AirdropUnitCollectionManager collectionManager, Account account, IDictionary<ulong, ulong> assetValues);
     }
 }

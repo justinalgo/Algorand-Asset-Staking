@@ -9,31 +9,47 @@ namespace Airdrop.AirdropFactories.Holdings
     public abstract class HoldingsAirdropFactory : IHoldingsAirdropFactory
     {
         public string[] CreatorAddresses { get; set; }
-        public ulong AssetId { get; set; }
+        public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
-        public abstract Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts();
-
         public abstract Task<IDictionary<ulong, ulong>> FetchAssetValues();
-
         public abstract Task<IEnumerable<Account>> FetchAccounts();
 
-        public ulong GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<ulong, ulong> assetValues)
+        public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
-            ulong airdropAmount = 0;
+            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
+            IEnumerable<Account> accounts = await this.FetchAccounts();
 
-            if (assetHoldings != null)
+            AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
+
+            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                foreach (AssetHolding miniAssetHolding in assetHoldings)
+                this.AddAssetsInAccount(collectionManager, account, assetValues);
+            });
+
+            return collectionManager.GetAirdropUnitCollections();
+        }
+
+        public void AddAssetsInAccount(AirdropUnitCollectionManager collectionManager, Account account, IDictionary<ulong, ulong> assetValues)
+        {
+            IEnumerable<AssetHolding> assetHoldings = account.Assets;
+
+            foreach (AssetHolding asset in assetHoldings)
+            {
+                ulong sourceAssetId = asset.AssetId;
+                ulong numberOfSourceAsset = asset.Amount;
+
+                if (assetValues.ContainsKey(sourceAssetId))
                 {
-                    if (miniAssetHolding.Amount > 0 &&
-                        assetValues.ContainsKey(miniAssetHolding.AssetId))
-                    {
-                        airdropAmount += (ulong)(assetValues[miniAssetHolding.AssetId] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount);
-                    }
+                    ulong assetValue = assetValues[sourceAssetId];
+                    collectionManager.AddAirdropUnit(new AirdropUnit(
+                        account.Address,
+                        this.DropAssetId,
+                        sourceAssetId,
+                        assetValue,
+                        numberOfSourceAsset: numberOfSourceAsset,
+                        isMultiplied: true));
                 }
             }
-
-            return airdropAmount;
         }
     }
 }

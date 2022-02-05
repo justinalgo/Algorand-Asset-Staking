@@ -11,14 +11,12 @@ namespace Airdrop.AirdropFactories.Liquidity
 {
     public class AcornLiquidityFactory : LiquidityAirdropFactory
     {
-        public string CreatorWallet { get; set; }
-        public ulong DropTotal { get; set; }
-        public ulong DropMinimum { get; set; }
         private readonly IIndexerUtils indexerUtils;
+        public string CreatorWallet { get; set; }
 
         public AcornLiquidityFactory(IIndexerUtils indexerUtils)
         {
-            this.AssetId = 226265212;
+            this.DropAssetId = 226265212;
             this.Decimals = 0;
             this.CreatorWallet = "GOGC4QDPXDK3WEVO2BYBS3LGSMTWDMQHDOO5KRJ7HLT6HDMI5FX7MLUMRA";
             this.LiquidityAssetId = 552642388;
@@ -28,30 +26,10 @@ namespace Airdrop.AirdropFactories.Liquidity
             this.DropMinimum = 0;
             this.indexerUtils = indexerUtils;
         }
-        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-            IEnumerable<(Account, ulong)> liquidityAmounts = this.GetLiquidityAmounts(accounts);
-
-            ulong liquidityTotal = (ulong)liquidityAmounts.Sum(la => (double)la.Item2);
-
-            List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
-
-            foreach ((Account, ulong) liquidityAmount in liquidityAmounts)
-            {
-                ulong dropAmount = this.CalculateDropAmount(DropTotal, liquidityTotal, liquidityAmount.Item2);
-                if (dropAmount > DropMinimum)
-                {
-                    airdropAmounts.Add(new AirdropAmount(liquidityAmount.Item1.Address, this.AssetId, dropAmount));
-                }
-            }
-
-            return airdropAmounts;
-        }
 
         public async override Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.DropAssetId);
 
             return accounts.Where(a => a.Address != this.CreatorWallet && a.Address != this.LiquidityWallet);
         }

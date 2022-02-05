@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Airdrop.AirdropFactories.Lottery
+namespace Airdrop.AirdropFactories.Random
 {
-    public interface ILotteryAirdropFactory : IAirdropFactory
+    public interface IRandomAirdropFactory : IAirdropFactory
     {
         public ulong NumberOfWinners { get; set; }
         public ulong TotalWinnings { get; set; }

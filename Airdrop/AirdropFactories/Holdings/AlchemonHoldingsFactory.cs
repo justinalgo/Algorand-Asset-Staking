@@ -18,7 +18,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public AlchemonHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos)
         {
-            this.AssetId = 310014962;
+            this.DropAssetId = 310014962;
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "OJGTHEJ2O5NXN7FVXDZZEEJTUEQHHCIYIE5MWY6BEFVVLZ2KANJODBOKGA" };
             this.revokedAddresses = new string[] {
@@ -42,30 +42,9 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.AssetId, this.stakeFlagAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, this.stakeFlagAssetId);
 
             return accounts.Where(a => !this.revokedAddresses.Contains(a.Address));
-        }
-
-        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
-            ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-
-            Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
-            {
-                IEnumerable<AssetHolding> assetHoldings = account.Assets;
-                
-                ulong amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
-
-                if (amount > 0)
-                {
-                    airdropAmounts.Add(new AirdropAmount(account.Address, this.AssetId, amount));
-                }
-            });
-
-            return airdropAmounts;
         }
     }
 }

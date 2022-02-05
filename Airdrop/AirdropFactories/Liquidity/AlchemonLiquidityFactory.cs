@@ -10,13 +10,11 @@ namespace Airdrop.AirdropFactories.Liquidity
 {
     public class AlchemonLiquidityFactory : LiquidityAirdropFactory
     {
-        public ulong DropTotal { get; set; }
-        public ulong DropMinimum { get; set; }
         private readonly IIndexerUtils indexerUtils;
 
         public AlchemonLiquidityFactory(IIndexerUtils indexerUtils)
         {
-            this.AssetId = 310014962;
+            this.DropAssetId = 310014962;
             this.Decimals = 0;
             this.LiquidityAssetId = 552701368;
             this.LiquidityWallet = "EJGN54S3OSQXDX5NYOGYZBGLIZZEKQSROO3AXKX2WPJ2CRMAW57YMDXWWE";
@@ -24,28 +22,6 @@ namespace Airdrop.AirdropFactories.Liquidity
             this.DropTotal = 12500;
             this.DropMinimum = 0;
             this.indexerUtils = indexerUtils;
-        }
-
-        public override async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-
-            IEnumerable<(Account, ulong)> liquidityAmounts = this.GetLiquidityAmounts(accounts);
-
-            ulong liquidityTotal = (ulong)liquidityAmounts.Sum(la => (double)la.Item2);
-            
-            List<AirdropAmount> airdropAmounts = new List<AirdropAmount>();
-
-            foreach ((Account, ulong) liquidityAmount in liquidityAmounts)
-            {
-                ulong dropAmount = this.CalculateDropAmount(DropTotal, liquidityTotal, liquidityAmount.Item2);
-                if (dropAmount > DropMinimum)
-                {
-                    airdropAmounts.Add(new AirdropAmount(liquidityAmount.Item1.Address, this.AssetId, dropAmount));
-                }
-            }
-
-            return airdropAmounts;
         }
 
         public override IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> accounts)
@@ -69,7 +45,7 @@ namespace Airdrop.AirdropFactories.Liquidity
 
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.DropAssetId);
 
             return accounts.Where(a => a.Address != this.LiquidityWallet);
         }
