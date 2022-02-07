@@ -34,7 +34,7 @@ namespace Airdrop.AirdropFactories.Liquidity
             {
                 Account account = liquidityInfo.Item1;
                 ulong liquidityAmount = liquidityInfo.Item2;
-                double dropAmount = liquidityAmount * dropValue;
+                ulong dropAmount = (ulong)(liquidityAmount * dropValue);
 
                 if (dropAmount > DropMinimum)
                 {

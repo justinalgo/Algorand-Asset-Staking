@@ -33,21 +33,24 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IEnumerable<AssetHolding> assetHoldings = account.Assets;
 
-            foreach (AssetHolding asset in assetHoldings)
+            if (assetHoldings != null)
             {
-                ulong sourceAssetId = asset.AssetId;
-                ulong numberOfSourceAsset = asset.Amount;
-
-                if (assetValues.ContainsKey(sourceAssetId))
+                foreach (AssetHolding asset in assetHoldings)
                 {
-                    ulong assetValue = assetValues[sourceAssetId];
-                    collectionManager.AddAirdropUnit(new AirdropUnit(
-                        account.Address,
-                        this.DropAssetId,
-                        sourceAssetId,
-                        assetValue,
-                        numberOfSourceAsset: numberOfSourceAsset,
-                        isMultiplied: true));
+                    ulong sourceAssetId = asset.AssetId;
+                    ulong numberOfSourceAsset = asset.Amount;
+
+                    if (assetValues.ContainsKey(sourceAssetId) && numberOfSourceAsset > 0)
+                    {
+                        ulong assetValue = assetValues[sourceAssetId];
+                        collectionManager.AddAirdropUnit(new AirdropUnit(
+                            account.Address,
+                            this.DropAssetId,
+                            sourceAssetId,
+                            assetValue,
+                            numberOfSourceAsset: numberOfSourceAsset,
+                            isMultiplied: true));
+                    }
                 }
             }
         }
