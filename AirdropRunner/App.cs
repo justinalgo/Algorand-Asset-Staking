@@ -15,6 +15,7 @@ using Util.KeyManagers;
 using Utils.Algod;
 using Utils.Indexer;
 using ApiException = Algorand.V2.Algod.Model.ApiException;
+using Encoder = Algorand.Encoder;
 using Transaction = Algorand.Transaction;
 
 namespace AirdropRunner
@@ -42,75 +43,79 @@ namespace AirdropRunner
 
         public async Task Run()
         {
-            IEnumerable<AirdropAmount> amounts = await holdingsAirdropFactory.FetchAirdropAmounts();
-
-            foreach (AirdropAmount amt in amounts.OrderByDescending(a => a.Amount))
+            IEnumerable<AirdropUnitCollection> collections = await holdingsAirdropFactory.FetchAirdropUnitCollections();
+            
+            foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
-                Console.WriteLine($"{amt.Wallet} : {amt.Amount}");
+                Console.WriteLine($"{collection.Wallet} : {collection.Total}");
             }
 
-            Console.WriteLine(amounts.Sum(a => (double)a.Amount));
-            Console.WriteLine(amounts.Count());
+            Console.WriteLine(collections.Sum(a => (double)a.Total));
+            Console.WriteLine(collections.Count());
             
             Console.ReadKey();
 
             ulong lastRound = await algodUtils.GetLastRound();
             Console.WriteLine($"Round start: {lastRound}");
 
-            Parallel.ForEach<AirdropAmount>(amounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, async airdropAmount =>
+            foreach (AirdropUnitCollection collection in collections)
             {
                 try
                 {
                     TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();
 
-                    Address address = new Address(airdropAmount.Wallet);
+                    Address address = new Address(collection.Wallet);
 
                     Transaction txn = Transaction.CreateAssetTransferTransaction(
                             assetSender: keyManager.GetAddress(),
                             assetReceiver: address,
                             assetCloseTo: null,
-                            assetAmount: airdropAmount.Amount,
+                            assetAmount: collection.Total,
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
                             note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
-                            assetIndex: airdropAmount.AssetId
+                            assetIndex: collection.DropAssetId
                         );
 
                     SignedTransaction stxn = keyManager.SignTransaction(txn);
 
                     PostTransactionsResponse resp = await this.algodUtils.SubmitTransaction(stxn);
-                    Console.WriteLine(airdropAmount.Wallet + " : " + airdropAmount.Amount + " with TxId: " + resp.TxId);
+                    Console.WriteLine(collection.Wallet + " : " + collection.Total + " with TxId: " + resp.TxId);
                 }
                 catch (ApiException<ErrorResponse> ex)
                 {
                     Console.WriteLine(ex.Result.Message);
-                    Console.WriteLine("ApiException on " + airdropAmount.Wallet);
+                    Console.WriteLine("ApiException on " + collection.Wallet);
                 }
                 catch (ArgumentException)
                 {
-                    Console.WriteLine(airdropAmount.Wallet + " is an invalid address");
+                    Console.WriteLine(collection.Wallet + " is an invalid address");
                 }
-            });
+                catch (AggregateException ex)
+                {
+                    Console.WriteLine(ex.Flatten().Message);
+                }
+            }
 
             await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
 
             IEnumerable<string> walletAddresses = await this.indexerUtils.GetWalletAddresses(
                 keyManager.GetAddress().EncodeAsString(),
-                holdingsAirdropFactory.AssetId,
+                holdingsAirdropFactory.DropAssetId,
                 addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender,
                 minRound: lastRound
             );
 
-            if (amounts.Count() != walletAddresses.Count())
+            if (collections.Count() != walletAddresses.Count())
             {
-                foreach (AirdropAmount amount in amounts)
+                foreach (AirdropUnitCollection collection in collections)
                 {
-                    if (!walletAddresses.Contains(amount.Wallet))
+                    if (!walletAddresses.Contains(collection.Wallet))
                     {
-                        Console.WriteLine($"Failed to drop: {amount.Wallet}");
+                        Console.WriteLine($"Failed to drop: {collection.Wallet}");
                     }
                 }
             }
