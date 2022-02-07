@@ -47,13 +47,13 @@ namespace Utils.Indexer
             IEnumerable<Account> accounts = await this.GetAccounts(assetId);
             List<Account> cleanedAccounts = new List<Account>();
 
-            foreach(Account account in accounts)
+            foreach(Account account in accounts.Where(a => a.Assets != null))
             {
                 HashSet<ulong> accountAssets = account.Assets.Select(a => a.AssetId).ToHashSet();
 
                 bool containsAllAssets = true;
 
-                foreach (ulong id in assetIds)
+                foreach (ulong id in assetIds.Append(assetId))
                 {
                     if (!accountAssets.Contains(id))
                     {
@@ -89,7 +89,7 @@ namespace Utils.Indexer
         {
             List<string> walletAddresses = new List<string>();
 
-            IEnumerable<Transaction> transactions = await GetTransactions(address, assetId, addressRole, txType, currencyGreaterThan, currencyLessThan, minRound);
+            IEnumerable<Transaction> transactions = await GetTransactions(address, assetId, addressRole, txType, currencyGreaterThan, currencyLessThan, minRound, afterTime);
 
             foreach (Transaction transaction in transactions)
             {
@@ -120,7 +120,7 @@ namespace Utils.Indexer
         }
         public async Task<Asset> GetAsset(ulong assetId)
         {
-            Response9 response = await lookupApi.AssetsAsync(assetId);
+            Response9 response = await lookupApi.AssetsAsync(assetId, include_all: false);
 
             return response.Asset;
         }
@@ -172,7 +172,7 @@ namespace Utils.Indexer
         }
         public async Task<Account> GetAccount(string address)
         {
-            Response6 response = await lookupApi.AccountsAsync(address);
+            Response6 response = await lookupApi.AccountsAsync(address, include_all: false);
 
             return response.Account;
         }
@@ -180,7 +180,7 @@ namespace Utils.Indexer
         {
             List<MiniAssetHolding> miniAssetHoldings = new List<MiniAssetHolding>();
 
-            Response10 response = await this.lookupApi.BalancesAsync(assetId);
+            Response10 response = await this.lookupApi.BalancesAsync(assetId, include_all: false);
 
             miniAssetHoldings.AddRange(response.Balances);
 
