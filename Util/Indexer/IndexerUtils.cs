@@ -24,6 +24,13 @@ namespace Utils.Indexer
             this.searchApi = searchApi;
         }
 
+        public async Task<Account> GetAccount(string address)
+        {
+            Response6 response = await lookupApi.AccountsAsync(address, include_all: false);
+
+            return response.Account;
+        }
+
         public async Task<IEnumerable<Account>> GetAccounts(ulong assetId)
         {
             List<Account> accounts = new List<Account>();
@@ -42,9 +49,9 @@ namespace Utils.Indexer
             return accounts;
         }
 
-        public async Task<IEnumerable<Account>> GetAccounts(ulong assetId, params ulong[] assetIds)
+        public async Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetIds)
         {
-            IEnumerable<Account> accounts = await this.GetAccounts(assetId);
+            IEnumerable<Account> accounts = await this.GetAccounts(assetIds.First());
             List<Account> cleanedAccounts = new List<Account>();
 
             foreach(Account account in accounts.Where(a => a.Assets != null))
@@ -53,7 +60,7 @@ namespace Utils.Indexer
 
                 bool containsAllAssets = true;
 
-                foreach (ulong id in assetIds.Append(assetId))
+                foreach (ulong id in assetIds)
                 {
                     if (!accountAssets.Contains(id))
                     {
@@ -78,9 +85,9 @@ namespace Utils.Indexer
             return accounts.Select(a => a.Address);
         }
 
-        public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId, params ulong[] assetIds)
+        public async Task<IEnumerable<string>> GetWalletAddresses(IEnumerable<ulong> assetIds)
         {
-            IEnumerable<Account> accounts = await this.GetAccounts(assetId, assetIds);
+            IEnumerable<Account> accounts = await this.GetAccounts(assetIds);
 
             return accounts.Select(a => a.Address);
         }
@@ -118,12 +125,14 @@ namespace Utils.Indexer
 
             return walletAddresses;
         }
+        
         public async Task<Asset> GetAsset(ulong assetId)
         {
             Response9 response = await lookupApi.AssetsAsync(assetId, include_all: false);
 
             return response.Asset;
         }
+        
         public async Task<IEnumerable<Asset>> GetAsset(IEnumerable<ulong> assetIds)
         {
             List<Asset> assets = new List<Asset>();
@@ -135,6 +144,7 @@ namespace Utils.Indexer
 
             return assets;
         }
+        
         public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong assetId, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, DateTimeOffset? afterTime = null)
         {
             List<Transaction> transactions = new List<Transaction>();
@@ -170,12 +180,7 @@ namespace Utils.Indexer
 
             return transactions;
         }
-        public async Task<Account> GetAccount(string address)
-        {
-            Response6 response = await lookupApi.AccountsAsync(address, include_all: false);
-
-            return response.Account;
-        }
+        
         public async Task<IEnumerable<MiniAssetHolding>> GetBalances(ulong assetId)
         {
             List<MiniAssetHolding> miniAssetHoldings = new List<MiniAssetHolding>();
@@ -190,6 +195,41 @@ namespace Utils.Indexer
             }
 
             return response.Balances;
+        }
+
+        public async Task<IEnumerable<Asset>> GetCreatedAssets(string address, string prefix = null)
+        {
+            Account account = await this.GetAccount(address);
+
+            if (prefix != null)
+            {
+                return account.CreatedAssets.Where(ca => ca.Params.UnitName.StartsWith(prefix));
+            }
+            else
+            {
+                return account.CreatedAssets;
+            }
+        }
+
+        public async Task<IEnumerable<Asset>> GetCreatedAssets(IEnumerable<string> addresses, string prefix = null)
+        {
+            List<Asset> assets = new List<Asset>();
+
+            foreach (string address in addresses)
+            {
+                Account account = await this.GetAccount(address);
+
+                if (prefix != null)
+                {
+                    assets.AddRange(account.CreatedAssets.Where(ca => ca.Params.UnitName.StartsWith(prefix)));
+                }
+                else
+                {
+                    assets.AddRange(account.CreatedAssets);
+                }
+            }
+
+            return assets;
         }
     }
 }

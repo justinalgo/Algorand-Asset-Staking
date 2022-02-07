@@ -29,7 +29,7 @@ namespace Airdrop.AirdropFactories.Liquidity
 
         public async override Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.LiquidityAssetId, this.DropAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(new[] { this.LiquidityAssetId, this.DropAssetId });
 
             return accounts.Where(a => a.Address != this.CreatorWallet && a.Address != this.LiquidityWallet);
         }
