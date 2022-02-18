@@ -82,11 +82,11 @@ namespace Airdrop.AirdropFactories.Holdings
 
                         if (randSellers.ContainsKey(walletAddress))
                         {
-                            randSellers[key].Add((assetId, 1));
+                            randSellers[walletAddress].Add((assetId, 1));
                         }
                         else
                         {
-                            randSellers[key] = new List<(ulong, ulong)>() { (assetId, 1) };
+                            randSellers[walletAddress] = new List<(ulong, ulong)>() { (assetId, 1) };
                         }
                     }
                 }
