@@ -39,13 +39,6 @@ stages:
           $(workingDirectory)/AirdropFunctionTest/AirdropFunctionTest.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
 
-    - task: DotNetCoreCLI@2 
-      displayName: Test
-      inputs:
-        command: test
-        projects: '$(workingDirectory)/AirdropFunctionTest/AirdropFunctionTest.csproj'
-        arguments: '--configuration $(buildConfiguration)'
-
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
@@ -58,10 +51,31 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
 
-- stage: Deploy
-  displayName: Deploy stage
+- stage: Test
+  displayName: Test stage
   dependsOn: Build
   condition: succeeded()
+
+  jobs:
+  - job: Test
+    displayName: Test
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+    - task: DotNetCoreCLI@2 
+      displayName: Test
+      inputs:
+        command: test
+        projects: '$(workingDirectory)/AirdropFunctionTest/AirdropFunctionTest.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: 
+  - Build
+  - Test
+  condition: and(succeeded('Build'), succeeded('Test'))
 
   jobs:
   - deployment: Deploy
