@@ -1,25 +1,34 @@
-﻿using Algorand.V2.Indexer.Model;
+﻿using Airdrop.AirdropFactories.Random;
+using Algorand.V2.Indexer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utils.Indexer;
 
-namespace Airdrop.AirdropFactories.Random
+namespace Airdrop.AirdropFactories.AcornPartners
 {
-    public abstract class RandomAirdropFactory
+    public abstract class AcornPartner
     {
+        private readonly IIndexerUtils indexerUtils;
+
+        public AcornPartner(IIndexerUtils indexerUtils)
+        {
+            this.DropAssetId = 226265212;
+            this.Decimals = 0;
+            this.indexerUtils = indexerUtils;
+        }
+
         public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
         public ulong NumberOfWinners { get; set; }
         public ulong TotalWinnings { get; set; }
 
-        public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
+        public async Task FetchAirdropUnitCollections(AirdropUnitCollectionManager airdropManager, IEnumerable<Account> accounts)
         {
             HashSet<ulong> assetIds = await this.FetchAssetIds();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
             List<(Account, ulong)> eligibleWinners = new List<(Account, ulong)>();
-            AirdropUnitCollectionManager airdropManager = new AirdropUnitCollectionManager();
 
             foreach (Account account in accounts)
             {
@@ -49,13 +58,16 @@ namespace Airdrop.AirdropFactories.Random
 
                 i++;
             }
-
-            return airdropManager.GetAirdropUnitCollections();
         }
 
         public abstract Task<HashSet<ulong>> FetchAssetIds();
 
-        public abstract Task<IEnumerable<Account>> FetchAccounts();
+        public async Task<IEnumerable<Account>> FetchAccounts()
+        {
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
+
+            return accounts;
+        }
 
         public IEnumerable<(Account, ulong)> GetEligibleWinners(Account account, HashSet<ulong> assetIds)
         {

@@ -6,37 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Airdrop", "Airdrop\Airdrop.csproj", "{9738AD26-1D65-4968-BC76-38B6DB597E30}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirdropRunner", "AirdropRunner\AirdropRunner.csproj", "{E51911FE-7A76-4509-B2CE-A8F738994D9B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A773FEAA-B8EC-4194-891A-9E88618F7D46} = {A773FEAA-B8EC-4194-891A-9E88618F7D46}
-	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Util\Utils.csproj", "{A773FEAA-B8EC-4194-891A-9E88618F7D46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj", "{E6336422-CDF2-4BD7-8FD0-01F79C56BA10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShrimpAirdropFunction", "ShrimpAirdropFunction\ShrimpAirdropFunction.csproj", "{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirdropFunction", "AirdropFunction\AirdropFunction.csproj", "{45E875CB-FBF6-4224-B6CF-4400FEB4550B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlchemonAirdropFunction", "AlchemonAirdropFunction\AlchemonAirdropFunction.csproj", "{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlchemonAirdropFunctionTest", "AlchemonAirdropFunctionTest\AlchemonAirdropFunctionTest.csproj", "{20C7A5D1-E804-4233-8006-73C8B27227CB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShrimpAirdropFunctionTest", "ShrimpAirdropFunctionTest\ShrimpAirdropFunctionTest.csproj", "{5653E9EB-18F7-486C-9662-3CA7D13A1948}"
-	ProjectSection(ProjectDependencies) = postProject
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E} = {230B0F46-5ED2-4DB1-8797-8CA48FB4573E}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirdropFunctions", "AirdropFunctions", "{B64AF18F-4323-41E0-BCFD-5DD2940821AD}"
-	ProjectSection(SolutionItems) = preProject
-		appsettings.json = appsettings.json
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirdropFunctionTests", "AirdropFunctionTests", "{BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanaAirdropFunction", "NanaAirdropFunction\NanaAirdropFunction.csproj", "{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanaAirdropFunctionTest", "NanaAirdropFunctionTest\NanaAirdropFunctionTest.csproj", "{2771C5F5-F9B3-4A63-8204-00E850FB2F38}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorAirdropFunction", "RaptorAirdropFunction\RaptorAirdropFunction.csproj", "{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorAirdropFunctionTest", "RaptorAirdropFunctionTest\RaptorAirdropFunctionTest.csproj", "{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirdropFunctionTest", "AirdropFunctionTest\AirdropFunctionTest.csproj", "{59900AA3-AD60-4A9E-97BA-F4828B4A738E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,55 +27,21 @@ Global
 		{E51911FE-7A76-4509-B2CE-A8F738994D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E51911FE-7A76-4509-B2CE-A8F738994D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E51911FE-7A76-4509-B2CE-A8F738994D9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A773FEAA-B8EC-4194-891A-9E88618F7D46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A773FEAA-B8EC-4194-891A-9E88618F7D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A773FEAA-B8EC-4194-891A-9E88618F7D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A773FEAA-B8EC-4194-891A-9E88618F7D46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20C7A5D1-E804-4233-8006-73C8B27227CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5653E9EB-18F7-486C-9662-3CA7D13A1948}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B4C5DD4-6956-4164-B7AB-0C047D8B8853}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2771C5F5-F9B3-4A63-8204-00E850FB2F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2771C5F5-F9B3-4A63-8204-00E850FB2F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2771C5F5-F9B3-4A63-8204-00E850FB2F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2771C5F5-F9B3-4A63-8204-00E850FB2F38}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C313A4C-5B5B-4359-8E9B-B1B485DA113D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6336422-CDF2-4BD7-8FD0-01F79C56BA10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6336422-CDF2-4BD7-8FD0-01F79C56BA10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6336422-CDF2-4BD7-8FD0-01F79C56BA10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6336422-CDF2-4BD7-8FD0-01F79C56BA10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E875CB-FBF6-4224-B6CF-4400FEB4550B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E875CB-FBF6-4224-B6CF-4400FEB4550B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E875CB-FBF6-4224-B6CF-4400FEB4550B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E875CB-FBF6-4224-B6CF-4400FEB4550B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59900AA3-AD60-4A9E-97BA-F4828B4A738E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59900AA3-AD60-4A9E-97BA-F4828B4A738E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59900AA3-AD60-4A9E-97BA-F4828B4A738E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59900AA3-AD60-4A9E-97BA-F4828B4A738E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{230B0F46-5ED2-4DB1-8797-8CA48FB4573E} = {B64AF18F-4323-41E0-BCFD-5DD2940821AD}
-		{6F84D9CE-12DB-44ED-ABFC-E4FDAE72B8F9} = {B64AF18F-4323-41E0-BCFD-5DD2940821AD}
-		{20C7A5D1-E804-4233-8006-73C8B27227CB} = {BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}
-		{5653E9EB-18F7-486C-9662-3CA7D13A1948} = {BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}
-		{4B4C5DD4-6956-4164-B7AB-0C047D8B8853} = {B64AF18F-4323-41E0-BCFD-5DD2940821AD}
-		{2771C5F5-F9B3-4A63-8204-00E850FB2F38} = {BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}
-		{1C313A4C-5B5B-4359-8E9B-B1B485DA113D} = {B64AF18F-4323-41E0-BCFD-5DD2940821AD}
-		{BE0FFB2B-D3C8-4029-B8FF-1AC89AB76F79} = {BB7F10F4-FC38-49D3-B752-4E9F48B3B8C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB8D4FA3-6D1C-4BD8-B039-EAFE26971028}

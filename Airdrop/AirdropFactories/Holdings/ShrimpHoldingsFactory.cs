@@ -7,8 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Util;
-using Util.Cosmos;
+using Utils.Cosmos;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
@@ -65,8 +64,15 @@ namespace Airdrop.AirdropFactories.Holdings
 
                 string address = account.Address;
 
-                this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
-                this.AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
+                if (randAccounts.ContainsKey(address))
+                {
+                    this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                }
+
+                if (ab2Accounts.ContainsKey(address))
+                {
+                    this.AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
+                }
             });
 
             return collectionManager.GetAirdropUnitCollections();

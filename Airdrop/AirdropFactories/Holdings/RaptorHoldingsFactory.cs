@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Util;
-using Util.Cosmos;
+using Utils;
+using Utils.Cosmos;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
@@ -35,7 +35,7 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin", "MoonDude", "Numbers", "BuzzyBees");
 
-            Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
+            Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => (ulong)(av.Value * Math.Pow(10, this.Decimals)));
 
             return assetValues;
         }

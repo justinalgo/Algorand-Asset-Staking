@@ -8,15 +8,15 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
-    public abstract class LiquidityAirdropFactory : ILiquidityAirdropFactory
+    public abstract class LiquidityAirdropFactory
     {
+        public ulong DropAssetId { get; set; }
+        public ulong Decimals { get; set; }
         public ulong LiquidityAssetId { get; set; }
         public string LiquidityWallet { get; set; }
         public ulong LiquidityMinimum { get; set; }
         public ulong DropTotal { get; set; }
         public ulong DropMinimum { get; set; }
-        public ulong DropAssetId { get; set; }
-        public ulong Decimals { get; set; }
         public abstract Task<IEnumerable<Account>> FetchAccounts();
 
         public abstract IEnumerable<(Account, ulong)> GetLiquidityAmounts(IEnumerable<Account> account);

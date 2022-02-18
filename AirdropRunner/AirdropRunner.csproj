@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Airdrop\Airdrop.csproj" />
-    <ProjectReference Include="..\Util\Utils.csproj" />
+    <ProjectReference Include="..\Utils\Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

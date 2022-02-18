@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Util;
-using Util.Cosmos;
+using Utils.Cosmos;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings

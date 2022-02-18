@@ -9,9 +9,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Util;
-using Util.Cosmos;
-using Util.KeyManagers;
+using Utils.Cosmos;
+using Utils.KeyManagers;
 using Utils.Algod;
 using Utils.Indexer;
 
@@ -64,9 +63,7 @@ namespace AirdropRunner
                     services.AddTransient<IAlgodUtils, AlgodUtils>();
                     services.AddTransient<IIndexerUtils, IndexerUtils>();
                     services.AddTransient<ICosmos, Cosmos>();
-                    services.AddTransient<IKeyManager, AirdropKey>();
-                    services.AddTransient<IHoldingsAirdropFactory, AlchemonHoldingsFactory>();
-                    services.AddTransient<ILiquidityAirdropFactory, AlchemonLiquidityFactory>();
+                    services.AddTransient<IKeyManager, KeyManager>();
                     services.AddTransient<App>();
                 });
     }

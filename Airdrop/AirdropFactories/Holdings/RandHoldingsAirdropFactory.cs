@@ -31,7 +31,10 @@ namespace Airdrop.AirdropFactories.Holdings
 
                 string address = account.Address;
 
-                this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                if (randAccounts.ContainsKey(address))
+                {
+                    this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                }
             });
 
             return collectionManager.GetAirdropUnitCollections();

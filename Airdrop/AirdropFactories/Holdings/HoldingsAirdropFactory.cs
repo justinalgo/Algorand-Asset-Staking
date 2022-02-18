@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public abstract class HoldingsAirdropFactory : IHoldingsAirdropFactory
+    public abstract class HoldingsAirdropFactory
     {
-        public string[] CreatorAddresses { get; set; }
         public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
+        public string[] CreatorAddresses { get; set; }
         public abstract Task<IDictionary<ulong, ulong>> FetchAssetValues();
         public abstract Task<IEnumerable<Account>> FetchAccounts();
 
