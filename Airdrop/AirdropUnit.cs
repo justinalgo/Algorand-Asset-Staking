@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-
-namespace Airdrop
+﻿namespace Airdrop
 {
     public class AirdropUnit
     {

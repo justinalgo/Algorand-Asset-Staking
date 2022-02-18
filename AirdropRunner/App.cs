@@ -1,6 +1,5 @@
 ﻿using Airdrop;
 using Airdrop.AirdropFactories.Holdings;
-using Airdrop.AirdropFactories.Liquidity;
 using Algorand;
 using Algorand.V2.Algod.Model;
 using Microsoft.Extensions.Logging;
@@ -10,17 +9,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Utils;
-using Utils.Cosmos;
-using Utils.KeyManagers;
 using Utils.Algod;
+using Utils.Cosmos;
 using Utils.Indexer;
-using ApiException = Algorand.V2.Algod.Model.ApiException;
-using Encoder = Algorand.Encoder;
+using Utils.KeyManagers;
 using Transaction = Algorand.Transaction;
-using Airdrop.AirdropFactories.Random;
-using Airdrop.AirdropFactories.Unique;
-using Airdrop.AirdropFactories.AcornPartners;
 
 namespace AirdropRunner
 {
@@ -57,7 +50,7 @@ namespace AirdropRunner
 
             Console.WriteLine(collections.Sum(a => (double)a.Total));
             Console.WriteLine(collections.Count());
-            
+
             Console.ReadKey();
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();

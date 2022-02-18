@@ -1,12 +1,9 @@
 ﻿using Algorand.V2.Indexer.Model;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Utils;
 using Utils.Cosmos;
 using Utils.Indexer;
 
@@ -21,7 +18,7 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             this.DropAssetId = 426980914;
             this.Decimals = 2;
-            this.CreatorAddresses = new string[] { 
+            this.CreatorAddresses = new string[] {
                 "EYERHFMTLLBVVDV4RKGKSTMWU4QZ7IG5HUEXQYO3UVX4ABQ5MDNJIKN7HQ",
                 "MOON3QNZT5XBPIYLMASRS5RSFRVVZF4SAMG4Q22KQFRLWKXXW2S2MY2WD4",
                 "OPBIE5S3IUKLNFU6C2DK5B3FTYD7W7BMVDTNMTFFLKVQXPUUNAFBHZHVBY",

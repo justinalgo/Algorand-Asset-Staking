@@ -1,15 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Algorand;
 using Algorand.V2.Algod;
-using Algorand.V2;
 using Algorand.V2.Algod.Model;
-using System.Threading.Tasks;
-using Algorand;
-using Encoder = Algorand.Encoder;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using Encoder = Algorand.Encoder;
 
 namespace Utils.Algod
 {

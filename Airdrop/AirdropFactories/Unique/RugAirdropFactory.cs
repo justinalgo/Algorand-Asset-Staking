@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Utils.Indexer;
 
@@ -48,7 +47,7 @@ namespace Airdrop.AirdropFactories.Unique
             }
             Console.WriteLine(eligibleWinners.Count());
 
-            ulong totalWinners = (ulong) this.WinningItems.Sum(wi => (double)wi.NumberOfWinners);
+            ulong totalWinners = (ulong)this.WinningItems.Sum(wi => (double)wi.NumberOfWinners);
 
             System.Random random = new System.Random();
             ulong i = 0;

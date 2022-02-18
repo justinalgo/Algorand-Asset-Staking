@@ -1,16 +1,15 @@
+using Airdrop;
+using Airdrop.AirdropFactories.Holdings;
+using Algorand;
+using Algorand.V2.Algod.Model;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Airdrop;
-using Airdrop.AirdropFactories.Holdings;
-using Algorand;
-using Algorand.V2.Algod.Model;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Extensions.Logging;
 using Utils.Algod;
 using Utils.Cosmos;
 using Utils.Indexer;
@@ -40,7 +39,7 @@ namespace AirdropFunction
         }
 
         [FunctionName("RaptorHoldingsAirdrop")]
-        public async Task RaptorHoldingsAirdrop([TimerTrigger(RaptorHoldingsAirdropSchedule)]TimerInfo myTimer, ILogger log)
+        public async Task RaptorHoldingsAirdrop([TimerTrigger(RaptorHoldingsAirdropSchedule)] TimerInfo myTimer, ILogger log)
         {
             if (myTimer.IsPastDue)
             {

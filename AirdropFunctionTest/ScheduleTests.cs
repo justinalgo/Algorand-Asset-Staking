@@ -1,5 +1,4 @@
 using AirdropFunction;
-using System;
 using Xunit;
 
 namespace FunctionTest

@@ -1,5 +1,4 @@
-﻿using Airdrop.AirdropFactories.Holdings;
-using Algorand.V2.Algod;
+﻿using Algorand.V2.Algod;
 using Algorand.V2.Indexer;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;

@@ -1,9 +1,6 @@
-﻿using Airdrop.AirdropFactories.Random;
-using Algorand.V2.Indexer.Model;
-using System;
+﻿using Algorand.V2.Indexer.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Utils.Indexer;
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace Airdrop
 {
@@ -19,7 +18,7 @@ namespace Airdrop
 
         public AirdropUnitCollection((string, ulong) infoTuple) : this(infoTuple.Item1, infoTuple.Item2) { }
 
-        public AirdropUnitCollection(string wallet, ulong dropAssetId, AirdropUnit airdropUnit) : this (wallet, dropAssetId)
+        public AirdropUnitCollection(string wallet, ulong dropAssetId, AirdropUnit airdropUnit) : this(wallet, dropAssetId)
         {
             this.AddAirdropUnit(airdropUnit);
         }

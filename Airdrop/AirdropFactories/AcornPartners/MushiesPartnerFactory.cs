@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Utils.Indexer;
 
@@ -17,7 +16,7 @@ namespace Airdrop.AirdropFactories.AcornPartners
         public MushiesPartnerFactory(IIndexerUtils indexerUtils, ulong totalWinnings) : base(indexerUtils)
         {
             this.CreatorAddresses = new string[] {
-                "NFZLQZAD3M3IGTF5DK2JENEAHOBP6V656P5S2EJKIBOI2KIV3VAJFNDRKI", 
+                "NFZLQZAD3M3IGTF5DK2JENEAHOBP6V656P5S2EJKIBOI2KIV3VAJFNDRKI",
                 "UWDYKPFNMTPDE64TLXVX2NQIVC4LP44XEZFF3KXDAVC63FPDAR3SR3AFP4"};
             this.RevokedAssets = new ulong[0];
             this.NumberOfWinners = 5;

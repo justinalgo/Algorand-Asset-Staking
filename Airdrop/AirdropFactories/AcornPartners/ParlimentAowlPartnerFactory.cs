@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Utils.Indexer;
 
@@ -17,8 +16,8 @@ namespace Airdrop.AirdropFactories.AcornPartners
         public ParlimentAowlPartnerFactory(IIndexerUtils indexerUtils, ulong totalWinnings) : base(indexerUtils)
         {
             this.CreatorAddresses = new string[] {
-                "AOWLLUX3BBLDV6KUZYQ7FBZTIWGWRRJO6B5XL2DFQ6WLITHUK26OO7IGMI", 
-                "AOWL3ZOC55JJDB5LU5CCIVK3WITVXMVZU6PV2CQQOLXUNCTOJQ6VJCPYAU", 
+                "AOWLLUX3BBLDV6KUZYQ7FBZTIWGWRRJO6B5XL2DFQ6WLITHUK26OO7IGMI",
+                "AOWL3ZOC55JJDB5LU5CCIVK3WITVXMVZU6PV2CQQOLXUNCTOJQ6VJCPYAU",
                 "AOWLDAJSAIHNR4J2TKB4U32Z73O7W52JGJUGUR5RW6ZH46G3ET4IFNNGQ4"};
             this.RevokedAssets = new ulong[0];
             this.NumberOfWinners = 8;

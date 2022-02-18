@@ -1,12 +1,9 @@
-﻿using Algorand.V2;
-using Algorand.V2.Indexer;
+﻿using Algorand.V2.Indexer;
 using Algorand.V2.Indexer.Model;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Utils.Indexer
@@ -54,7 +51,7 @@ namespace Utils.Indexer
             IEnumerable<Account> accounts = await this.GetAccounts(assetIds.First());
             List<Account> cleanedAccounts = new List<Account>();
 
-            foreach(Account account in accounts.Where(a => a.Assets != null))
+            foreach (Account account in accounts.Where(a => a.Assets != null))
             {
                 HashSet<ulong> accountAssets = account.Assets.Select(a => a.AssetId).ToHashSet();
 
@@ -125,14 +122,14 @@ namespace Utils.Indexer
 
             return walletAddresses;
         }
-        
+
         public async Task<Asset> GetAsset(ulong assetId)
         {
             Response9 response = await lookupApi.AssetsAsync(assetId, include_all: false);
 
             return response.Asset;
         }
-        
+
         public async Task<IEnumerable<Asset>> GetAsset(IEnumerable<ulong> assetIds)
         {
             List<Asset> assets = new List<Asset>();
@@ -144,7 +141,7 @@ namespace Utils.Indexer
 
             return assets;
         }
-        
+
         public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, DateTimeOffset? afterTime = null)
         {
             List<Transaction> transactions = new List<Transaction>();
@@ -180,7 +177,7 @@ namespace Utils.Indexer
 
             return transactions;
         }
-        
+
         public async Task<IEnumerable<MiniAssetHolding>> GetBalances(ulong assetId)
         {
             List<MiniAssetHolding> miniAssetHoldings = new List<MiniAssetHolding>();

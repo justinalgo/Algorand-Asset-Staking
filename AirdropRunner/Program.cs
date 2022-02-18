@@ -1,6 +1,4 @@
-﻿using Airdrop.AirdropFactories.Holdings;
-using Airdrop.AirdropFactories.Liquidity;
-using Algorand.V2.Algod;
+﻿using Algorand.V2.Algod;
 using Algorand.V2.Indexer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,10 +7,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Utils.Cosmos;
-using Utils.KeyManagers;
 using Utils.Algod;
+using Utils.Cosmos;
 using Utils.Indexer;
+using Utils.KeyManagers;
 
 namespace AirdropRunner
 {

@@ -1,10 +1,7 @@
 ﻿using Algorand.V2.Indexer.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Liquidity
 {
@@ -88,7 +85,7 @@ namespace Airdrop.AirdropFactories.Liquidity
             return lowest;
         }
 
-        public double CalculateLiquidityValue( ulong liquidityTotal)
+        public double CalculateLiquidityValue(ulong liquidityTotal)
         {
             return (double)this.DropTotal / (double)liquidityTotal;
         }
