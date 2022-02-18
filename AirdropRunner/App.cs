@@ -38,7 +38,23 @@ namespace AirdropRunner
 
         public async Task Run()
         {
-            Key key = keyManager.CavernaWallet;
+            ulong round = 19321702;
+            Key shrimpKey = this.keyManager.ShrimpWallet;
+
+            var transactions = await indexerUtils.GetTransactions(shrimpKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: round);
+            HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
+
+            Console.WriteLine(transactions.Count());
+
+            foreach (var txn in transactions)
+            {
+                if (!txIds.Contains(txn.Id))
+                {
+                    Console.WriteLine("Failed to drop: " + txn.AssetTransferTransaction.Receiver);
+                }
+            }
+
+            /*Key key = keyManager.CavernaWallet;
             var factory = new RaptorHoldingsFactory(indexerUtils, cosmos, httpClientFactory);
 
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
@@ -102,7 +118,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }
+            }*/
         }
     }
 }

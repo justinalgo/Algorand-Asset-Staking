@@ -97,7 +97,8 @@ namespace AirdropFunction
 
             await this.algodUtils.SubmitSignedTransactions(signedTransactions);
 
-            await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
+            ulong lastRound = await this.algodUtils.GetLastRound();
+            await this.algodUtils.GetStatusAfterRound(lastRound + 10);
 
             var transactions = await indexerUtils.GetTransactions(CavernaKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
@@ -170,7 +171,8 @@ namespace AirdropFunction
 
             await this.algodUtils.SubmitSignedTransactions(signedTransactions);
 
-            await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
+            ulong lastRound = await this.algodUtils.GetLastRound();
+            await this.algodUtils.GetStatusAfterRound(lastRound + 10);
 
             var transactions = await indexerUtils.GetTransactions(CavernaKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
@@ -243,7 +245,8 @@ namespace AirdropFunction
 
             await this.algodUtils.SubmitSignedTransactions(signedTransactions);
 
-            await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
+            ulong lastRound = await this.algodUtils.GetLastRound();
+            await this.algodUtils.GetStatusAfterRound(lastRound + 10);
 
             var transactions = await indexerUtils.GetTransactions(shrimpKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
