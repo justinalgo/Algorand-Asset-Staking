@@ -47,7 +47,7 @@ namespace AirdropFunction
                 throw new Exception("Airdrop past due");
             }
 
-            Key key = this.keyManager.CavernaWallet;
+            Key CavernaKey = this.keyManager.CavernaWallet;
             RaptorHoldingsFactory factory = new RaptorHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
@@ -69,7 +69,7 @@ namespace AirdropFunction
                     Address address = new Address(collection.Wallet);
 
                     Transaction txn = Transaction.CreateAssetTransferTransaction(
-                            assetSender: key.GetAddress(),
+                            assetSender: CavernaKey.GetAddress(),
                             assetReceiver: address,
                             assetCloseTo: null,
                             assetAmount: collection.Total,
@@ -82,7 +82,7 @@ namespace AirdropFunction
                             assetIndex: collection.DropAssetId
                         );
 
-                    SignedTransaction stxn = key.SignTransaction(txn);
+                    SignedTransaction stxn = CavernaKey.SignTransaction(txn);
 
                     signedTransactions.Add(stxn);
                 }
@@ -99,7 +99,7 @@ namespace AirdropFunction
 
             await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
 
-            var transactions = await indexerUtils.GetTransactions(key.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
+            var transactions = await indexerUtils.GetTransactions(CavernaKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
 
             foreach (SignedTransaction stxn in signedTransactions)
@@ -120,7 +120,7 @@ namespace AirdropFunction
                 throw new Exception("Airdrop past due");
             }
 
-            Key key = this.keyManager.CavernaWallet;
+            Key CavernaKey = this.keyManager.CavernaWallet;
             NanaHoldingsFactory factory = new NanaHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
@@ -142,7 +142,7 @@ namespace AirdropFunction
                     Address address = new Address(collection.Wallet);
 
                     Transaction txn = Transaction.CreateAssetTransferTransaction(
-                            assetSender: key.GetAddress(),
+                            assetSender: CavernaKey.GetAddress(),
                             assetReceiver: address,
                             assetCloseTo: null,
                             assetAmount: collection.Total,
@@ -155,7 +155,7 @@ namespace AirdropFunction
                             assetIndex: collection.DropAssetId
                         );
 
-                    SignedTransaction stxn = key.SignTransaction(txn);
+                    SignedTransaction stxn = CavernaKey.SignTransaction(txn);
 
                     signedTransactions.Add(stxn);
                 }
@@ -172,7 +172,7 @@ namespace AirdropFunction
 
             await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
 
-            var transactions = await indexerUtils.GetTransactions(key.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
+            var transactions = await indexerUtils.GetTransactions(CavernaKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
 
             foreach (SignedTransaction stxn in signedTransactions)
@@ -193,7 +193,7 @@ namespace AirdropFunction
                 throw new Exception("Airdrop past due");
             }
 
-            Key key = this.keyManager.CavernaWallet;
+            Key shrimpKey = this.keyManager.ShrimpWallet;
             ShrimpHoldingsFactory factory = new ShrimpHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
@@ -215,7 +215,7 @@ namespace AirdropFunction
                     Address address = new Address(collection.Wallet);
 
                     Transaction txn = Transaction.CreateAssetTransferTransaction(
-                            assetSender: key.GetAddress(),
+                            assetSender: shrimpKey.GetAddress(),
                             assetReceiver: address,
                             assetCloseTo: null,
                             assetAmount: collection.Total,
@@ -228,7 +228,7 @@ namespace AirdropFunction
                             assetIndex: collection.DropAssetId
                         );
 
-                    SignedTransaction stxn = key.SignTransaction(txn);
+                    SignedTransaction stxn = shrimpKey.SignTransaction(txn);
 
                     signedTransactions.Add(stxn);
                 }
@@ -245,7 +245,7 @@ namespace AirdropFunction
 
             await this.algodUtils.GetStatusAfterRound(await this.algodUtils.GetLastRound() + 5);
 
-            var transactions = await indexerUtils.GetTransactions(key.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
+            var transactions = await indexerUtils.GetTransactions(shrimpKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: startingRound);
             HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
 
             foreach (SignedTransaction stxn in signedTransactions)
