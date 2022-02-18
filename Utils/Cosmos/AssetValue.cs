@@ -1,9 +1,21 @@
 ﻿using Newtonsoft.Json;
 
-namespace Util.Cosmos
+namespace Utils.Cosmos
 {
     public class AssetValue
     {
+        public AssetValue() { }
+
+        public AssetValue(ulong assetId, string projectId, string name, string unitName, ulong value)
+        {
+            this.Id = assetId.ToString();
+            this.ProjectId = projectId;
+            this.Name = name;
+            this.UnitName = unitName;
+            this.AssetId = assetId;
+            this.Value = value;
+        }
+
         [JsonProperty("id")]
         public string Id { get; set; }
         [JsonProperty("projectId")]

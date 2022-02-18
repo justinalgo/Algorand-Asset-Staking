@@ -1,4 +1,4 @@
-﻿using Algorand.V2.Model;
+﻿using Algorand.V2.Indexer.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -6,23 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Util;
-using Util.Cosmos;
+using Utils;
+using Utils.Cosmos;
+using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class RaptorHoldingsFactory : IHoldingsAirdropFactory
+    public class RaptorHoldingsFactory : RandHoldingsAirdropFactory
     {
-        public long AssetId { get; set; }
-        public long Decimals { get; set; }
-        public string[] CreatorAddresses { get; set; }
-        private readonly IAlgoApi api;
+        private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
-        private readonly HttpClient httpClient;
 
-        public RaptorHoldingsFactory(IAlgoApi api, ICosmos cosmos, IHttpClientFactory httpClientFactory)
+        public RaptorHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient())
         {
-            this.AssetId = 426980914;
+            this.DropAssetId = 426980914;
             this.Decimals = 2;
             this.CreatorAddresses = new string[] { 
                 "EYERHFMTLLBVVDV4RKGKSTMWU4QZ7IG5HUEXQYO3UVX4ABQ5MDNJIKN7HQ",
@@ -30,119 +27,24 @@ namespace Airdrop.AirdropFactories.Holdings
                 "OPBIE5S3IUKLNFU6C2DK5B3FTYD7W7BMVDTNMTFFLKVQXPUUNAFBHZHVBY",
                 "BEEE3WGLXN6QD62D3LVB67DF5LESMIS6FVD4QTMOV3325OM24CDQKBWI6U",
             };
-            this.api = api;
+            this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
-            this.httpClient = httpClientFactory.CreateClient();
         }
 
-        public async Task<IEnumerable<AirdropAmount>> FetchAirdropAmounts()
-        {
-            IDictionary<long, long> assetValues = await this.FetchAssetValues();
-            ConcurrentBag<AirdropAmount> airdropAmounts = new ConcurrentBag<AirdropAmount>();
-            IEnumerable<string> walletAddresses = this.FetchWalletAddresses();
-            IDictionary<string, long> randValues = await this.GetRandValues(assetValues);
-
-            Parallel.ForEach(walletAddresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, walletAddress =>
-            {
-                IEnumerable<AssetHolding> assetHoldings = this.api.GetAssetsByAddress(walletAddress);
-                long amount = this.GetAssetHoldingsAmount(assetHoldings, assetValues);
-
-                amount += this.GetRandAmount(walletAddress, randValues);
-
-                if (amount > 0)
-                {
-                    airdropAmounts.Add(new AirdropAmount(walletAddress, this.AssetId, amount));
-                }
-            });
-
-            return airdropAmounts;
-        }
-
-        public async Task<IDictionary<long, long>> FetchAssetValues()
+        public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin", "MoonDude", "Numbers", "BuzzyBees");
 
-            Dictionary<long, long> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
+            Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => (ulong)(av.Value * Math.Pow(10, this.Decimals)));
 
             return assetValues;
         }
 
-        public IEnumerable<string> FetchWalletAddresses()
+        public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<string> walletAddresses = this.api.GetWalletAddressesWithAsset(this.AssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
 
-            return walletAddresses;
-        }
-
-        public long GetAssetHoldingsAmount(IEnumerable<AssetHolding> assetHoldings, IDictionary<long, long> assetValues)
-        {
-            long airdropAmount = 0;
-
-            foreach (AssetHolding miniAssetHolding in assetHoldings)
-            {
-                if (miniAssetHolding.AssetId.HasValue &&
-                    miniAssetHolding.Amount.HasValue &&
-                    miniAssetHolding.Amount > 0 &&
-                    assetValues.ContainsKey(miniAssetHolding.AssetId.Value))
-                {
-                    airdropAmount += (long)(assetValues[miniAssetHolding.AssetId.Value] * Math.Pow(10, this.Decimals) * miniAssetHolding.Amount.Value);
-                }
-            }
-
-            return airdropAmount;
-        }
-
-        private long GetRandAmount(string walletAddress, IDictionary<string, long> randValues)
-        {
-            if (randValues.ContainsKey(walletAddress))
-            {
-                return randValues[walletAddress];
-            }
-
-            return 0;
-        }
-
-        public async Task<IDictionary<string, long>> GetRandValues(IDictionary<long, long> assetValues)
-        {
-            Dictionary<string, long> walletValues = new Dictionary<string, long>();
-            IEnumerable<(long, string)> randSellers = await GetRandSellers();
-
-            foreach ((long, string) randSeller in randSellers)
-            {
-                if (walletValues.ContainsKey(randSeller.Item2) && assetValues.ContainsKey(randSeller.Item1))
-                {
-                    walletValues[randSeller.Item2] += (long)(assetValues[randSeller.Item1] * Math.Pow(10, this.Decimals));
-                }
-                else if (assetValues.ContainsKey(randSeller.Item1))
-                {
-                    walletValues[randSeller.Item2] = (long)(assetValues[randSeller.Item1] * Math.Pow(10, this.Decimals));
-                }
-            }
-
-            return walletValues;
-        }
-
-        private async Task<IEnumerable<(long, string)>> GetRandSellers()
-        {
-            List<(long, string)> randSellers = new List<(long, string)>();
-
-            foreach (string creatorAddress in this.CreatorAddresses)
-            {
-                string randEndpoint = "https://www.randswap.com/v1/secondary/get-listings-for-creator?creatorAddress=" + creatorAddress;
-
-                string jsonResponse = await httpClient.GetStringAsync(randEndpoint);
-                Dictionary<string, dynamic> sellers = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonResponse);
-
-                foreach (var assetId in sellers.Keys)
-                {
-                    if (assetId != "name" && assetId != "royalty" && assetId != "escrowAddress")
-                    {
-                        randSellers.Add((long.Parse(assetId), sellers[assetId]["seller"]));
-                    }
-                }
-            }
-
-            return randSellers;
+            return accounts;
         }
     }
 }
