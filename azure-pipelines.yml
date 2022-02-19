@@ -99,7 +99,7 @@ stages:
               appName: $(functionAppName)
               package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
 
-- stage: GitHub Sync
+- stage: GitHubSync
   displayName: GitHub Sync
   dependsOn:
     - Build
