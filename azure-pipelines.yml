@@ -19,6 +19,8 @@ variables:
   # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
+  githubRepoName: 'CavernaTechnologies/Algorand-Asset-Staking.git'
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -96,3 +98,24 @@ stages:
               appType: functionApp
               appName: $(functionAppName)
               package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+
+- stage: GitHubSync
+  displayName: GitHub Sync
+  dependsOn:
+    - Build
+    - Test
+    - Deploy
+  condition: and(succeeded('Build'), succeeded('Test'), succeeded('Deploy'))
+
+  jobs:
+    - job: GitHubSync
+      displayName: GitHub Sync
+      pool:
+        vmImage: $(vmImageName)
+      
+      steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            git push --prune https://$(GITHUBPAT)@github.com/$(GITHUBREPONAME) +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
