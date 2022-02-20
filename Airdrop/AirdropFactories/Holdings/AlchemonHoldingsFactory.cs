@@ -41,7 +41,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(new[] { this.DropAssetId, this.stakeFlagAssetId });
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(new[] { this.stakeFlagAssetId, this.DropAssetId});
 
             return accounts.Where(a => !this.revokedAddresses.Contains(a.Address));
         }

@@ -89,11 +89,11 @@ namespace Utils.Indexer
             return accounts.Select(a => a.Address);
         }
 
-        public async Task<IEnumerable<string>> GetWalletAddresses(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, DateTimeOffset? afterTime = null)
+        public async Task<IEnumerable<string>> GetWalletAddresses(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null)
         {
             List<string> walletAddresses = new List<string>();
 
-            IEnumerable<Transaction> transactions = await GetTransactions(address, assetId, addressRole, txType, currencyGreaterThan, currencyLessThan, minRound, afterTime);
+            IEnumerable<Transaction> transactions = await GetTransactions(address, assetId, addressRole, txType, currencyGreaterThan, currencyLessThan, minRound, maxRound, afterTime);
 
             foreach (Transaction transaction in transactions)
             {
@@ -142,13 +142,14 @@ namespace Utils.Indexer
             return assets;
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, DateTimeOffset? afterTime = null)
+        public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null)
         {
             List<Transaction> transactions = new List<Transaction>();
 
             Response4 response = await searchApi.TransactionsAsync(
                     tx_type: txType,
                     min_round: minRound,
+                    max_round: maxRound,
                     asset_id: assetId,
                     currency_greater_than: currencyGreaterThan,
                     currency_less_than: currencyLessThan,
