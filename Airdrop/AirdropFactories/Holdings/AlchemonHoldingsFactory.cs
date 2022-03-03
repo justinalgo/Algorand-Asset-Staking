@@ -43,7 +43,9 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(new[] { this.stakeFlagAssetId, this.DropAssetId});
 
-            return accounts.Where(a => !this.revokedAddresses.Contains(a.Address));
+            accounts = accounts.Where(a => !this.revokedAddresses.Contains(a.Address));
+
+            return accounts;
         }
     }
 }

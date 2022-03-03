@@ -47,7 +47,9 @@ namespace Airdrop.AirdropFactories.Liquidity
         {
             IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(new[] { this.LiquidityAssetId, this.DropAssetId });
 
-            return accounts.Where(a => a.Address != this.LiquidityWallet);
+            accounts = accounts.Where(a => a.Address != this.LiquidityWallet);
+
+            return accounts;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Airdrop.AirdropFactories.Random
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "ACORNOX3WJKR2GX63IJGPC2MV6E7GRNBBEE22BXQ6H7HFMEXLUL3RSEBLY" };
             this.NumberOfWinners = 10;
-            this.TotalWinnings = 221312;
+            this.TotalWinnings = 301886;
             this.indexerUtils = indexerUtils;
         }
 
@@ -31,6 +31,8 @@ namespace Airdrop.AirdropFactories.Random
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
             IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
+
+            accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
 
             return accounts;
         }

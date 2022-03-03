@@ -43,7 +43,11 @@ namespace Utils.Indexer
                 accounts.AddRange(response.Accounts);
             }
 
-            return accounts;
+            IEnumerable<Account> cleanedAccounts = accounts.Where(acc => acc.Assets != null);
+
+            cleanedAccounts = cleanedAccounts.Where(acc => acc.Assets.FirstOrDefault(a => a.AssetId == assetId) != null);
+
+            return cleanedAccounts;
         }
 
         public async Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetIds)

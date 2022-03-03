@@ -36,7 +36,7 @@ namespace Airdrop
 
             foreach (AirdropUnit airdropUnit in this.airdropUnits)
             {
-                total += airdropUnit.Amount();
+                total += airdropUnit.GetTotal();
             }
 
             return total;
@@ -45,6 +45,18 @@ namespace Airdrop
         public int Count()
         {
             return this.airdropUnits.Count;
+        }
+
+        public override string ToString()
+        {
+            string collectionBreakdown = $"{this.Wallet} : {this.DropAssetId} : {this.Total}";
+
+            foreach (AirdropUnit airdropUnit in this.airdropUnits)
+            {
+                collectionBreakdown += $"\n\t{airdropUnit.SourceAssetId} : {airdropUnit.NumberOfSourceAsset} : {airdropUnit.Total}";
+            }
+
+            return collectionBreakdown;
         }
     }
 }

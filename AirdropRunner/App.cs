@@ -1,5 +1,9 @@
 ﻿using Airdrop;
 using Airdrop.AirdropFactories.Holdings;
+using Airdrop.AirdropFactories.Liquidity;
+using Airdrop.AirdropFactories.Random;
+using Airdrop.AirdropFactories.Unique;
+using Airdrop.AirdropFactories.AcornPartners;
 using Algorand;
 using Algorand.V2.Algod.Model;
 using Microsoft.Extensions.Logging;
@@ -38,33 +42,17 @@ namespace AirdropRunner
 
         public async Task Run()
         {
-            ulong round = 19321702;
-            Key shrimpKey = this.keyManager.ShrimpWallet;
-
-            var transactions = await indexerUtils.GetTransactions(shrimpKey.ToString(), addressRole: Algorand.V2.Indexer.Model.AddressRole.Sender, txType: Algorand.V2.Indexer.Model.TxType.Axfer, minRound: round);
-            HashSet<string> txIds = transactions.Select(t => t.Id).ToHashSet();
-
-            Console.WriteLine(transactions.Count());
-
-            foreach (var txn in transactions)
-            {
-                if (!txIds.Contains(txn.Id))
-                {
-                    Console.WriteLine("Failed to drop: " + txn.AssetTransferTransaction.Receiver);
-                }
-            }
-
-            /*Key key = keyManager.CavernaWallet;
-            var factory = new RaptorHoldingsFactory(indexerUtils, cosmos, httpClientFactory);
+            Key key = keyManager.CavernaWallet;
+            var factory = new AcornLiquidityFactory(indexerUtils);
 
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
-                Console.WriteLine($"{collection.Wallet} : {collection.DropAssetId} : {collection.Total}");
+                Console.WriteLine(collection.ToString());
             }
 
-            Console.WriteLine(collections.Sum(a => (double)a.Total));
+            Console.WriteLine(collections.Sum(c => (double)c.Total));
             Console.WriteLine(collections.Count());
 
             Console.ReadKey();
@@ -86,7 +74,7 @@ namespace AirdropRunner
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
-                            note: Encoding.UTF8.GetBytes(""),
+                            note: Encoding.UTF8.GetBytes(collection.ToString()),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId
@@ -118,7 +106,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }*/
+            }
         }
     }
 }

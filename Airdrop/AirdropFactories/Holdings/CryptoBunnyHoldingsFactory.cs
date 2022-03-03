@@ -25,6 +25,8 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
 
+            accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
+
             return accounts;
         }
 

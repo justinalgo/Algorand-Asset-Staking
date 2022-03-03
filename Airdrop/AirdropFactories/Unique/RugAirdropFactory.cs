@@ -37,7 +37,6 @@ namespace Airdrop.AirdropFactories.Unique
         {
             HashSet<ulong> assetIds = await this.FetchAssetIds();
             IEnumerable<Account> accounts = await this.FetchAccounts();
-            Console.WriteLine(accounts.Count());
             List<(Account, ulong)> eligibleWinners = new List<(Account, ulong)>();
             AirdropUnitCollectionManager airdropManager = new AirdropUnitCollectionManager();
 
@@ -45,7 +44,6 @@ namespace Airdrop.AirdropFactories.Unique
             {
                 eligibleWinners.AddRange(this.GetEligibleWinners(account, assetIds));
             }
-            Console.WriteLine(eligibleWinners.Count());
 
             ulong totalWinners = (ulong)this.WinningItems.Sum(wi => (double)wi.NumberOfWinners);
 
@@ -105,14 +103,13 @@ namespace Airdrop.AirdropFactories.Unique
 
         public async Task<IEnumerable<Account>> FetchAccounts()
         {
-            List<ulong> assetIds = new List<ulong>();
+            IEnumerable<ulong> assetIds = this.WinningItems.Select(wi => wi.AssetId);
 
-            foreach (WinningItem item in this.WinningItems)
-            {
-                assetIds.Add(item.AssetId);
-            }
+            IEnumerable<Account> accounts = await indexerUtils.GetAccounts(assetIds);
 
-            return await indexerUtils.GetAccounts(assetIds);
+            accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
+
+            return accounts;
         }
 
         public IEnumerable<(Account, ulong)> GetEligibleWinners(Account account, HashSet<ulong> assetIds)
