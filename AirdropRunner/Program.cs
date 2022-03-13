@@ -40,7 +40,7 @@ namespace AirdropRunner
                     services.AddHttpClient<IDefaultApi, DefaultApi>(client =>
                     {
                         client.BaseAddress = new Uri(context.Configuration["Endpoints:Algod"]);
-                        client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["AlgodToken"]);
+                        client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["Node2ApiToken"]);
                         client.Timeout = Timeout.InfiniteTimeSpan;
                     });
 
