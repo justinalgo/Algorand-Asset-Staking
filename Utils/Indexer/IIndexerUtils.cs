@@ -12,6 +12,7 @@ namespace Utils.Indexer
         Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetId);
         Task<IEnumerable<Asset>> GetAsset(IEnumerable<ulong> assetIds);
         Task<Asset> GetAsset(ulong assetId);
+        Task<IEnumerable<MiniAssetHolding>> GetBalances(ulong assetId);
         Task<IEnumerable<Asset>> GetCreatedAssets(string address, string prefix = null);
         Task<IEnumerable<Asset>> GetCreatedAssets(IEnumerable<string> addresses, string prefix = null);
         Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null);

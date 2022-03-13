@@ -14,14 +14,14 @@ namespace Airdrop.AirdropFactories.Random
 
         public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
-            HashSet<ulong> assetIds = await this.FetchAssetIds();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
+            HashSet<ulong> assetIds = await FetchAssetIds();
+            IEnumerable<Account> accounts = await FetchAccounts();
             List<(Account, ulong)> eligibleWinners = new List<(Account, ulong)>();
             AirdropUnitCollectionManager airdropManager = new AirdropUnitCollectionManager();
 
             foreach (Account account in accounts)
             {
-                eligibleWinners.AddRange(this.GetEligibleWinners(account, assetIds));
+                eligibleWinners.AddRange(GetEligibleWinners(account, assetIds));
             }
 
             System.Random random = new System.Random();

@@ -20,8 +20,8 @@ namespace Airdrop.AirdropFactories.Liquidity
 
         public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-            IEnumerable<(Account, ulong)> liquidityInfoItems = this.GetLiquidityAmounts(accounts);
+            IEnumerable<Account> accounts = await FetchAccounts();
+            IEnumerable<(Account, ulong)> liquidityInfoItems = GetLiquidityAmounts(accounts);
             AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
 
             ulong liquidityTotal = (ulong)liquidityInfoItems.Sum(la => (double)la.Item2);

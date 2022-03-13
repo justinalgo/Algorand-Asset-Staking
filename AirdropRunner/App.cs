@@ -43,7 +43,7 @@ namespace AirdropRunner
         public async Task Run()
         {
             Key key = keyManager.CavernaWallet;
-            var factory = new AcornLiquidityFactory(indexerUtils);
+            var factory = new AlchemonHoldingsFactory(indexerUtils, cosmos);
 
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
@@ -74,7 +74,8 @@ namespace AirdropRunner
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
-                            note: Encoding.UTF8.GetBytes(collection.ToString()),
+                            //note: Encoding.UTF8.GetBytes(collection.ToString()),
+                            note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId

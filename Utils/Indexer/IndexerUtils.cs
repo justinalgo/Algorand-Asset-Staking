@@ -193,10 +193,12 @@ namespace Utils.Indexer
 
             while (response.NextToken != null)
             {
+                response = await this.lookupApi.BalancesAsync(assetId, include_all: false, next: response.NextToken);
+
                 miniAssetHoldings.AddRange(response.Balances);
             }
 
-            return response.Balances;
+            return miniAssetHoldings;
         }
 
         public async Task<IEnumerable<Asset>> GetCreatedAssets(string address, string prefix = null)

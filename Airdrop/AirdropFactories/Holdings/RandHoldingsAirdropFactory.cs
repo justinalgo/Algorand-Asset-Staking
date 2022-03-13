@@ -17,21 +17,21 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public new async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
-            IDictionary<ulong, ulong> assetValues = await this.FetchAssetValues();
-            IEnumerable<Account> accounts = await this.FetchAccounts();
-            IDictionary<string, List<(ulong, ulong)>> randAccounts = await this.FetchRandAccounts();
+            IDictionary<ulong, ulong> assetValues = await FetchAssetValues();
+            IEnumerable<Account> accounts = await FetchAccounts();
+            IDictionary<string, List<(ulong, ulong)>> randAccounts = await FetchRandAccounts();
 
             AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
 
             Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                this.AddAssetsInAccount(collectionManager, account, assetValues);
+                AddAssetsInAccount(collectionManager, account, assetValues);
 
                 string address = account.Address;
 
                 if (randAccounts.ContainsKey(address))
                 {
-                    this.AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                    AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
                 }
             });
 

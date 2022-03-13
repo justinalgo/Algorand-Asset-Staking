@@ -41,12 +41,12 @@ namespace Airdrop.AirdropFactories.Liquidity
 
             Parallel.ForEach(accounts, new ParallelOptions { MaxDegreeOfParallelism = 10 }, account =>
             {
-                ulong liquidityAmount = this.GetLiquidityAssetAmount(account.Assets);
+                ulong liquidityAmount = GetLiquidityAssetAmount(account.Assets);
 
                 if (liquidityAmount > this.LiquidityMinimum)
                 {
                     IEnumerable<Transaction> transactions = this.indexerUtils.GetTransactions(account.Address, this.LiquidityAssetId, afterTime: DateTime.Now.AddDays(-6.5), txType: TxType.Axfer).Result;
-                    ulong lowAmount = this.GetAssetLowest(account.Address, liquidityAmount, transactions);
+                    ulong lowAmount = GetAssetLowest(account.Address, liquidityAmount, transactions);
                     liquidityAmounts.Add((account, lowAmount));
                 }
             });
