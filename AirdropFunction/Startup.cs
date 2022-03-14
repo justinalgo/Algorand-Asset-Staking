@@ -27,7 +27,7 @@ namespace AirdropFunction
 
             var settings = builder.ConfigurationBuilder.Build();
 
-            string azureKeyVaultEndpoint = settings.GetValue<string>("endpoints:azureKeyVault");
+            string azureKeyVaultEndpoint = settings.GetValue<string>("Endpoints:AzureKeyVault");
 
             builder.ConfigurationBuilder
                 .AddAzureKeyVault(azureKeyVaultEndpoint);
@@ -42,22 +42,22 @@ namespace AirdropFunction
 
             services.AddHttpClient<IDefaultApi, DefaultApi>(client =>
             {
-                client.BaseAddress = new Uri(context.Configuration["endpoints:algod"]);
-                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["node2ApiToken"]);
+                client.BaseAddress = new Uri(context.Configuration["Endpoints:Algod"]);
+                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["Node2ApiToken"]);
                 client.Timeout = Timeout.InfiniteTimeSpan;
             });
 
             services.AddHttpClient<ILookupApi, LookupApi>(client =>
             {
-                client.BaseAddress = new Uri(context.Configuration["endpoints:indexer"]);
-                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["indexerToken"]);
+                client.BaseAddress = new Uri(context.Configuration["Endpoints:Indexer"]);
+                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["IndexerToken"]);
                 client.Timeout = Timeout.InfiniteTimeSpan;
             });
 
             services.AddHttpClient<ISearchApi, SearchApi>(client =>
             {
-                client.BaseAddress = new Uri(context.Configuration["endpoints:indexer"]);
-                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["indexerToken"]);
+                client.BaseAddress = new Uri(context.Configuration["Endpoints:Indexer"]);
+                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["IndexerToken"]);
                 client.Timeout = Timeout.InfiniteTimeSpan;
             });
 
