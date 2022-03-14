@@ -43,9 +43,53 @@ namespace AirdropRunner
         public async Task Run()
         {
             Key key = keyManager.CavernaWallet;
-            var factory = new AlchemonHoldingsFactory(indexerUtils, cosmos);
 
-            IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
+            double ratio = 0.0003417;
+
+            ulong algo50 = (ulong)(50 / ratio);
+            ulong algo60 = (ulong)(60 / ratio);
+            ulong algo75 = (ulong)(75 / ratio);
+            ulong algo90 = (ulong)(90 / ratio);
+            ulong algo100 = (ulong)(100 / ratio);
+
+            var fact = new GoannaPartnerFactory(indexerUtils, algo100);
+
+            var accounts = await fact.FetchAccounts();
+
+            AirdropUnitCollectionManager manager = new AirdropUnitCollectionManager();
+
+            //100algo
+            await fact.FetchAirdropUnitCollections(manager, accounts);
+            await new AlchemonPartnerFactory(indexerUtils, cosmos, algo100).FetchAirdropUnitCollections(manager, accounts);
+            await new StarfacePartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
+            await new MngoPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
+            await new BananaMintPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
+            await new TrinleyPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
+
+            //90algo
+            await new ParlimentAowlPartnerFactory(indexerUtils, algo90).FetchAirdropUnitCollections(manager, accounts);
+
+            //75algo
+            await new AlgoGangPartnerFactory(indexerUtils, algo75).FetchAirdropUnitCollections(manager, accounts);
+            await new SwappyPartnerFactory(indexerUtils, algo75).FetchAirdropUnitCollections(manager, accounts);
+
+            //60algo
+            await new AlgoOwlPartnerFactory(indexerUtils, algo60).FetchAirdropUnitCollections(manager, accounts);
+
+            //50algo
+            await new AlgoBotsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoPlanetsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoWhalesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new FlemishPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new KnitHeadsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new LingLingPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new MonstiPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new MushiesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new StupidHorsePartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new TinyWhalesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new YieldlingPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+
+            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
@@ -74,8 +118,8 @@ namespace AirdropRunner
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
-                            //note: Encoding.UTF8.GetBytes(collection.ToString()),
-                            note: Encoding.UTF8.GetBytes(""),
+                            note: Encoding.UTF8.GetBytes(collection.ToString().Length < 1024 ? collection.ToString() : "Note too long..."),
+                            //note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId
