@@ -11,7 +11,7 @@ variables:
   azureSubscription: '65a9aa81-dec7-4421-9d61-176428ec9a2a'
 
   # Function app name
-  functionAppName: 'cavernaairdrop'
+  functionAppName: 'airdropfunction'
 
   # Agent VM image name
   vmImageName: 'windows-2019'
