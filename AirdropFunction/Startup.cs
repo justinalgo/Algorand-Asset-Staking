@@ -22,12 +22,14 @@ namespace AirdropFunction
             FunctionsHostBuilderContext context = builder.GetContext();
 
             builder.ConfigurationBuilder
-                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: true, reloadOnChange: false)
+                .AddJsonFile(Path.Combine(context.ApplicationRootPath, "appsettings.json"), optional: false, reloadOnChange: false)
                 .AddJsonFile(Path.Combine(context.ApplicationRootPath, $"appsettings.{context.EnvironmentName}.json"), optional: true, reloadOnChange: false);
 
             var settings = builder.ConfigurationBuilder.Build();
 
             string azureKeyVaultEndpoint = settings.GetValue<string>("Endpoints:AzureKeyVault");
+
+            Console.WriteLine(azureKeyVaultEndpoint);
 
             builder.ConfigurationBuilder
                 .AddAzureKeyVault(azureKeyVaultEndpoint);
@@ -36,6 +38,12 @@ namespace AirdropFunction
         public override void Configure(IFunctionsHostBuilder builder)
         {
             FunctionsHostBuilderContext context = builder.GetContext();
+
+            Console.WriteLine(context.Configuration["Endpoints:Algod"]);
+            Console.WriteLine(context.Configuration["Endpoints:Indexer"]);
+            Console.WriteLine(context.Configuration["Node2ApiToken"]);
+            Console.WriteLine(context.Configuration["IndexerToken"]);
+
             IServiceCollection services = builder.Services;
 
             services.AddHttpClient();
