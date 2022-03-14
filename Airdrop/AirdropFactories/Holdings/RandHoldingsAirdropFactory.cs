@@ -1,5 +1,6 @@
 ﻿using Algorand.V2.Indexer.Model;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -78,7 +79,7 @@ namespace Airdrop.AirdropFactories.Holdings
                     if (key != "name" && key != "royalty" && key != "escrowAddress")
                     {
                         ulong assetId = ulong.Parse(key);
-                        string walletAddress = sellers[key]["seller"];
+                        string walletAddress = sellers[key]["sellerAddress"];
 
                         if (randSellers.ContainsKey(walletAddress))
                         {
