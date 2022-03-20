@@ -43,16 +43,48 @@ namespace AirdropRunner
         public async Task Run()
         {
             Key key = keyManager.CavernaWallet;
-            var factory = new AlchemonHoldingsFactory(indexerUtils, cosmos);
 
-            IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
+            ulong alva = 553615859;
+            ulong prepack = 465310574;
+            ulong s1 = 557939659;
+            //var factory = new AlchemonHoldingsFactory(indexerUtils, cosmos);
+
+            var accounts = await indexerUtils.GetAccounts(alva);
+
+            AirdropUnitCollectionManager manager = new AirdropUnitCollectionManager();
+
+            foreach (var account in accounts)
+            {
+                foreach (var asset in account.Assets)
+                {
+                    if (asset.AssetId == prepack && asset.Amount > 0)
+                    {
+                        manager.AddAirdropUnit(new AirdropUnit(account.Address, alva, prepack, 9000, asset.Amount, true));
+                    } else if (asset.AssetId == s1 && asset.Amount > 0)
+                    {
+                        manager.AddAirdropUnit(new AirdropUnit(account.Address, alva, s1, 9000, asset.Amount, true));
+                    }
+                }
+            }
+
+            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
+
+            ulong total = 0;
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
-                Console.WriteLine(collection.ToString());
+                ulong? prepacks = collection.airdropUnits.FirstOrDefault(au => au.SourceAssetId == prepack)?.NumberOfSourceAsset;
+                double modifier = 1;
+                if (prepacks.HasValue)
+                {
+                    modifier += (double)(prepacks * .025);
+                }
+                ulong newTotal = (ulong) (collection.Total * modifier);
+                total += newTotal;
+                Console.WriteLine($"{collection.Wallet} : {newTotal}");
             }
 
-            Console.WriteLine(collections.Sum(c => (double)c.Total));
+            Console.WriteLine(total);
             Console.WriteLine(collections.Count());
 
             Console.ReadKey();
@@ -66,11 +98,19 @@ namespace AirdropRunner
                 {
                     Address address = new Address(collection.Wallet);
 
+                    ulong? prepacks = collection.airdropUnits.FirstOrDefault(au => au.SourceAssetId == prepack)?.NumberOfSourceAsset;
+                    double modifier = 1;
+                    if (prepacks.HasValue)
+                    {
+                        modifier += (double)(prepacks * .025);
+                    }
+                    ulong newTotal = (ulong)(collection.Total * modifier);
+
                     Transaction txn = Transaction.CreateAssetTransferTransaction(
                             assetSender: key.GetAddress(),
                             assetReceiver: address,
                             assetCloseTo: null,
-                            assetAmount: collection.Total,
+                            assetAmount: newTotal,
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
