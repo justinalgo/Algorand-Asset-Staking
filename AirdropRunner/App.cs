@@ -44,15 +44,17 @@ namespace AirdropRunner
         {
             Key key = keyManager.CavernaWallet;
 
-            double ratio = 0.0003417;
+            ulong total = (6 * 100) + (90) + (2 * 75) + (60) + (11 * 50);
 
-            ulong algo50 = (ulong)(50 / ratio);
-            ulong algo60 = (ulong)(60 / ratio);
-            ulong algo75 = (ulong)(75 / ratio);
-            ulong algo90 = (ulong)(90 / ratio);
-            ulong algo100 = (ulong)(100 / ratio);
+            double ratio = 1000000 / (double) total;
 
-            var fact = new GoannaPartnerFactory(indexerUtils, algo100);
+            ulong weight50 = (ulong)(50 * ratio);
+            ulong weight60 = (ulong)(60 * ratio);
+            ulong weight75 = (ulong)(75 * ratio);
+            ulong weight90 = (ulong)(90 * ratio);
+            ulong weight100 = (ulong)(100 * ratio);
+
+            var fact = new GoannaPartnerFactory(indexerUtils, weight100);
 
             var accounts = await fact.FetchAccounts();
 
@@ -60,34 +62,34 @@ namespace AirdropRunner
 
             //100algo
             await fact.FetchAirdropUnitCollections(manager, accounts);
-            await new AlchemonPartnerFactory(indexerUtils, cosmos, algo100).FetchAirdropUnitCollections(manager, accounts);
-            await new StarfacePartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
-            await new MngoPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
-            await new BananaMintPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
-            await new TrinleyPartnerFactory(indexerUtils, algo100).FetchAirdropUnitCollections(manager, accounts);
+            await new AlchemonPartnerFactory(indexerUtils, cosmos, weight100).FetchAirdropUnitCollections(manager, accounts);
+            await new StarfacePartnerFactory(indexerUtils, weight100).FetchAirdropUnitCollections(manager, accounts);
+            await new MngoPartnerFactory(indexerUtils, weight100).FetchAirdropUnitCollections(manager, accounts);
+            await new BananaMintPartnerFactory(indexerUtils, weight100).FetchAirdropUnitCollections(manager, accounts);
+            await new TrinleyPartnerFactory(indexerUtils, weight100).FetchAirdropUnitCollections(manager, accounts);
 
             //90algo
-            await new ParlimentAowlPartnerFactory(indexerUtils, algo90).FetchAirdropUnitCollections(manager, accounts);
+            await new ParlimentAowlPartnerFactory(indexerUtils, weight90).FetchAirdropUnitCollections(manager, accounts);
 
             //75algo
-            await new AlgoGangPartnerFactory(indexerUtils, algo75).FetchAirdropUnitCollections(manager, accounts);
-            await new SwappyPartnerFactory(indexerUtils, algo75).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoGangPartnerFactory(indexerUtils, weight75).FetchAirdropUnitCollections(manager, accounts);
+            await new SwappyPartnerFactory(indexerUtils, weight75).FetchAirdropUnitCollections(manager, accounts);
 
             //60algo
-            await new AlgoOwlPartnerFactory(indexerUtils, algo60).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoOwlPartnerFactory(indexerUtils, weight60).FetchAirdropUnitCollections(manager, accounts);
 
             //50algo
-            await new AlgoBotsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoPlanetsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoWhalesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new FlemishPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new KnitHeadsPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new LingLingPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new MonstiPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new MushiesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new StupidHorsePartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new TinyWhalesPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
-            await new YieldlingPartnerFactory(indexerUtils, algo50).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoBotsPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoPlanetsPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoWhalesPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new FlemishPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new KnitHeadsPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new LingLingPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new MonstiPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new MushiesPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new StupidHorsePartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new TinyWhalesPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
+            await new YieldlingPartnerFactory(indexerUtils, weight50).FetchAirdropUnitCollections(manager, accounts);
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
