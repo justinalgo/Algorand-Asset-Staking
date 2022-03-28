@@ -7,7 +7,7 @@ namespace Utils.Indexer
 {
     public interface IIndexerUtils
     {
-        Task<Account> GetAccount(string address);
+        Task<Account> GetAccount(string address, ExcludeType[] exclude = null);
         Task<IEnumerable<Account>> GetAccounts(ulong assetId);
         Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetId);
         Task<IEnumerable<Asset>> GetAsset(IEnumerable<ulong> assetIds);

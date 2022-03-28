@@ -21,9 +21,9 @@ namespace Utils.Indexer
             this.searchApi = searchApi;
         }
 
-        public async Task<Account> GetAccount(string address)
+        public async Task<Account> GetAccount(string address, ExcludeType[] exclude = null)
         {
-            Response6 response = await lookupApi.AccountsAsync(address, include_all: false);
+            Response6 response = await lookupApi.AccountsAsync(address, exclude: exclude);
 
             return response.Account;
         }
@@ -32,13 +32,13 @@ namespace Utils.Indexer
         {
             List<Account> accounts = new List<Account>();
 
-            Response response = await this.searchApi.AccountsAsync(asset_id: assetId, include_all: false);
+            Response response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.CreatedApps, ExcludeType.CreatedAssets}, include_all: false);
 
             accounts.AddRange(response.Accounts);
 
             while (response.NextToken != null)
             {
-                response = await this.searchApi.AccountsAsync(asset_id: assetId, include_all: false, next: response.NextToken);
+                response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.CreatedApps, ExcludeType.CreatedAssets }, include_all: false, next: response.NextToken);
 
                 accounts.AddRange(response.Accounts);
             }
@@ -88,9 +88,16 @@ namespace Utils.Indexer
 
         public async Task<IEnumerable<string>> GetWalletAddresses(IEnumerable<ulong> assetIds)
         {
-            IEnumerable<Account> accounts = await this.GetAccounts(assetIds);
+            List<string> addresses = new List<string>();
 
-            return accounts.Select(a => a.Address);
+            foreach (ulong assetId in assetIds)
+            {
+                IEnumerable<MiniAssetHolding> accounts = await this.GetBalances(assetId);
+
+                addresses.AddRange(accounts.Select(mah => mah.Address));
+            }
+
+            return addresses;
         }
 
         public async Task<IEnumerable<string>> GetWalletAddresses(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null)
@@ -203,7 +210,7 @@ namespace Utils.Indexer
 
         public async Task<IEnumerable<Asset>> GetCreatedAssets(string address, string prefix = null)
         {
-            Account account = await this.GetAccount(address);
+            Account account = await this.GetAccount(address, new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.Assets, ExcludeType.CreatedApps });
 
             if (prefix != null)
             {
@@ -221,7 +228,7 @@ namespace Utils.Indexer
 
             foreach (string address in addresses)
             {
-                Account account = await this.GetAccount(address);
+                Account account = await this.GetAccount(address, new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.Assets, ExcludeType.CreatedApps });
 
                 if (prefix != null)
                 {

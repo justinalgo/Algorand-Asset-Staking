@@ -8,10 +8,10 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '65a9aa81-dec7-4421-9d61-176428ec9a2a'
+  azureSubscription: '6e39df3c-370d-4d04-abfe-062352824e7b'
 
   # Function app name
-  functionAppName: 'cavernaairdrop'
+  functionAppName: 'AirdropFunction'
 
   # Agent VM image name
   vmImageName: 'windows-2019'
