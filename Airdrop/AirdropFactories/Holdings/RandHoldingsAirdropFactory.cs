@@ -69,31 +69,33 @@ namespace Airdrop.AirdropFactories.Holdings
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                string randEndpoint = "https://www.randswap.com/v1/secondary/get-listings-for-creator?creatorAddress=" + creatorAddress;
+                string randEndpoint = "https://www.randswap.com/v1/listings/creator/" + creatorAddress;
 
                 string jsonResponse = await HttpClient.GetStringAsync(randEndpoint);
-                Dictionary<string, dynamic> sellers = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonResponse);
+                List<RandListing> listings = JsonConvert.DeserializeObject<List<RandListing>>(jsonResponse);
 
-                foreach (var key in sellers.Keys)
+                foreach (RandListing listing in listings)
                 {
-                    if (key != "name" && key != "royalty" && key != "escrowAddress")
+                    if (randSellers.ContainsKey(listing.SellerAddress))
                     {
-                        ulong assetId = ulong.Parse(key);
-                        string walletAddress = sellers[key]["sellerAddress"];
-
-                        if (randSellers.ContainsKey(walletAddress))
-                        {
-                            randSellers[walletAddress].Add((assetId, 1));
-                        }
-                        else
-                        {
-                            randSellers[walletAddress] = new List<(ulong, ulong)>() { (assetId, 1) };
-                        }
+                        randSellers[listing.SellerAddress].Add((listing.AssetId, 1));
+                    }
+                    else
+                    {
+                        randSellers[listing.SellerAddress] = new List<(ulong, ulong)>() { (listing.AssetId, 1) };
                     }
                 }
             }
 
             return randSellers;
         }
+    }
+
+    class RandListing
+    {
+        [JsonProperty("assetId")]
+        public ulong AssetId { get; set; }
+        [JsonProperty("sellerAddress")]
+        public string SellerAddress { get; set; }
     }
 }
