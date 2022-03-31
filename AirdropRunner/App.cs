@@ -69,7 +69,7 @@ namespace AirdropRunner
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
-            ulong total = 0;
+            IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
@@ -114,8 +114,8 @@ namespace AirdropRunner
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
-                            //note: Encoding.UTF8.GetBytes(collection.ToString()),
-                            note: Encoding.UTF8.GetBytes(""),
+                            note: Encoding.UTF8.GetBytes(collection.ToString().Length < 1024 ? collection.ToString() : "Note too long..."),
+                            //note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId
