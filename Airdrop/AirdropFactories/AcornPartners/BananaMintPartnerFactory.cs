@@ -27,7 +27,7 @@ namespace Airdrop.AirdropFactories.AcornPartners
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                Account account = await this.indexerUtils.GetAccount(creatorAddress);
+                Account account = await this.indexerUtils.GetAccount(creatorAddress, new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.Assets, ExcludeType.CreatedApps });
 
                 foreach (Asset asset in account.CreatedAssets)
                 {

@@ -61,7 +61,7 @@ namespace Airdrop.AirdropFactories.AcornPartners
 
         public async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.CreatedAssets, ExcludeType.CreatedApps });
 
             return accounts;
         }

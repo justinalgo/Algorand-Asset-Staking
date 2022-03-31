@@ -28,17 +28,17 @@ namespace Utils.Indexer
             return response.Account;
         }
 
-        public async Task<IEnumerable<Account>> GetAccounts(ulong assetId)
+        public async Task<IEnumerable<Account>> GetAccounts(ulong assetId, ExcludeType[] excludeTypes = null)
         {
             List<Account> accounts = new List<Account>();
 
-            Response response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.CreatedApps, ExcludeType.CreatedAssets}, include_all: false);
+            Response response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: excludeTypes, include_all: false);
 
             accounts.AddRange(response.Accounts);
 
             while (response.NextToken != null)
             {
-                response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.CreatedApps, ExcludeType.CreatedAssets }, include_all: false, next: response.NextToken);
+                response = await this.searchApi.AccountsAsync(asset_id: assetId, exclude: excludeTypes, include_all: false, next: response.NextToken);
 
                 accounts.AddRange(response.Accounts);
             }
@@ -50,9 +50,9 @@ namespace Utils.Indexer
             return cleanedAccounts;
         }
 
-        public async Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetIds)
+        public async Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetIds, ExcludeType[] excludeTypes)
         {
-            IEnumerable<Account> accounts = await this.GetAccounts(assetIds.First());
+            IEnumerable<Account> accounts = await this.GetAccounts(assetIds.First(), excludeTypes: excludeTypes);
             List<Account> cleanedAccounts = new List<Account>();
 
             foreach (Account account in accounts.Where(a => a.Assets != null))
@@ -81,7 +81,7 @@ namespace Utils.Indexer
 
         public async Task<IEnumerable<string>> GetWalletAddresses(ulong assetId)
         {
-            IEnumerable<Account> accounts = await this.GetAccounts(assetId);
+            IEnumerable<MiniAssetHolding> accounts = await this.GetBalances(assetId);
 
             return accounts.Select(a => a.Address);
         }

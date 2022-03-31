@@ -8,8 +8,8 @@ namespace Utils.Indexer
     public interface IIndexerUtils
     {
         Task<Account> GetAccount(string address, ExcludeType[] exclude = null);
-        Task<IEnumerable<Account>> GetAccounts(ulong assetId);
-        Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetId);
+        Task<IEnumerable<Account>> GetAccounts(ulong assetId, ExcludeType[] exclude = null);
+        Task<IEnumerable<Account>> GetAccounts(IEnumerable<ulong> assetId, ExcludeType[] exclude = null);
         Task<IEnumerable<Asset>> GetAsset(IEnumerable<ulong> assetIds);
         Task<Asset> GetAsset(ulong assetId);
         Task<IEnumerable<MiniAssetHolding>> GetBalances(ulong assetId);
