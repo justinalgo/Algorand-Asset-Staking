@@ -90,9 +90,9 @@ namespace Airdrop.AirdropFactories.Unique
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                Account account = await this.indexerUtils.GetAccount(creatorAddress);
+                IEnumerable<Asset> assets = await this.indexerUtils.GetCreatedAssets(creatorAddress);
 
-                foreach (Asset asset in account.CreatedAssets)
+                foreach (Asset asset in assets)
                 {
                     assetIds.Add(asset.Index);
                 }
@@ -105,7 +105,7 @@ namespace Airdrop.AirdropFactories.Unique
         {
             IEnumerable<ulong> assetIds = this.WinningItems.Select(wi => wi.AssetId);
 
-            IEnumerable<Account> accounts = await indexerUtils.GetAccounts(assetIds);
+            IEnumerable<Account> accounts = await indexerUtils.GetAccounts(assetIds, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
 
             accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
 

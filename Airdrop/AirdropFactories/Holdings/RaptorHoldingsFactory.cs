@@ -30,7 +30,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
-            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin", "MoonDude", "Numbers", "BuzzyBees");
+            IEnumerable<AssetValue> values = await cosmos.GetAssetValues("RaptorCoin");
 
             Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => (ulong)(av.Value * Math.Pow(10, this.Decimals)));
 
@@ -39,7 +39,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
 
             return accounts;
         }

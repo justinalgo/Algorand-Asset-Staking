@@ -93,6 +93,9 @@ namespace AirdropRunner
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
+            //var fact = new AlchemonHoldingsFactory(indexerUtils, cosmos);
+            //var collections = await fact.FetchAirdropUnitCollections();
+
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
                 Console.WriteLine(collection.ToString());
@@ -121,7 +124,6 @@ namespace AirdropRunner
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
                             note: Encoding.UTF8.GetBytes(collection.ToString().Length < 1024 ? collection.ToString() : "Note too long..."),
-                            //note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId
