@@ -47,7 +47,6 @@ namespace AirdropRunner
             ulong alva = 553615859;
             ulong prepack = 465310574;
             ulong s1 = 557939659;
-            //var factory = new AlchemonHoldingsFactory(indexerUtils, cosmos);
 
             var accounts = await indexerUtils.GetAccounts(alva);
 
@@ -69,7 +68,7 @@ namespace AirdropRunner
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
-            IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
+            ulong total = 0;
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
