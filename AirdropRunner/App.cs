@@ -18,6 +18,7 @@ using Utils.Cosmos;
 using Utils.Indexer;
 using Utils.KeyManagers;
 using Transaction = Algorand.Transaction;
+using Algorand.V2.Indexer.Model;
 
 namespace AirdropRunner
 {
@@ -48,7 +49,7 @@ namespace AirdropRunner
             ulong prepack = 465310574;
             ulong s1 = 557939659;
 
-            var accounts = await indexerUtils.GetAccounts(alva);
+            var accounts = await indexerUtils.GetAccounts(alva, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.AppsLocalState, ExcludeType.CreatedApps });
 
             AirdropUnitCollectionManager manager = new AirdropUnitCollectionManager();
 
@@ -113,8 +114,7 @@ namespace AirdropRunner
                             flatFee: transactionParameters.Fee,
                             firstRound: transactionParameters.LastRound,
                             lastRound: transactionParameters.LastRound + 1000,
-                            note: Encoding.UTF8.GetBytes(collection.ToString().Length < 1024 ? collection.ToString() : "Note too long..."),
-                            //note: Encoding.UTF8.GetBytes(""),
+                            note: Encoding.UTF8.GetBytes(""),
                             genesisID: transactionParameters.GenesisId,
                             genesisHash: new Algorand.Digest(transactionParameters.GenesisHash),
                             assetIndex: collection.DropAssetId
