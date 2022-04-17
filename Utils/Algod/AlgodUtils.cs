@@ -68,5 +68,10 @@ namespace Utils.Algod
 
             return txnIds;
         }
+
+        public async Task<Algorand.V2.Algod.Model.Account> GetAccount(string address)
+        {
+            return await this.algod.AccountsAsync(address, Format.Json);
+        }
     }
 }

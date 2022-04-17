@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Cosmos;
 using Utils.Indexer;
 
@@ -12,10 +13,9 @@ namespace Airdrop.AirdropFactories.Holdings
 {
     public class ShrimpHoldingsFactory : RandHoldingsAirdropFactory
     {
-        private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
 
-        public ShrimpHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient())
+        public ShrimpHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(indexerUtils, algodUtils, httpClientFactory.CreateClient())
         {
             this.DropAssetId = 360019122;
             this.Decimals = 0;
@@ -28,14 +28,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "MNGO4JTLBN64PJLWTQZYHDMF2UBHGJGW5L7TXDVTJV7JGVD5AE4Y3HTEZM",
                 "5DYIZMX7N4SAB44HLVRUGLYBPSN4UMPDZVTX7V73AIRMJQA3LKTENTLFZ4",
             };
-            this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
-        }
-        public override async Task<IEnumerable<Account>> FetchAccounts()
-        {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
-
-            return accounts;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
@@ -47,10 +40,10 @@ namespace Airdrop.AirdropFactories.Holdings
             return assetValues;
         }
 
-        public new async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
+        public override async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
             IDictionary<ulong, ulong> assetValues = await FetchAssetValues();
-            IEnumerable<Account> accounts = await FetchAccounts();
+            var accounts = await FetchAccounts();
             IDictionary<string, List<(ulong, ulong)>> randAccounts = await FetchRandAccounts();
             IDictionary<string, List<(ulong, ulong)>> ab2Accounts = await FetchAb2Accounts();
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Cosmos;
 using Utils.Indexer;
 
@@ -11,10 +12,9 @@ namespace Airdrop.AirdropFactories.Holdings
 {
     public class RaptorHoldingsFactory : RandHoldingsAirdropFactory
     {
-        private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
 
-        public RaptorHoldingsFactory(IIndexerUtils indexerUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(httpClientFactory.CreateClient())
+        public RaptorHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, ICosmos cosmos, IHttpClientFactory httpClientFactory) : base(indexerUtils, algodUtils, httpClientFactory.CreateClient())
         {
             this.DropAssetId = 426980914;
             this.Decimals = 2;
@@ -24,7 +24,6 @@ namespace Airdrop.AirdropFactories.Holdings
                 "OPBIE5S3IUKLNFU6C2DK5B3FTYD7W7BMVDTNMTFFLKVQXPUUNAFBHZHVBY",
                 "BEEE3WGLXN6QD62D3LVB67DF5LESMIS6FVD4QTMOV3325OM24CDQKBWI6U",
             };
-            this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
         }
 
@@ -35,13 +34,6 @@ namespace Airdrop.AirdropFactories.Holdings
             Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => (ulong)(av.Value * Math.Pow(10, this.Decimals)));
 
             return assetValues;
-        }
-
-        public override async Task<IEnumerable<Account>> FetchAccounts()
-        {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
-
-            return accounts;
         }
     }
 }

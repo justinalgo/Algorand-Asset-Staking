@@ -5,16 +5,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
     public class LundisHoldingsFactory : HoldingsAirdropFactory
     {
-        private readonly ulong[] revokedAssets;
-        private readonly IIndexerUtils indexerUtils;
-
-        public LundisHoldingsFactory(IIndexerUtils indexerUtils)
+        public LundisHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils) : base(indexerUtils, algodUtils)
         {
             this.DropAssetId = 658399558;
             this.Decimals = 0;
@@ -23,7 +21,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "7PVEEP2CS77VJEYZGW2IIGZ63P5CO557XRNKBRPTIREKLET7A4G62W4CQA",
                 "TXZ3AKZLIKNNT3OBQOMTSYWC7AK7CIVSZZIDCSTONXNTX44LQIRU6ELFDA",
             };
-            this.revokedAssets = new ulong[]
+            this.RevokedAssets = new ulong[]
             {
                 654561741,
                 660004771,
@@ -31,34 +29,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 698533302,
                 704128153
             };
-            this.indexerUtils = indexerUtils;
-        }
-
-        public override async Task<IEnumerable<Account>> FetchAccounts()
-        {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
-
-            return accounts;
-        }
-
-        public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
-        {
-            Dictionary<ulong, ulong> assetValues = new Dictionary<ulong, ulong>();
-
-            foreach (string creatorAddress in this.CreatorAddresses)
-            {
-                IEnumerable<Asset> assets = await this.indexerUtils.GetCreatedAssets(creatorAddress);
-
-                foreach (Asset asset in assets)
-                {
-                    if (!this.revokedAssets.Contains(asset.Index))
-                    {
-                        assetValues.Add(asset.Index, 50);
-                    }
-                }
-            }
-
-            return assetValues;
+            this.AssetValue = 50;
         }
     }
 }

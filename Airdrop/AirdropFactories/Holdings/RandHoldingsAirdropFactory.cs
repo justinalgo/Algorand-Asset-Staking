@@ -1,9 +1,11 @@
-﻿using Algorand.V2.Indexer.Model;
+﻿using Algorand.V2.Algod.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Utils.Algod;
+using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
@@ -11,12 +13,12 @@ namespace Airdrop.AirdropFactories.Holdings
     {
         public HttpClient HttpClient { get; }
 
-        public RandHoldingsAirdropFactory(HttpClient httpClient)
+        public RandHoldingsAirdropFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, HttpClient httpClient) : base(indexerUtils, algodUtils)
         {
             this.HttpClient = httpClient;
         }
 
-        public new async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
+        public override async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
             IDictionary<ulong, ulong> assetValues = await FetchAssetValues();
             IEnumerable<Account> accounts = await FetchAccounts();

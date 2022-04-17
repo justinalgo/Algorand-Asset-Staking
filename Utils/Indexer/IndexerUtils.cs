@@ -1,7 +1,9 @@
-﻿using Algorand.V2.Indexer;
+﻿using Algorand.V2.Algod;
+using Algorand.V2.Indexer;
 using Algorand.V2.Indexer.Model;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -84,6 +86,26 @@ namespace Utils.Indexer
             IEnumerable<MiniAssetHolding> accounts = await this.GetBalances(assetId);
 
             return accounts.Select(a => a.Address);
+        }
+
+        public async Task<IEnumerable<string>> GetWalletAddressesIntersect(IEnumerable<ulong> assetIds)
+        {
+            new List<string>();
+
+            ulong id = assetIds.First();
+
+            IEnumerable<MiniAssetHolding> accounts = await this.GetBalances(id);
+            IEnumerable<string> addresses = accounts.Select(mah => mah.Address);
+
+            foreach (ulong assetId in assetIds.Skip(1))
+            {
+                accounts = await this.GetBalances(assetId);
+                IEnumerable<string> intersectAddresses = accounts.Select(mah => mah.Address);
+
+                addresses = addresses.Intersect(intersectAddresses).ToList();
+            }
+
+            return addresses;
         }
 
         public async Task<IEnumerable<string>> GetWalletAddresses(IEnumerable<ulong> assetIds)
