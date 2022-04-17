@@ -51,7 +51,7 @@ namespace AirdropFunction
             }
 
             Key CavernaKey = this.keyManager.CavernaWallet;
-            AlchemonLiquidityFactory factory = new AlchemonLiquidityFactory(this.indexerUtils);
+            AlchemonLiquidityFactory factory = new AlchemonLiquidityFactory(this.indexerUtils, this.algodUtils);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
@@ -125,7 +125,7 @@ namespace AirdropFunction
             }
 
             Key CavernaKey = this.keyManager.CavernaWallet;
-            RaptorHoldingsFactory factory = new RaptorHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
+            RaptorHoldingsFactory factory = new RaptorHoldingsFactory(this.indexerUtils, this.algodUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
@@ -199,7 +199,7 @@ namespace AirdropFunction
             }
 
             Key CavernaKey = this.keyManager.CavernaWallet;
-            NanaHoldingsFactory factory = new NanaHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
+            NanaHoldingsFactory factory = new NanaHoldingsFactory(this.indexerUtils, this.algodUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
@@ -273,7 +273,7 @@ namespace AirdropFunction
             }
 
             Key CavernaKey = this.keyManager.CavernaWallet;
-            CryptoBunnyHoldingsFactory factory = new CryptoBunnyHoldingsFactory(this.indexerUtils, this.cosmos);
+            CryptoBunnyHoldingsFactory factory = new CryptoBunnyHoldingsFactory(this.indexerUtils, this.algodUtils, this.cosmos);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
@@ -347,7 +347,7 @@ namespace AirdropFunction
             }
 
             Key shrimpKey = this.keyManager.ShrimpWallet;
-            ShrimpHoldingsFactory factory = new ShrimpHoldingsFactory(this.indexerUtils, this.cosmos, this.httpClientFactory);
+            ShrimpHoldingsFactory factory = new ShrimpHoldingsFactory(this.indexerUtils, this.algodUtils, this.cosmos, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
