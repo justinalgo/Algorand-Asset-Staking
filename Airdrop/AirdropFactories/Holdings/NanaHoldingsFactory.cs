@@ -27,6 +27,14 @@ namespace Airdrop.AirdropFactories.Holdings
 
             Dictionary<ulong, ulong> assetValues = values.ToDictionary(av => av.AssetId, av => av.Value);
 
+            //Add bananaBIRD assets
+            var account = await AlgodUtils.GetAccount("APEJUA6GF5PWA5GNR7DPEOILKFAMC6ES4H2DO3YMVEDZWBDZIEWZGKZMR4");
+
+            foreach (var asset in account.CreatedAssets)
+            {
+                assetValues.Add(asset.Index, 20);
+            }
+
             return assetValues;
         }
     }
