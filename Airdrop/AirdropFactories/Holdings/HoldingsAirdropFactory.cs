@@ -32,7 +32,8 @@ namespace Airdrop.AirdropFactories.Holdings
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                var assets = await this.IndexerUtils.GetCreatedAssets(creatorAddress);
+                Account account = await this.AlgodUtils.GetAccount(creatorAddress);
+                var assets = account.CreatedAssets;
 
                 if (this.RevokedAddresses != null)
                 {
@@ -59,8 +60,6 @@ namespace Airdrop.AirdropFactories.Holdings
         public virtual async Task<IEnumerable<Account>> FetchAccounts()
         {
             IEnumerable<string> addresses = await this.IndexerUtils.GetWalletAddresses(this.DropAssetId);
-
-            Console.WriteLine(addresses.Count());
 
             ConcurrentBag<Account> accounts = new ConcurrentBag<Account>();
 

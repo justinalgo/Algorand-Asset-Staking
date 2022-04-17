@@ -46,37 +46,37 @@ namespace AirdropRunner
 
             /*ulong acorn = 50000;
 
-            var fact = new GoannaPartnerFactory(indexerUtils, acorn);
+            var fact = new GoannaPartnerFactory(indexerUtils, algodUtils, acorn);
 
             var accounts = await fact.FetchAccounts();
 
             AirdropUnitCollectionManager manager = new AirdropUnitCollectionManager();
 
             await fact.FetchAirdropUnitCollections(manager, accounts);
-            await new AlchemonPartnerFactory(indexerUtils, cosmos, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new StarfacePartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new MngoPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new BananaMintPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new TrinleyPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new ParlimentAowlPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoGangPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new SwappyPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoOwlPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoBotsPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoPlanetsPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new AlgoWhalesPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new FlemishPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new KnitHeadsPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new LingLingPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new MonstiPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new MushiesPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new StupidHorsePartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new TinyWhalesPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
-            await new YieldlingPartnerFactory(indexerUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlchemonPartnerFactory(indexerUtils, algodUtils, cosmos, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new StarfacePartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new MngoPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new BananaMintPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new TrinleyPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new ParlimentAowlPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoGangPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new SwappyPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoOwlPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoBotsPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoPlanetsPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoWhalesPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new FlemishPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new KnitHeadsPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new LingLingPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new MonstiPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new MushiesPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new StupidHorsePartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new TinyWhalesPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new YieldlingPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();*/
 
-            var fact = new AlchemonHoldingsFactory(indexerUtils, algodUtils, cosmos);
+            var fact = new AlchemonLiquidityFactory(indexerUtils, algodUtils);
             var collections = await fact.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
@@ -87,7 +87,7 @@ namespace AirdropRunner
             Console.WriteLine(collections.Sum(c => (double)c.Total));
             Console.WriteLine(collections.Count());
 
-            Console.ReadKey();
+            /*Console.ReadKey();
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();
             TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();
@@ -138,7 +138,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }
+            }*/
         }
     }
 }
