@@ -1,34 +1,27 @@
-﻿using Algorand.V2.Indexer.Model;
+﻿using Algorand.V2.Algod.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Cosmos;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.AcornPartners
 {
-    public class AlchemonPartnerFactory
+    public class AlchemonPartnerFactory : AcornPartner
     {
-        public ulong TotalWinnings { get; set; }
-
-        private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;
-        private readonly string[] CreatorAddresses;
-        public ulong[] RevokedAssets { get; }
-        public ulong DropAssetId { get; set; }
-        public ulong Decimals { get; set; }
-        public AlchemonPartnerFactory(IIndexerUtils indexerUtils, ICosmos cosmos, ulong totalWinnings)
+        public AlchemonPartnerFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, ICosmos cosmos, ulong totalWinnings) : base(indexerUtils, algodUtils)
         {
             this.DropAssetId = 226265212;
             this.Decimals = 0;
             this.CreatorAddresses = new string[] {
                 "OJGTHEJ2O5NXN7FVXDZZEEJTUEQHHCIYIE5MWY6BEFVVLZ2KANJODBOKGA"};
             this.TotalWinnings = totalWinnings;
-            this.indexerUtils = indexerUtils;
             this.cosmos = cosmos;
         }
 
-        public async Task FetchAirdropUnitCollections(AirdropUnitCollectionManager airdropManager, IEnumerable<Account> accounts)
+        public override async Task FetchAirdropUnitCollections(AirdropUnitCollectionManager airdropManager, IEnumerable<Account> accounts)
         {
             System.Random random = new System.Random();
             IEnumerable<AssetValue> assetValues = await this.cosmos.GetAssetValues("Alchemon");

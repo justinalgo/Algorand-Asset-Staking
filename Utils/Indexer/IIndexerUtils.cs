@@ -19,5 +19,6 @@ namespace Utils.Indexer
         Task<IEnumerable<string>> GetWalletAddresses(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null);
         Task<IEnumerable<string>> GetWalletAddresses(ulong assetId);
         Task<IEnumerable<string>> GetWalletAddresses(IEnumerable<ulong> assetIds);
+        Task<IEnumerable<string>> GetWalletAddressesIntersect(IEnumerable<ulong> assetIds);
     }
 }

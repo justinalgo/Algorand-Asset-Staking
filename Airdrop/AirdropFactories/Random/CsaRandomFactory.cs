@@ -30,7 +30,7 @@ namespace Airdrop.AirdropFactories.Random
 
         public override async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId);
+            IEnumerable<Account> accounts = await this.indexerUtils.GetAccounts(this.DropAssetId, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
 
             accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
 

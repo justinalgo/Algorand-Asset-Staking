@@ -28,9 +28,6 @@ namespace AirdropFunction
             var settings = builder.ConfigurationBuilder.Build();
 
             string azureKeyVaultEndpoint = settings.GetValue<string>("Endpoints:AzureKeyVault");
-
-            Console.WriteLine(azureKeyVaultEndpoint);
-
             builder.ConfigurationBuilder
                 .AddAzureKeyVault(azureKeyVaultEndpoint);
         }
@@ -39,11 +36,6 @@ namespace AirdropFunction
         {
             FunctionsHostBuilderContext context = builder.GetContext();
 
-            Console.WriteLine(context.Configuration["Endpoints:Algod"]);
-            Console.WriteLine(context.Configuration["Endpoints:Indexer"]);
-            Console.WriteLine(context.Configuration["Node2ApiToken"]);
-            Console.WriteLine(context.Configuration["IndexerToken"]);
-
             IServiceCollection services = builder.Services;
 
             services.AddHttpClient();
@@ -51,7 +43,7 @@ namespace AirdropFunction
             services.AddHttpClient<IDefaultApi, DefaultApi>(client =>
             {
                 client.BaseAddress = new Uri(context.Configuration["Endpoints:Algod"]);
-                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["Node2ApiToken"]);
+                client.DefaultRequestHeaders.Add("X-Algo-API-Token", context.Configuration["AlgodToken"]);
                 client.Timeout = Timeout.InfiniteTimeSpan;
             });
 

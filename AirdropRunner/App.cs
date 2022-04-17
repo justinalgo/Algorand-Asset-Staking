@@ -87,7 +87,7 @@ namespace AirdropRunner
             Console.WriteLine(total);
             Console.WriteLine(collections.Count());
 
-            Console.ReadKey();
+            /*Console.ReadKey();
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();
             TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();
@@ -146,7 +146,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }
+            }*/
         }
     }
 }

@@ -1,17 +1,14 @@
 ﻿using Algorand.V2.Indexer.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.AcornPartners
 {
     public class StupidHorsePartnerFactory : AcornPartner
     {
-        private readonly IIndexerUtils indexerUtils;
-        private readonly string[] CreatorAddresses;
-        public string AssetPrefix { get; }
-
-        public StupidHorsePartnerFactory(IIndexerUtils indexerUtils, ulong totalWinnings) : base(indexerUtils)
+        public StupidHorsePartnerFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, ulong totalWinnings) : base(indexerUtils, algodUtils)
         {
             this.CreatorAddresses = new string[] {
                 "GLOW7AKCAZXWQRPI6Q7OCVAO75H45AIYMTDEH3VNPETKYFXMNHAMQOVMS4",
@@ -19,27 +16,6 @@ namespace Airdrop.AirdropFactories.AcornPartners
             this.AssetPrefix = "HORSE";
             this.NumberOfWinners = 2;
             this.TotalWinnings = totalWinnings;
-            this.indexerUtils = indexerUtils;
-        }
-
-        public override async Task<HashSet<ulong>> FetchAssetIds()
-        {
-            HashSet<ulong> assetIds = new HashSet<ulong>();
-
-            foreach (string creatorAddress in this.CreatorAddresses)
-            {
-                Account account = await this.indexerUtils.GetAccount(creatorAddress, new ExcludeType[] { ExcludeType.AppsLocalState, ExcludeType.Assets, ExcludeType.CreatedApps });
-
-                foreach (Asset asset in account.CreatedAssets)
-                {
-                    if (asset.Params.UnitName.StartsWith(this.AssetPrefix))
-                    {
-                        assetIds.Add(asset.Index);
-                    }
-                }
-            }
-
-            return assetIds;
         }
     }
 }
