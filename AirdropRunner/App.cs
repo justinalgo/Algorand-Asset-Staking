@@ -19,6 +19,7 @@ using Utils.Indexer;
 using Utils.KeyManagers;
 using Transaction = Algorand.Transaction;
 using Algorand.V2.Indexer.Model;
+using System.Collections.Concurrent;
 
 namespace AirdropRunner
 {
@@ -49,7 +50,15 @@ namespace AirdropRunner
             ulong prepack = 465310574;
             ulong s1 = 557939659;
 
-            var accounts = await indexerUtils.GetAccounts(alva, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.AppsLocalState, ExcludeType.CreatedApps });
+            IEnumerable<string> addresses = await indexerUtils.GetWalletAddresses(alva);
+
+            ConcurrentBag<Algorand.V2.Algod.Model.Account> accounts = new ConcurrentBag<Algorand.V2.Algod.Model.Account>();
+
+            Parallel.ForEach<string>(addresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, address =>
+            {
+                var account = algodUtils.GetAccount(address).Result;
+                accounts.Add(account);
+            });
 
             AirdropUnitCollectionManager manager = new AirdropUnitCollectionManager();
 
