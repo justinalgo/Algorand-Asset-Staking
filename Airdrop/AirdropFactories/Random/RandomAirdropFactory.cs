@@ -1,4 +1,4 @@
-﻿using Algorand.V2.Indexer.Model;
+﻿using Algorand.V2.Algod.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
