@@ -25,9 +25,7 @@ namespace Airdrop.AirdropFactories.Holdings
             {
                 654561741,
                 660004771,
-                676186493,
-                698533302,
-                704128153
+                676186493
             };
             this.AssetValue = 50;
         }
