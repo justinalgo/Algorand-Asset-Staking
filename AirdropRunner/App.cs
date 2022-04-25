@@ -44,7 +44,7 @@ namespace AirdropRunner
         {
             Key key = keyManager.CavernaWallet;
 
-            /*ulong acorn = 50000;
+            ulong acorn = 50000;
 
             var fact = new GoannaPartnerFactory(indexerUtils, algodUtils, acorn);
 
@@ -73,11 +73,17 @@ namespace AirdropRunner
             await new StupidHorsePartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
             await new TinyWhalesPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
             await new YieldlingPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoSaiyansPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgoBullsPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new DopeCatsPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new PyreneesPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new CorvusPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
+            await new AlgorillaPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
 
-            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();*/
+            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
 
-            var fact = new AlchemonLiquidityFactory(indexerUtils, algodUtils);
-            var collections = await fact.FetchAirdropUnitCollections();
+            //var fact = new MantisHoldingsFactory(indexerUtils, algodUtils);
+            //var collections = await fact.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
