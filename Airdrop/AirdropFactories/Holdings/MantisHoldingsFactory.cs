@@ -17,39 +17,47 @@ namespace Airdrop.AirdropFactories.Holdings
             this.Decimals = 8;
             this.CreatorAddresses = new string[] {
                 "AII4BCB5GN6YMSP7TNWMQRM4X2SVZY7AUMKQAGLMZBKZFC2LUWAER2CVOQ",
+                "SLVMSY7ENGPNQOW4FPABNTEB3EBZMNUBKTDWBWWST76XWNFO5TQGLRS3SA",
+                "GLDMHYDO2XRYZRGZMJ5TEZRN345FL3KPURAT3HGZB6TGGBWRR7HGMPZZJE",
+                "DMAN364FAMQWALOM7VIHTDGL7356MCAWAN2H23BJ7PL275THG3WGPX3GDE"
             };
-            this.AssetValue = 285;
+            this.AssetValue = 28500000000;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
         {
             Dictionary<ulong, ulong> assetValues = new Dictionary<ulong, ulong>();
 
-            foreach (string creatorAddress in this.CreatorAddresses)
-            {
-                Account account = await this.AlgodUtils.GetAccount(creatorAddress);
-                var assets = account.CreatedAssets;
+            await AssetHelper(assetValues, this.CreatorAddresses[0], this.AssetValue);
+            await AssetHelper(assetValues, this.CreatorAddresses[1], 6 * this.AssetValue);
+            await AssetHelper(assetValues, this.CreatorAddresses[2], 13 * this.AssetValue);
+            await AssetHelper(assetValues, this.CreatorAddresses[3], 27 * this.AssetValue);
 
-                if (this.RevokedAddresses != null)
+            return assetValues;
+        }
+
+        private async Task AssetHelper(IDictionary<ulong, ulong> assetValues, string wallet, ulong value)
+        {
+            Account account = await this.AlgodUtils.GetAccount(wallet);
+            var assets = account.CreatedAssets;
+
+            if (this.RevokedAddresses != null)
+            {
+                foreach (var asset in assets)
                 {
-                    foreach (var asset in assets)
+                    if (!this.RevokedAssets.Contains(asset.Index))
                     {
-                        if (!this.RevokedAssets.Contains(asset.Index))
-                        {
-                            assetValues.Add(asset.Index, this.AssetValue);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var asset in assets)
-                    {
-                        assetValues.Add(asset.Index, this.AssetValue);
+                        assetValues.Add(asset.Index, value);
                     }
                 }
             }
-
-            return assetValues;
+            else
+            {
+                foreach (var asset in assets)
+                {
+                    assetValues.Add(asset.Index, value);
+                }
+            }
         }
     }
 }
