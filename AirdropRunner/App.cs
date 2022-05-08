@@ -49,6 +49,7 @@ namespace AirdropRunner
             ulong alva = 553615859;
             ulong prepack = 465310574;
             ulong s1 = 557939659;
+            ulong different = 728089801;
 
             IEnumerable<string> addresses = await indexerUtils.GetWalletAddresses(alva);
 
@@ -69,9 +70,14 @@ namespace AirdropRunner
                     if (asset.AssetId == prepack && asset.Amount > 0)
                     {
                         manager.AddAirdropUnit(new AirdropUnit(account.Address, alva, prepack, 9000, asset.Amount, true));
-                    } else if (asset.AssetId == s1 && asset.Amount > 0)
+                    } 
+                    else if (asset.AssetId == s1 && asset.Amount > 0)
                     {
                         manager.AddAirdropUnit(new AirdropUnit(account.Address, alva, s1, 9000, asset.Amount, true));
+                    }
+                    else if (asset.AssetId == different && asset.Amount > 0)
+                    {
+                        manager.AddAirdropUnit(new AirdropUnit(account.Address, alva, different, 9000, asset.Amount, true));
                     }
                 }
             }
@@ -96,7 +102,7 @@ namespace AirdropRunner
             Console.WriteLine(total);
             Console.WriteLine(collections.Count());
 
-            /*Console.ReadKey();
+            Console.ReadKey();
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();
             TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();
@@ -155,7 +161,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }*/
+            }
         }
     }
 }
