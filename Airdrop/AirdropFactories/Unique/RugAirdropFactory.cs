@@ -1,21 +1,25 @@
-﻿using Algorand.V2.Indexer.Model;
+﻿using Algorand.V2.Algod.Model;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utils.Algod;
 using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Unique
 {
     public class RugAirdropFactory
     {
-        private readonly IIndexerUtils indexerUtils;
+        public IAlgodUtils AlgodUtils { get; }
+        public IIndexerUtils IndexerUtils { get; }
         public string[] CreatorAddresses { get; }
         public WinningItem[] WinningItems { get; }
 
-        public RugAirdropFactory(IIndexerUtils indexerUtils)
+        public RugAirdropFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils)
         {
-            this.indexerUtils = indexerUtils;
+            this.IndexerUtils = indexerUtils;
+            this.AlgodUtils = algodUtils;
 
             this.CreatorAddresses = new string[] { "RUGSVETYW67CNQB5ZBJXYRZR5ZS5TXCQWFRACISKGEJ5N6YXYKTGJUTGRM", "RUG2PYQAYXNDR4UWUEBUX5NMDRS2VS73IY2F6LDEFHWXAHZRCU7FHTE3IE" };
             this.WinningItems = new WinningItem[]
@@ -90,7 +94,7 @@ namespace Airdrop.AirdropFactories.Unique
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                IEnumerable<Asset> assets = await this.indexerUtils.GetCreatedAssets(creatorAddress);
+                IEnumerable<Asset> assets = (await AlgodUtils.GetAccount(creatorAddress)).CreatedAssets;
 
                 foreach (Asset asset in assets)
                 {
@@ -103,11 +107,15 @@ namespace Airdrop.AirdropFactories.Unique
 
         public async Task<IEnumerable<Account>> FetchAccounts()
         {
-            IEnumerable<ulong> assetIds = this.WinningItems.Select(wi => wi.AssetId);
+            IEnumerable<string> addresses = await this.IndexerUtils.GetWalletAddressesIntersect(this.WinningItems.Select(wi => wi.AssetId));
 
-            IEnumerable<Account> accounts = await indexerUtils.GetAccounts(assetIds, new ExcludeType[] { ExcludeType.CreatedAssets, ExcludeType.CreatedApps, ExcludeType.AppsLocalState });
+            ConcurrentBag<Account> accounts = new ConcurrentBag<Account>();
 
-            accounts = accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
+            Parallel.ForEach<string>(addresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, address =>
+            {
+                var account = this.AlgodUtils.GetAccount(address).Result;
+                accounts.Add(account);
+            });
 
             return accounts;
         }
@@ -133,6 +141,19 @@ namespace Airdrop.AirdropFactories.Unique
             return eligibleAssets;
         }
 
+    }
+
+    class AccountEqualityComparer : IEqualityComparer<Account>
+    {
+        public bool Equals(Account x, Account y)
+        {
+            return x.Address == y.Address;
+        }
+
+        public int GetHashCode(Account x)
+        {
+            return x.Address.GetHashCode();
+        }
     }
 
     public class WinningItem
