@@ -8,6 +8,7 @@ namespace Airdrop
         public ulong DropAssetId { get; }
         public ulong Total { get => this.GetTotal(); }
         public ConcurrentBag<AirdropUnit> airdropUnits;
+        public AirdropUnitCollectionModifier modifier;
 
         public AirdropUnitCollection(string wallet, ulong dropAssetId)
         {
@@ -30,6 +31,11 @@ namespace Airdrop
             this.airdropUnits.Add(airdropUnit);
         }
 
+        public void AddModifier(AirdropUnitCollectionModifier modifier)
+        {
+            this.modifier = modifier;
+        }
+
         public ulong GetTotal()
         {
             ulong total = 0;
@@ -37,6 +43,11 @@ namespace Airdrop
             foreach (AirdropUnit airdropUnit in this.airdropUnits)
             {
                 total += airdropUnit.GetTotal();
+            }
+
+            if (this.modifier != null)
+            {
+                total = (ulong)(total * modifier.GetModifier());
             }
 
             return total;
@@ -50,6 +61,11 @@ namespace Airdrop
         public override string ToString()
         {
             string collectionBreakdown = $"{this.Wallet} : {this.DropAssetId} : {this.Total}";
+
+            if (this.modifier != null)
+            {
+                collectionBreakdown += $"\n\tModifier: {this.modifier.SourceAssetId} : {this.modifier.NumberOfSourceAsset} : {this.modifier.GetModifier()}";
+            }
 
             foreach (AirdropUnit airdropUnit in this.airdropUnits)
             {

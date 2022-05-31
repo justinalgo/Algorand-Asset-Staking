@@ -2,10 +2,12 @@
 using Algorand.V2.Indexer;
 using Algorand.V2.Indexer.Model;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Utils.Indexer
@@ -263,6 +265,29 @@ namespace Utils.Indexer
             }
 
             return assets;
+        }
+
+        public async Task<dynamic> GetArc69Data(ulong assetId)
+        {
+            var txns = await this.searchApi.TransactionsAsync(tx_type: TxType.Acfg, asset_id: assetId);
+            var txn = txns.Transactions.OrderByDescending(t => t.ConfirmedRound).FirstOrDefault();
+            if (txn != null)
+            {
+                dynamic obj = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(txn.Note));
+                try
+                {
+                    if (obj.standard == "arc69")
+                    {
+                        return obj;
+                    }
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -18,6 +18,7 @@ using Utils.Cosmos;
 using Utils.Indexer;
 using Utils.KeyManagers;
 using Transaction = Algorand.Transaction;
+using Newtonsoft.Json;
 
 namespace AirdropRunner
 {
@@ -44,7 +45,7 @@ namespace AirdropRunner
         {
             Key key = keyManager.CavernaWallet;
 
-            ulong acorn = 50000;
+            /*ulong acorn = 50000;
 
             var fact = new GoannaPartnerFactory(indexerUtils, algodUtils, acorn);
 
@@ -80,10 +81,10 @@ namespace AirdropRunner
             await new CorvusPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
             await new AlgorillaPartnerFactory(indexerUtils, algodUtils, acorn).FetchAirdropUnitCollections(manager, accounts);
 
-            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();
+            IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();*/
 
-            //var fact = new MantisHoldingsFactory(indexerUtils, algodUtils);
-            //var collections = await fact.FetchAirdropUnitCollections();
+            var fact = new AlvaHoldingFactory(indexerUtils, algodUtils);
+            var collections = await fact.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))
             {
@@ -93,7 +94,7 @@ namespace AirdropRunner
             Console.WriteLine(collections.Sum(c => (double)c.Total));
             Console.WriteLine(collections.Count());
 
-            /*Console.ReadKey();
+            Console.ReadKey();
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();
             TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();
@@ -144,7 +145,7 @@ namespace AirdropRunner
                 {
                     Console.WriteLine("Failed to drop: " + stxn.tx.assetReceiver);
                 }
-            }*/
+            }
         }
     }
 }

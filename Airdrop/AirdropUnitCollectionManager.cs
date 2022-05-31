@@ -27,6 +27,22 @@ namespace Airdrop
             }
         }
 
+        public void AddModifier(AirdropUnitCollectionModifier modifier)
+        {
+            (string, ulong) key = (modifier.Address, modifier.DropAssetId);
+
+            if (this.collectionDict.ContainsKey(key))
+            {
+                this.collectionDict[key].AddModifier(modifier);
+            } 
+            else
+            {
+                AirdropUnitCollection col = new AirdropUnitCollection(key);
+                col.AddModifier(modifier);
+                this.collectionDict[key] = col;
+            }
+        }
+
         public IEnumerable<string> GetWalletAddresses()
         {
             return this.collectionDict.Keys.Select(k => k.Item1).Distinct();

@@ -20,5 +20,6 @@ namespace Utils.Indexer
         Task<IEnumerable<string>> GetWalletAddresses(ulong assetId);
         Task<IEnumerable<string>> GetWalletAddresses(IEnumerable<ulong> assetIds);
         Task<IEnumerable<string>> GetWalletAddressesIntersect(IEnumerable<ulong> assetIds);
+        Task<dynamic> GetArc69Data(ulong assetId);
     }
 }
