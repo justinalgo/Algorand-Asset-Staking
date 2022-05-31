@@ -110,7 +110,7 @@ namespace Airdrop.AirdropFactories.Holdings
                     ulong sourceAssetId = asset.AssetId;
                     ulong numberOfSourceAsset = asset.Amount;
 
-                    if (sourceAssetId == 557939659 && numberOfSourceAsset > 0)
+                    if (sourceAssetId == 555593804 && numberOfSourceAsset > 0)
                     {
                         collectionManager.AddModifier(new AirdropUnitCollectionModifier(
                             account.Address,
