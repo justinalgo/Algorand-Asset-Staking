@@ -1,16 +1,27 @@
 ﻿using Algorand.V2.Algod.Model;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Utils.Algod;
+using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Random
 {
     public abstract class RandomAirdropFactory
     {
+        public IIndexerUtils IndexerUtils { get; }
+        public IAlgodUtils AlgodUtils { get; }
+        public string[] CreatorAddresses { get; set; }
         public ulong DropAssetId { get; set; }
         public ulong Decimals { get; set; }
         public ulong NumberOfWinners { get; set; }
         public ulong TotalWinnings { get; set; }
+        public RandomAirdropFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils)
+        {
+            this.IndexerUtils = indexerUtils;
+            this.AlgodUtils = algodUtils;
+        }
 
         public async Task<IEnumerable<AirdropUnitCollection>> FetchAirdropUnitCollections()
         {
@@ -51,9 +62,28 @@ namespace Airdrop.AirdropFactories.Random
             return airdropManager.GetAirdropUnitCollections();
         }
 
-        public abstract Task<HashSet<ulong>> FetchAssetIds();
 
-        public abstract Task<IEnumerable<Account>> FetchAccounts();
+        public async Task<HashSet<ulong>> FetchAssetIds()
+        {
+            var account = await AlgodUtils.GetAccount(this.CreatorAddresses[0]);
+
+            return account.CreatedAssets.Select(ca => ca.Index).ToHashSet();
+        }
+
+        public async Task<IEnumerable<Account>> FetchAccounts()
+        {
+            IEnumerable<string> addresses = await IndexerUtils.GetWalletAddresses(this.DropAssetId);
+
+            ConcurrentBag<Account> accounts = new ConcurrentBag<Account>();
+
+            Parallel.ForEach<string>(addresses, new ParallelOptions { MaxDegreeOfParallelism = 10 }, address =>
+            {
+                var account = AlgodUtils.GetAccount(address).Result;
+                accounts.Add(account);
+            });
+
+            return accounts.Where(a => !this.CreatorAddresses.Contains(a.Address));
+        }
 
         public IEnumerable<(Account, ulong)> GetEligibleWinners(Account account, HashSet<ulong> assetIds)
         {
