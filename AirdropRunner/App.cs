@@ -83,7 +83,7 @@ namespace AirdropRunner
 
             IEnumerable<AirdropUnitCollection> collections = manager.GetAirdropUnitCollections();*/
 
-            var fact = new AlvaHoldingFactory(indexerUtils, algodUtils);
+            var fact = new AlvaHoldingsFactory(indexerUtils, algodUtils);
             var collections = await fact.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderByDescending(a => a.Total))

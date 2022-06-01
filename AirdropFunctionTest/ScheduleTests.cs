@@ -46,5 +46,11 @@ namespace FunctionTest
         {
             Assert.Equal("0 0 18 * * *", Function.MantisHoldingsAirdropSchedule);
         }
+
+        [Fact]
+        public void AlvaHoldingsAirdropScheduleTest()
+        {
+            Assert.Equal("0 0 16 * * Sun,Tue,Thu,Sat", Function.MantisHoldingsAirdropSchedule);
+        }
     }
 }

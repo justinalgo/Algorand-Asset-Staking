@@ -11,9 +11,9 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class AlvaHoldingFactory : HoldingsAirdropFactory
+    public class AlvaHoldingsFactory : HoldingsAirdropFactory
     {
-        public AlvaHoldingFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils) : base(indexerUtils, algodUtils)
+        public AlvaHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils) : base(indexerUtils, algodUtils)
         {
             this.DropAssetId = 553615859;
             this.Decimals = 2;
