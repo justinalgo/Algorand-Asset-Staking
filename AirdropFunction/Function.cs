@@ -505,8 +505,17 @@ namespace AirdropFunction
                 log.LogInformation($"{collection.Wallet} : {collection.Total}");
             }
 
-            log.LogInformation("Total drop: " + collections.Sum(a => (double)a.Total));
+            ulong total = (ulong)collections.Sum(a => (double)a.Total);
+            log.LogInformation("Total drop: " + total);
             log.LogInformation("Number of drops: " + collections.Count());
+
+            ulong curr = await algodUtils.GetAssetAmount(CavernaKey.ToString(), factory.DropAssetId);
+
+            if (curr < total)
+            {
+                log.LogError("Insufficient funds. Erroring out...");
+                throw new Exception("Insufficient Funds");
+            }
 
             List<SignedTransaction> signedTransactions = new List<SignedTransaction>();
             TransactionParametersResponse transactionParameters = await algodUtils.GetTransactionParams();

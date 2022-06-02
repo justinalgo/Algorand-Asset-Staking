@@ -73,5 +73,20 @@ namespace Utils.Algod
         {
             return await this.algod.AccountsAsync(address, Format.Json);
         }
+
+        public async Task<ulong> GetAssetAmount(string address, ulong assetid)
+        {
+            var acc = await GetAccount(address);
+
+            foreach (var asset in acc.Assets)
+            {
+                if (asset.AssetId == assetid)
+                {
+                    return asset.Amount;
+                }
+            }
+
+            return 0;
+        }
     }
 }
