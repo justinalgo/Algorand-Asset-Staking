@@ -50,7 +50,7 @@ namespace FunctionTest
         [Fact]
         public void AlvaHoldingsAirdropScheduleTest()
         {
-            Assert.Equal("0 0 16 * * Sun,Tue,Thu,Sat", Function.MantisHoldingsAirdropSchedule);
+            Assert.Equal("0 0 16 * * Sun,Tue,Thu,Sat", Function.AlvaHoldingsAirdropSchedule);
         }
     }
 }
