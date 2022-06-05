@@ -177,7 +177,7 @@ namespace Utils.Indexer
             return assets;
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null)
+        public async Task<IEnumerable<Transaction>> GetTransactions(string address, ulong? assetId = null, AddressRole? addressRole = null, TxType? txType = null, ulong? currencyGreaterThan = null, ulong? currencyLessThan = null, ulong? minRound = null, ulong? maxRound = null, DateTimeOffset? afterTime = null, DateTimeOffset? beforeTime = null)
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -190,7 +190,8 @@ namespace Utils.Indexer
                     currency_less_than: currencyLessThan,
                     address: address,
                     address_role: addressRole,
-                    after_time: afterTime
+                    after_time: afterTime,
+                    before_time: beforeTime
                 );
 
             transactions.AddRange(response.Transactions);
@@ -199,13 +200,16 @@ namespace Utils.Indexer
             {
                 response = await searchApi.TransactionsAsync(
                     next: response.NextToken,
+                    tx_type: txType,
                     min_round: minRound,
+                    max_round: maxRound,
                     asset_id: assetId,
-                    after_time: afterTime,
                     currency_greater_than: currencyGreaterThan,
                     currency_less_than: currencyLessThan,
                     address: address,
-                    address_role: addressRole
+                    address_role: addressRole,
+                    after_time: afterTime,
+                    before_time: beforeTime
                 );
 
                 transactions.AddRange(response.Transactions);
