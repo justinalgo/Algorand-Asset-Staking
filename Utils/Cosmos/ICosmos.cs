@@ -7,7 +7,7 @@ namespace Utils.Cosmos
     {
         Task<AssetValue> CreateAsset(AssetValue assetValue);
         Task CreateAsset(dynamic assetValue, string projectId);
-        public Task<AssetValue> GetAssetValueById(long assetId, string key);
+        public Task<AssetValue> GetAssetValueById(ulong assetId, string key);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId);
         public Task<IEnumerable<AssetValue>> GetAssetValues(string projectId, params string[] projectIds);
         Task<IEnumerable<dynamic>> GetAssetValuesDynamic(string projectId);

@@ -20,7 +20,7 @@ namespace Utils.Cosmos
             assetsContainer = client.GetContainer("caverna", "Assets");
         }
 
-        public async Task<AssetValue> GetAssetValueById(long assetId, string key)
+        public async Task<AssetValue> GetAssetValueById(ulong assetId, string key)
         {
             AssetValue assetValue = await assetsContainer.ReadItemAsync<AssetValue>(assetId.ToString(), new PartitionKey(key));
 
