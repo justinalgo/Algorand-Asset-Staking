@@ -129,7 +129,7 @@ namespace AirdropFunction
             }
 
             Key CavernaKey = this.keyManager.CavernaWallet;
-            RaptorHoldingsFactory factory = new RaptorHoldingsFactory(this.indexerUtils, this.algodUtils, this.cosmos, this.httpClientFactory);
+            RaptorHoldingsFactory factory = new RaptorHoldingsFactory(this.indexerUtils, this.algodUtils, this.httpClientFactory);
             IEnumerable<AirdropUnitCollection> collections = await factory.FetchAirdropUnitCollections();
 
             foreach (AirdropUnitCollection collection in collections.OrderBy(c => c.Wallet))
