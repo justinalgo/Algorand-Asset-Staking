@@ -16,6 +16,7 @@ namespace Airdrop.AirdropFactories.AcornPartners
             this.CreatorAddresses = new string[] { "D5J7H7PIYKLY2U6A5OFUAC7GQHTHSXXNX65DSD3CJYPBV2MVK6NTNW44CA"};
             this.NumberOfWinners = 1;
             this.TotalWinnings = totalWinnings;
+            this.AssetPrefix = "goan";
         }
     }
 }
