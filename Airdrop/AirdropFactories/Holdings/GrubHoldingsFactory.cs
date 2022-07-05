@@ -52,7 +52,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 }
             }
 
-            ulong wuValue = 99;
+            ulong wuValue = 69;
 
             foreach (string creatorAddress in this.CreatorAddresses.Skip(2).Take(1))
             {
