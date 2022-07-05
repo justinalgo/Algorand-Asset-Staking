@@ -9,11 +9,14 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public abstract class RandHoldingsAirdropFactory : HoldingsAirdropFactory
+    public abstract class ExchangeHoldingsAirdropFactory : HoldingsAirdropFactory
     {
         public HttpClient HttpClient { get; }
+        public bool SearchRand { get; set; }
+        public bool SearchAlgox { get; set; }
+        public string[] AlgoxCollectionNames { get; set; }
 
-        public RandHoldingsAirdropFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, HttpClient httpClient) : base(indexerUtils, algodUtils)
+        public ExchangeHoldingsAirdropFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, HttpClient httpClient) : base(indexerUtils, algodUtils)
         {
             this.HttpClient = httpClient;
         }
@@ -22,7 +25,16 @@ namespace Airdrop.AirdropFactories.Holdings
         {
             IDictionary<ulong, ulong> assetValues = await FetchAssetValues();
             IEnumerable<Account> accounts = await FetchAccounts();
-            IDictionary<string, List<(ulong, ulong)>> randAccounts = await FetchRandAccounts();
+            IDictionary<string, List<(ulong, ulong)>> randAccounts = null; 
+            IDictionary<string, List<(ulong, ulong)>> algoxAccounts = null;
+            if (SearchRand)
+            {
+                randAccounts = await FetchRandAccounts();
+            }
+            if (SearchAlgox)
+            {
+                algoxAccounts = await FetchAlgoxAccounts();
+            }
 
             AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
 
@@ -32,9 +44,13 @@ namespace Airdrop.AirdropFactories.Holdings
 
                 string address = account.Address;
 
-                if (randAccounts.ContainsKey(address))
+                if (SearchRand && randAccounts != null && randAccounts.ContainsKey(address))
                 {
                     AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                }
+                if (SearchAlgox && algoxAccounts != null && algoxAccounts.ContainsKey(address))
+                {
+                    AddAssetsInList(collectionManager, address, algoxAccounts[address], assetValues);
                 }
             });
 
@@ -50,7 +66,7 @@ namespace Airdrop.AirdropFactories.Holdings
                     ulong sourceAssetId = sourceAssetInfo.Item1;
                     ulong numberOfSourceAsset = sourceAssetInfo.Item2;
 
-                    if (assetValues.ContainsKey(sourceAssetId))
+                    if (this.SearchRand && assetValues.ContainsKey(sourceAssetId))
                     {
                         ulong sourceAssetValue = assetValues[sourceAssetId];
                         collectionManager.AddAirdropUnit(new AirdropUnit(
@@ -91,6 +107,33 @@ namespace Airdrop.AirdropFactories.Holdings
 
             return randSellers;
         }
+
+        public async Task<Dictionary<string, List<(ulong, ulong)>>> FetchAlgoxAccounts()
+        {
+            Dictionary<string, List<(ulong, ulong)>> sellers = new Dictionary<string, List<(ulong, ulong)>>();
+
+            foreach (string collection in this.AlgoxCollectionNames)
+            {
+                string endpoint = "https://api.algoxnft.com/v1/collections/" + collection + "/buy-it-now-listings";
+
+                string jsonResponse = await HttpClient.GetStringAsync(endpoint);
+                List<AlgoxListing> listings = JsonConvert.DeserializeObject<List<AlgoxListing>>(jsonResponse);
+
+                foreach (AlgoxListing listing in listings)
+                {
+                    if (sellers.ContainsKey(listing.SellerAddress))
+                    {
+                        sellers[listing.SellerAddress].Add((listing.AssetId, 1));
+                    }
+                    else
+                    {
+                        sellers[listing.SellerAddress] = new List<(ulong, ulong)>() { (listing.AssetId, 1) };
+                    }
+                }
+            }
+
+            return sellers;
+        }
     }
 
     class RandListing
@@ -98,6 +141,14 @@ namespace Airdrop.AirdropFactories.Holdings
         [JsonProperty("assetId")]
         public ulong AssetId { get; set; }
         [JsonProperty("sellerAddress")]
+        public string SellerAddress { get; set; }
+    }
+
+    class AlgoxListing
+    {
+        [JsonProperty("asset_id")]
+        public ulong AssetId { get; set; }
+        [JsonProperty("seller_wallet_address")]
         public string SellerAddress { get; set; }
     }
 }

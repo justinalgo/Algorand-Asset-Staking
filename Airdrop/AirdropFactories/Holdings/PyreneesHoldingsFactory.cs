@@ -7,7 +7,7 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class PyreneesHoldingsFactory : RandHoldingsAirdropFactory
+    public class PyreneesHoldingsFactory : ExchangeHoldingsAirdropFactory
     {
         public PyreneesHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, IHttpClientFactory httpClientFactory) : base(indexerUtils, algodUtils, httpClientFactory.CreateClient())
         {
@@ -17,6 +17,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.RevokedAddresses = new string[] { "IEQGNR7DPQ26ZY7A22VHRTLHDL2PZ3XD5AUMMEEPYB6DUL6FSRN2NUUWPE" };
             this.RevokedAssets = new ulong[] { };
             this.AssetValue = 1;
+            this.SearchRand = true;
         }
     }
 }

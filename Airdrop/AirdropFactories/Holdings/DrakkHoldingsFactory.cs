@@ -11,7 +11,7 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class DrakkHoldingsFactory : RandHoldingsAirdropFactory
+    public class DrakkHoldingsFactory : ExchangeHoldingsAirdropFactory
     {
         private readonly ICosmos cosmos;
 
@@ -22,6 +22,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.CreatorAddresses = new string[] { "UXXYI4CPUIZ27UTWNL42VO7EG5LQGRQHLNKD2JIPVHEBZ7T7JXYOHAGW4A" };
             this.RevokedAddresses = new string[] { "7VGVH2G7R7MM7HNRV6AFIC7HP3WXIK6CZ42GGSK6LRRMREGNOQXRATBMLA", "UXXYI4CPUIZ27UTWNL42VO7EG5LQGRQHLNKD2JIPVHEBZ7T7JXYOHAGW4A", "B6PH4HYVR6MJOOQMFFJ3VFNHJO3NTBGHQBCFOHT4KKI6CGWI3DW2AZBMNM", "5MJJG6FPU43HRHGOMHWZT5ZGNCUD7DHICWF45GJVIEZDRQKS3M7KWMJWAQ" };
             this.cosmos = cosmos;
+            this.SearchRand = true;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()

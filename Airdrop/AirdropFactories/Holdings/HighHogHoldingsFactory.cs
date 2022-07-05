@@ -7,7 +7,7 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class HighHogHoldingsFactory : RandHoldingsAirdropFactory
+    public class HighHogHoldingsFactory : ExchangeHoldingsAirdropFactory
     {
         public HighHogHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, IHttpClientFactory httpClientFactory) : base(indexerUtils, algodUtils, httpClientFactory.CreateClient())
         {
@@ -15,6 +15,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "YZEDY575NGDQPBQT3FD5C6S56DFNNICIGN32X2GI6AC63MVOPZMWVOZY7Y" };
             this.AssetValue = 5000;
+            this.SearchRand = true;
         }
     }
 }

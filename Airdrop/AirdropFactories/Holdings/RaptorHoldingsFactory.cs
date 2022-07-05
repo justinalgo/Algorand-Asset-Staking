@@ -10,7 +10,7 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class RaptorHoldingsFactory : RandHoldingsAirdropFactory
+    public class RaptorHoldingsFactory : ExchangeHoldingsAirdropFactory
     {
 
         public RaptorHoldingsFactory(IIndexerUtils indexerUtils, IAlgodUtils algodUtils, IHttpClientFactory httpClientFactory) : base(indexerUtils, algodUtils, httpClientFactory.CreateClient())
@@ -21,6 +21,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "EYERHFMTLLBVVDV4RKGKSTMWU4QZ7IG5HUEXQYO3UVX4ABQ5MDNJIKN7HQ",
             };
             this.AssetValue = 1200000;
+            this.SearchRand = true;
         }
     }
 }

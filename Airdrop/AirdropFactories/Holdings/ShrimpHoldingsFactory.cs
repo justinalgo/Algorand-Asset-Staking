@@ -1,5 +1,6 @@
 ﻿using Algorand.V2.Indexer.Model;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -11,7 +12,7 @@ using Utils.Indexer;
 
 namespace Airdrop.AirdropFactories.Holdings
 {
-    public class ShrimpHoldingsFactory : RandHoldingsAirdropFactory
+    public class ShrimpHoldingsFactory : ExchangeHoldingsAirdropFactory
     {
         private readonly ICosmos cosmos;
 
@@ -29,6 +30,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "5DYIZMX7N4SAB44HLVRUGLYBPSN4UMPDZVTX7V73AIRMJQA3LKTENTLFZ4",
             };
             this.cosmos = cosmos;
+            this.AlgoxCollectionNames = new string[] { "mngo", "ling-lings", "yieldlings" };
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
@@ -46,6 +48,7 @@ namespace Airdrop.AirdropFactories.Holdings
             var accounts = await FetchAccounts();
             IDictionary<string, List<(ulong, ulong)>> randAccounts = await FetchRandAccounts();
             IDictionary<string, List<(ulong, ulong)>> ab2Accounts = await FetchAb2Accounts();
+            IDictionary<string, List<(ulong, ulong)>> algoxAccounts = await FetchAlgoxAccounts();
 
             AirdropUnitCollectionManager collectionManager = new AirdropUnitCollectionManager();
 
@@ -63,6 +66,11 @@ namespace Airdrop.AirdropFactories.Holdings
                 if (ab2Accounts.ContainsKey(address))
                 {
                     this.AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
+                }
+
+                if (algoxAccounts.ContainsKey(address))
+                {
+                    this.AddAssetsInList(collectionManager, address, algoxAccounts[address], assetValues);
                 }
             });
 
