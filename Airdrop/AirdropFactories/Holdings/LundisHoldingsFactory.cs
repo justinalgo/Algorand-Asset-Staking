@@ -27,6 +27,10 @@ namespace Airdrop.AirdropFactories.Holdings
                 660004771,
                 676186493
             };
+            this.RevokedAddresses = new string[]
+            {
+                "LUNDIW5HP5KWUG6JTXHMDB5XPNXQ43OIBXET3RTBXNVJISQUTBKWONTGNI",
+            };
             this.AssetValue = 50;
         }
 
@@ -116,6 +120,8 @@ namespace Airdrop.AirdropFactories.Holdings
 
             assetValues[798642989] = 750;
             assetValues[798638793] = 750;
+            assetValues[798830332] = 750;
+            assetValues[799367574] = 750;
 
             //325 Assets
 
