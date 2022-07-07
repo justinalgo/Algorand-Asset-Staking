@@ -30,7 +30,7 @@ namespace AirdropFunction
         public const string AlvaHoldingsAirdropSchedule = "0 0 16 * * Sun,Tue,Thu,Sat";
         public const string GooseHoldingsAirdropSchedule = "0 0 16 * * Mon,Thu";
         public const string PyreneesHoldingsAirdropSchedule = "0 0 0 * * Mon";
-        public const string GrubHoldingsAirdropSchedule = "0 0 19 * * Thur";
+        public const string GrubHoldingsAirdropSchedule = "0 0 19 * * Thu";
         private readonly IAlgodUtils algodUtils;
         private readonly IIndexerUtils indexerUtils;
         private readonly ICosmos cosmos;

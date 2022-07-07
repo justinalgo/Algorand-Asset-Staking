@@ -68,7 +68,7 @@ namespace FunctionTest
         [Fact]
         public void GrubHoldingsAirdropScheduleTest()
         {
-            Assert.Equal("0 0 19 * * Thurs", Function.GrubHoldingsAirdropSchedule);
+            Assert.Equal("0 0 19 * * Thu", Function.GrubHoldingsAirdropSchedule);
         }
     }
 }
