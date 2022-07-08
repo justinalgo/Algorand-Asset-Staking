@@ -66,7 +66,7 @@ namespace Airdrop.AirdropFactories.Holdings
                     ulong sourceAssetId = sourceAssetInfo.Item1;
                     ulong numberOfSourceAsset = sourceAssetInfo.Item2;
 
-                    if (this.SearchRand && assetValues.ContainsKey(sourceAssetId))
+                    if (assetValues.ContainsKey(sourceAssetId))
                     {
                         ulong sourceAssetValue = assetValues[sourceAssetId];
                         collectionManager.AddAirdropUnit(new AirdropUnit(

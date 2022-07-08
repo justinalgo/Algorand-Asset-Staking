@@ -65,12 +65,12 @@ namespace Airdrop.AirdropFactories.Holdings
 
                 if (ab2Accounts.ContainsKey(address))
                 {
-                    this.AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
+                    AddAssetsInList(collectionManager, address, ab2Accounts[address], assetValues);
                 }
 
                 if (algoxAccounts.ContainsKey(address))
                 {
-                    this.AddAssetsInList(collectionManager, address, algoxAccounts[address], assetValues);
+                    AddAssetsInList(collectionManager, address, algoxAccounts[address], assetValues);
                 }
             });
 
