@@ -6,12 +6,6 @@ namespace FunctionTest
     public class ScheduleTests
     {
         [Fact]
-        public void RaptorHoldingsAirdropScheduleTest()
-        {
-            Assert.Equal("0 0 5 * * Mon", Function.RaptorHoldingsAirdropSchedule);
-        }
-
-        [Fact]
         public void CryptoBunnyHoldingsAirdropScheduleTest()
         {
             Assert.Equal("0 0 15 * * Mon", Function.CryptoBunnyHoldingsAirdropSchedule);
@@ -69,6 +63,12 @@ namespace FunctionTest
         public void GrubHoldingsAirdropScheduleTest()
         {
             Assert.Equal("0 0 19 * * Thu", Function.GrubHoldingsAirdropSchedule);
+        }
+
+        [Fact]
+        public void HootHoldingsAirdropScheduleTest()
+        {
+            Assert.Equal("0 0 19 * * Mon", Function.HootHoldingsAirdropSchedule);
         }
     }
 }
