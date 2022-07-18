@@ -87,7 +87,7 @@ namespace Airdrop.AirdropFactories.Holdings
 
             foreach (string creatorAddress in this.CreatorAddresses)
             {
-                string randEndpoint = "https://www.randswap.com/v1/listings/creator/" + creatorAddress;
+                string randEndpoint = "https://www.randswap.com/v1/listings/creator/" + creatorAddress + "?token=Wes_WQWN44UHDGUsld8n0M6OSorH8sl645PD";
 
                 string jsonResponse = await HttpClient.GetStringAsync(randEndpoint);
                 List<RandListing> listings = JsonConvert.DeserializeObject<List<RandListing>>(jsonResponse);

@@ -32,7 +32,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "baby-hoot-group"
             };
             this.SearchAlgox = true;
-            //this.SearchRand = true;
+            this.SearchRand = true;
         }
 
         public async override Task<IDictionary<ulong, ulong>> FetchAssetValues()

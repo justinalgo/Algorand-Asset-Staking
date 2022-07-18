@@ -26,7 +26,7 @@ namespace Airdrop.AirdropFactories.Holdings
                 "WISEUJP5PIFAOWYDEVIDWQLKEQFTOSG3ADHE7NJYEAQNFXV5I2R7YLLBQQ",
                 "DDYUZA46ZXAJICQMSYIKG3SWNKZND6C5VEH57YVJAV47NDYM3BMDKAC3LQ",
             };
-            //this.SearchRand = true;
+            this.SearchRand = true;
             this.SearchAlgox = true;
             this.AlgoxCollectionNames = new string[]
             {
