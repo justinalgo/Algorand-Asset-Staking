@@ -19,7 +19,7 @@ namespace Airdrop.AirdropFactories.Holdings
             this.Decimals = 0;
             this.CreatorAddresses = new string[] { "NV7D4EFKO5FRXEHRVMEP3LDG6IACFQVJXYYG6KJAGXW2JRBKW3Y7UNQE2Y" };
             this.cosmos = cosmos;
-            this.SearchRand = true;
+            //this.SearchRand = true;
         }
 
         public override async Task<IDictionary<ulong, ulong>> FetchAssetValues()
