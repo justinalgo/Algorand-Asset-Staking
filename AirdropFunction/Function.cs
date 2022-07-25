@@ -22,7 +22,7 @@ namespace AirdropFunction
     {
         public const string CryptoBunnyHoldingsAirdropSchedule = "0 0 15 * * Mon";
         public const string NanaHoldingsAirdropSchedule = "0 0 14 * * Mon,Fri";
-        public const string ShrimpHoldingsAirdropSchedule = "0 0 16 * * Mon,Fri";
+        public const string ShrimpHoldingsAirdropSchedule = "0 0 16 * * Mon";
         public const string AlchemonHoldingsAirdropSchedule = "0 0 16 * * Sat";
         public const string AlchemonLiquidityAirdropSchedule = "0 0 16 * * Sun";
         public const string MantisHoldingsAirdropSchedule = "0 0 18 * * *";

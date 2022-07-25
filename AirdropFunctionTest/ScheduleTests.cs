@@ -20,7 +20,7 @@ namespace FunctionTest
         [Fact]
         public void ShrimpHoldingsAirdropScheduleTest()
         {
-            Assert.Equal("0 0 16 * * Mon,Fri", Function.ShrimpHoldingsAirdropSchedule);
+            Assert.Equal("0 0 16 * * Mon", Function.ShrimpHoldingsAirdropSchedule);
         }
 
         [Fact]
