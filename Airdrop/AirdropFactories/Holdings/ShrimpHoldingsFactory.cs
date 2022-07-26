@@ -57,6 +57,7 @@ namespace Airdrop.AirdropFactories.Holdings
             IDictionary<ulong, ulong> assetValues = await FetchAssetValues();
             var accounts = await FetchAccounts();
             IDictionary<string, List<(ulong, ulong)>> randAccounts = await FetchRandAccounts();
+            IDictionary<string, List<(ulong, ulong)>> alandiaAccounts = await FetchAlandiaAccounts();
             IDictionary<string, List<(ulong, ulong)>> ab2Accounts = await FetchAb2Accounts();
             IDictionary<string, List<(ulong, ulong)>> algoxAccounts = await FetchAlgoxAccounts();
 
@@ -71,6 +72,11 @@ namespace Airdrop.AirdropFactories.Holdings
                 if (randAccounts.ContainsKey(address))
                 {
                     AddAssetsInList(collectionManager, address, randAccounts[address], assetValues);
+                }
+
+                if (alandiaAccounts.ContainsKey(address))
+                {
+                    AddAssetsInList(collectionManager, address, alandiaAccounts[address], assetValues);
                 }
 
                 if (ab2Accounts.ContainsKey(address))
