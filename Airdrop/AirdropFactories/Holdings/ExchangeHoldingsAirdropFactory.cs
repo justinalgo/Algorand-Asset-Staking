@@ -184,7 +184,7 @@ namespace Airdrop.AirdropFactories.Holdings
     class AlandiaListing
     {
         [JsonProperty("asset_id")]
-        public ulong AssetId get; set; }
+        public ulong AssetId { get; set; }
         [JsonProperty("wallet")]
         public string SellerAddress { get; set; }
     }
